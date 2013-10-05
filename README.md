@@ -1,3 +1,7 @@
-# How to make a simple HTML5 Canvas game
+This is a simple HTML 5 game inspired by a Lost Decade tutorial (http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/) The background image, the character and the goblin are from Lost Decade.
 
-Build your first HTML5 Canvas game in no time! [Read the whole article here!](http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/)
+The code is all by Andrew Davis (http://www.thetravelingprogrammer.com)
+
+The fireball animation is from http://opengameart.org/content/fireball-spell
+
+The explosion animation is from http://opengameart.org/content/explosion

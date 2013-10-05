@@ -1,0 +1,30 @@
+//(function() {
+
+window.game = window.game || { };
+
+game.Monster = function(pos) {
+    game.Thing.call(this, pos, [32,32]);
+    //this.state = gMonsterState.waiting;
+    //this.goal = null;
+}
+game.Monster.prototype = new game.Thing();
+game.Monster.prototype.constructor = game.Monster;
+ 
+game.Monster.prototype.draw = function() {
+    game.Thing.prototype.draw.call(this, this.pos, 'monster');
+};
+game.Monster.prototype.update = function(dt) {
+    if (gWorld.player != undefined) {
+        var vect = calcNormalVector(gWorld.player.pos, this.pos);
+        var maxvar = 2000;
+        this.vel[0] = maxvar * dt * vect[0];
+        this.vel[1] = maxvar * dt * vect[1];
+    }
+    game.Thing.prototype.update.call(this, dt);
+    
+    //if (gLoopcount % 10 == 0 && this.health < this.maxhealth) {
+    //    this.health++;
+    //}
+};
+
+//}());

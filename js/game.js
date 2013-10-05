@@ -88,6 +88,7 @@ gCanvas.addEventListener('click', onMouseClick);
 
 function newGame() {
     gWorld.level = 0;
+    gWorld.score = 0;
     gWorld.state.setState(gWorld.state.states.INGAME);
     nextLevel();
     

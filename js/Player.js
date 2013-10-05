@@ -15,25 +15,25 @@ game.Player.prototype.draw = function() {
 };
 
 game.Player.prototype.update = function(dt) {
-    if (gWorld.keyState[38]) { //up
+    if (gWorld.keyState[87] || gWorld.keyState[38]) { //up
         //this.vel[1] = -this.maxvel;
         this.pos[1] -= this.maxvel * dt;
     }
-    if (gWorld.keyState[40]) { //down
+    if (gWorld.keyState[83] || gWorld.keyState[40]) { //down
         //this.vel[1] = this.maxvel;
         this.pos[1] += this.maxvel * dt;
     }
-    if (gWorld.keyState[37]) { //left
+    if (gWorld.keyState[65] || gWorld.keyState[37]) { //left
         //this.vel[0] = -this.maxvel;
         this.pos[0] -= this.maxvel * dt;
     }
-    if (gWorld.keyState[39]) { //right
+    if (gWorld.keyState[68] || gWorld.keyState[39]) { //right
         //this.vel[0] = this.maxvel;
         this.pos[0] += this.maxvel * dt;
     }
-    if (gWorld.keyState[32]) { //spacebar - guns
-        this.shoot();
-    }
+    //if (gWorld.keyState[32]) { //spacebar - guns
+    //    this.shoot();
+    //}
     
     if (this.pos[0] < 30) {
         this.pos[0] = 30;

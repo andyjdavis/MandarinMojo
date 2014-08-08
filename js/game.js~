@@ -199,7 +199,7 @@ function nextCharacter() {
 
     gWorld.enemies = Array();
     //gWorld.projectiles = Array();
-    gWorld.explosions = Array();
+    //gWorld.explosions = Array();
     
     gWorld.player.pos = [gCanvas.width/2, gCanvas.height/2];
     
@@ -255,7 +255,7 @@ function checkCollisions() {
         
         if (m.collideThing(gWorld.player)) {
             gWorld.state.setState(gWorld.state.states.END);
-            gQuestion.innerHTML = "";
+            gQuestion.innerHTML = " ";
             return;
         }
 
@@ -273,16 +273,28 @@ function checkCollisions() {
             }
         }*/
     }
-    var char;
+    var char, charexploder;
     for (var i in gWorld.currentwords) {
         char = gWorld.currentwords[i];
         if (char.collideThing(gWorld.player)) {
+        	//explode monsters
+        	for (var j = gWorld.enemies.length - 1; j >= 0;j--) {
+		        m = gWorld.enemies[j];
+		        gWorld.explosions.push(new game.Explosion(m.pos));
+	        }
+	        
+	        //explode the characters
+            for (var j in gWorld.currentwords) {
+        		charexploder = gWorld.currentwords[j];
+    			gWorld.explosions.push(new game.Explosion(char.pos));
+            }
+	        
             if (char.iscorrect) {
                 gWorld.score++;
                 nextCharacter();
             } else {
                 gWorld.state.setState(gWorld.state.states.END);
-                gQuestion.innerHTML = "";
+                gQuestion.innerHTML = " ";
             }
         }
     }
@@ -347,6 +359,9 @@ function drawGame() {
         }
         drawText(gContext, "Your best score is "+gWorld.bestscore, gWorld.textsize, gWorld.textcolor, 150, 240);
         drawText(gContext, "Press d to play again", gWorld.textsize, gWorld.textcolor, 150, 350);
+        for (var i in gWorld.explosions) {
+            gWorld.explosions[i].draw();
+        }
     }
 }
 

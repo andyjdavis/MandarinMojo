@@ -2,7 +2,7 @@
 window.game = window.game || { };
 
 function onSoundLoad() {
-    gSounds.numSoundsLoaded++;
+    gWorld.sounds.numSoundsLoaded++;
 }
 game.SoundManager = function() {
     this.numSoundsLoaded = 0;
@@ -12,8 +12,8 @@ game.SoundManager = function() {
     try {
         //this._context = new webkitAudioContext();
         
-        //this.sounds['music'] = new Audio("resources/music.ogg");
-        //this.sounds['explosion'] = new Audio("resources/explosion.ogg");
+        this.sounds['success'] = new Audio("success.ogg");
+        this.sounds['fail'] = new Audio("thump.ogg");
         //this.sounds['attack'] = new Audio("resources/attack.ogg");
         
         for (var key in this.sounds) {

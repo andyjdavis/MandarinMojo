@@ -11,4 +11,8 @@ The background image, the character image and the goblin image are from Lost Dec
 
 The code is all by Andrew Davis http://www.thetravelingprogrammer.com
 
-The word/character lists came from http://www.hskhsk.com/word-lists.html
+The word/character lists are from http://www.hskhsk.com/word-lists.html
+
+The success sound is from http://www.freesound.org/people/grunz/sounds/109662/
+
+The failure sounds is from http://soundbible.com/992-Right-Cross.html

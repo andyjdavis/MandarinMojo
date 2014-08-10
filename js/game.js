@@ -38,7 +38,11 @@ gWorld = {
     bestscore: 0,
     
     textcolor: 'White',
-    textsize: '18pt Arial'
+    textsize: '18pt Arial',
+    
+    then: Date.now(),
+    now: 0,
+    dt: 0
 };
 gWorld.state.setState(gWorld.state.states.LOADING);
 gWorld.words['character'] = Array();
@@ -151,7 +155,7 @@ function loadWords() {
 					    gWorld.words['character'][word] = words[i + traditionaloffset];
 					    gWorld.words['pinyin'][word] = words[i + 2];
 					    gWorld.words['english'][word] = words[i + 4];
-					    console.log(gWorld.words['character'][word]);
+					    //console.log(gWorld.words['character'][word]);
 					    word++;
 			        }
 			    }
@@ -256,6 +260,7 @@ function checkCollisions() {
         if (m.collideThing(gWorld.player)) {
             gWorld.state.setState(gWorld.state.states.END);
             gQuestion.innerHTML = " ";
+            gWorld.sounds.play("fail");
             return;
         }
 
@@ -292,9 +297,11 @@ function checkCollisions() {
             if (char.iscorrect) {
                 gWorld.score++;
                 nextCharacter();
+                gWorld.sounds.play("success");
             } else {
                 gWorld.state.setState(gWorld.state.states.END);
                 gQuestion.innerHTML = " ";
+                gWorld.sounds.play("fail");
             }
         }
     }
@@ -365,27 +372,25 @@ function drawGame() {
     }
 }
 
-var then = Date.now();
-var now = null;
-var dt = null;
-
 //executed 60/second
 var mainloop = function() {
     state = gWorld.state.getState();
     //if (state == gWorld.state.states.INGAME) {
-        now = Date.now();
-        dt = (now - then)/1000;
-        then = now;
-        
-        gWorld.loopCount++;
-        gWorld.loopCount %= 8; //stop it going to infinity
+        gWorld.now = Date.now();
+        if (gWorld.then != 0) {
+            gWorld.dt = (gWorld.now - gWorld.then)/1000;
+            
+            gWorld.loopCount++;
+            gWorld.loopCount %= 8; //stop it going to infinity
 
-        updateGame(dt);
-        if (state == gWorld.state.states.INGAME) {
-            checkCollisions();
+            updateGame(gWorld.dt);
+            if (state == gWorld.state.states.INGAME) {
+                checkCollisions();
+            }
+            drawGame();
         }
+        gWorld.then = gWorld.now;
     //}
-    drawGame();
 };
 
 var ONE_FRAME_TIME = 1000 / 60; // 60 per second

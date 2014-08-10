@@ -9,7 +9,7 @@ The prototype is itself inspired by a Lost Decade tutorial http://www.lostdecade
 
 The background image, the character image and the goblin image are from Lost Decade.
 
-The code is all by Andrew Davis http://www.thetravelingprogrammer.com
+The code is all by Andrew Davis http://www.thetravelingprogrammer.com https://github.com/andyjdavis/ChineseCharacterChallenge.git
 
 The word/character lists are from http://www.hskhsk.com/word-lists.html
 

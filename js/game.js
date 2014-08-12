@@ -17,6 +17,11 @@ gCanvas.width = 512;
 gCanvas.height = 480;
 document.body.appendChild(gCanvas);
 
+var gPinyin = document.createElement("p");
+var text = document.createTextNode("Pinyin will appear here");
+gPinyin.appendChild(text);
+document.body.appendChild(gPinyin);
+
 gWorld = {
     keyState: Array(),
     state: new game.StateManager(),
@@ -188,7 +193,21 @@ function nextCharacter() {
         while (wordindex == -1) {
             wordindex = getRandomInt(0, gWorld.words['english'].length - 1);
             if (gWorld.words['character'][wordindex] == "") {
+                // bad data that slipped through.
                 wordindex = -1;
+                continue;
+            }
+            // check we don't display the same character twice at once.
+            for (var j = 0; j < 4; j++) {
+                if (i == j) {
+                    continue;
+                }
+                if (gWorld.currentwords[j]
+                    && gWorld.currentwords[j].character == gWorld.words['character'][wordindex]) {
+
+                    wordindex = -1;
+                    continue;
+                }
             }
         }
         gWorld.currentwords[i] = new game.Character(gWorld.characterpositions[i],
@@ -198,6 +217,7 @@ function nextCharacter() {
         if (i == correctslot) {
             gWorld.currentquestion = gWorld.words['english'][wordindex];
             gQuestion.innerHTML = gWorld.words['english'][wordindex];
+            gPinyin.innerHTML = gWorld.words['pinyin'][wordindex];
         }
     }
 
@@ -210,13 +230,10 @@ function nextCharacter() {
     spawnMonster();
 }
 function spawnMonster() {
-    var n = 1;
-    if (Math.random() < 0.4) {
-        n = 2;
-    }
+    var n = Math.floor(gWorld.score / 5) + 1;
 
     var door, pos, m;
-    for (var i = 0;i< n;i++) {
+    for (var i = 0;i < n;i++) {
         door = Math.floor(Math.random() * 4) + 1;
 
         if (door == 1) {
@@ -260,6 +277,7 @@ function checkCollisions() {
         if (m.collideThing(gWorld.player)) {
             gWorld.state.setState(gWorld.state.states.END);
             gQuestion.innerHTML = " ";
+            gPinyin.innerHTML = " ";
             gWorld.sounds.play("fail");
             return;
         }
@@ -301,6 +319,7 @@ function checkCollisions() {
             } else {
                 gWorld.state.setState(gWorld.state.states.END);
                 gQuestion.innerHTML = " ";
+                gPinyin.innerHTML = " ";
                 gWorld.sounds.play("fail");
             }
         }

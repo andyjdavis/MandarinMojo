@@ -6,53 +6,65 @@
 
 window.game = window.game || { };
 
-var gQuestion = document.createElement("p");
-var text = document.createTextNode("Questions will appear here");
-gQuestion.appendChild(text);
-document.body.appendChild(gQuestion);
+window.onload = function(){
+    var gLeft = document.getElementById("left_col");
+    var gRight = document.getElementById("left_col");
 
-gCanvas = document.createElement("canvas");
-gContext = gCanvas.getContext("2d");
-gCanvas.width = 512;
-gCanvas.height = 480;
-document.body.appendChild(gCanvas);
+    gQuestion = document.createElement("p");
+    var text = document.createTextNode("Questions will appear here");
+    gQuestion.appendChild(text);
+    //document.body.appendChild(gQuestion);
+    gLeft.appendChild(gQuestion);
 
-var gPinyin = document.createElement("p");
-var text = document.createTextNode("Pinyin will appear here");
-gPinyin.appendChild(text);
-document.body.appendChild(gPinyin);
+    gCanvas = document.createElement("canvas");
+    gContext = gCanvas.getContext("2d");
+    gCanvas.width = 512;
+    gCanvas.height = 480;
+    gLeft.appendChild(gCanvas);
 
-gWorld = {
-    keyState: Array(),
-    state: new game.StateManager(),
-    images: new game.ImageManager(),
-    sounds: new game.SoundManager(),
-    player: new game.Player([gCanvas.width/2, gCanvas.height/2]),
-    enemies: Array(),
-    //projectiles: Array(),
-    explosions: Array(),
-    words: Array(),
-    currentwords: Array(),
-    currentquestion: '',
-    characterpositions: Array([50, 80],
-                              [50, 400],
-                              [430, 80],
-                              [430, 400]),
-    loopCount: 0,
-    score: 0,
-    bestscore: 0,
-    
-    textcolor: 'White',
-    textsize: '18pt Arial',
-    
-    then: Date.now(),
-    now: 0,
-    dt: 0
-};
-gWorld.state.setState(gWorld.state.states.LOADING);
-gWorld.words['character'] = Array();
-gWorld.words['pinyin'] = Array();
-gWorld.words['english'] = Array();
+    gPinyin = document.createElement("p");
+    text = document.createTextNode("Pinyin will appear here");
+    gPinyin.appendChild(text);
+    gLeft.appendChild(gPinyin);
+
+    gWorld = {
+        keyState: Array(),
+        state: new game.StateManager(),
+        images: new game.ImageManager(),
+        sounds: new game.SoundManager(),
+        player: new game.Player([gCanvas.width/2, gCanvas.height/2]),
+        enemies: Array(),
+        //projectiles: Array(),
+        explosions: Array(),
+        words: Array(),
+        currentwords: Array(),
+        currentquestion: '',
+        characterpositions: Array([50, 80],
+                                  [50, 400],
+                                  [430, 80],
+                                  [430, 400]),
+        loopCount: 0,
+        score: 0,
+        bestscore: 0,
+
+        textcolor: 'White',
+        textsize: '18pt Arial',
+
+        then: Date.now(),
+        now: 0,
+        dt: 0
+    };
+    gWorld.state.setState(gWorld.state.states.LOADING);
+    gWorld.words['character'] = Array();
+    gWorld.words['pinyin'] = Array();
+    gWorld.words['english'] = Array();
+
+    window.addEventListener('keydown', onKeyDown, false);
+    window.addEventListener('keyup', onKeyUp, false);
+    gCanvas.addEventListener('click', onMouseClick);
+
+    loadWords();
+}
 
 function onKeyDown(event) {
     var state = gWorld.state.getState();
@@ -99,9 +111,6 @@ function onMouseClick(event) {
         gWorld.projectiles.push(projectile);
     }*/
 }
-window.addEventListener('keydown', onKeyDown, false);
-window.addEventListener('keyup', onKeyUp, false);
-gCanvas.addEventListener('click', onMouseClick);
 
 function loadWords() {
 	var traditionaloffset = 0;
@@ -120,28 +129,6 @@ function loadWords() {
 		var name = "HSK"+(++n);
 		if (getParameterByName(name)) {
 			var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
-			/*xmlhttp.onreadystatechange = function() {
-				if(xmlhttp.status==200 && xmlhttp.readyState==4) {
-					console.log('response');
-					//replace new lines with tabs then split on tabs.
-				    var words = xmlhttp.responseText.replace(/(\r\n|\n|\r)/gm,"\t").split(/\t/g);
-				    
-				    var word = 0;
-				    if (gWorld.words['character'].length > 0) {
-				    	word = gWorld.words['character'].length;
-					}
-				    for (var i = 0; i < words.length; i += 5) {
-				        gWorld.words['character'][word] = words[i];
-				        gWorld.words['pinyin'][word] = words[i + 2];
-				        gWorld.words['english'][word] = words[i + 4];
-				        //console.log(gWorld.words['english'][word]);
-				        word++;
-				    }
-				}
-			}
-			console.log('getting '+files[i]);
-			xmlhttp.open("GET",files[i],true);
-			xmlhttp.send();*/
 			xmlhttp.onreadystatechange = function() {
 				
 			}
@@ -168,7 +155,6 @@ function loadWords() {
 		}
 	}
 }
-loadWords();
 
 function newGame() {
     gWorld.score = 0;
@@ -178,14 +164,17 @@ function newGame() {
     //gSounds.play("music", true);
 }
 function nextCharacter() {
-    /*gWorld.currentword = getRandomInt(0, gWorld.words['english'].length);
-    gWorld.wrongwords[0] = gWorld.wrongwords[1] = gWorld.wrongwords[2] = gWorld.currentword;
-    
-    for (var i = 0; i < gWorld.wrongwords.length; i++) {
-        while (gWorld.wrongwords[i] == gWorld.currentword) {
-            gWorld.wrongwords[i] = getRandomInt(0, gWorld.words['english'].length);
-        }
-    }*/
+    /*var tableRef = document.getElementById('myTable').getElementsByTagName('tbody')[0];
+
+// Insert a row in the table at the last row
+var newRow   = tableRef.insertRow(tableRef.rows.length);
+
+// Insert a cell in the row at index 0
+var newCell  = newRow.insertCell(0);
+
+// Append a text node to the cell
+var newText  = document.createTextNode('New row')
+newCell.appendChild(newText);*/
     var wordindex = 0;
     var correctslot = getRandomInt(0, 3);
     for (var i = 0; i < 4; i++) {
@@ -393,6 +382,9 @@ function drawGame() {
 
 //executed 60/second
 var mainloop = function() {
+    if (gWorld == null) {
+        return;
+    }
     state = gWorld.state.getState();
     //if (state == gWorld.state.states.INGAME) {
         gWorld.now = Date.now();

@@ -6,14 +6,32 @@
 		<style>
 			body {background-color:#3a7c2c;color:white;font:18pt Arial}
 			p {text-align:center;width:512px;height:28px;}
+
+			#wrap {
+               width:100%;
+               margin:0 auto;
+            }
+            #left_col {
+               float:left;
+               width:512px;
+               background-color:orange;
+            }
+            #right_col {
+               float:right;
+               widthXX:100%;
+               background-color:blue;
+            }
 		</style>
 	</head>
 	<body>
 	    <script type='text/javascript' > 
         var gCanvas = null;
         var gQuestion = null;
+        var gPinyin = null;
         var gContext = null;
         var gWorld = null;
+        var gLeft = null;
+        var gRight = null;
         </script>
 		<SCRIPT LANGUAGE="javascript" SRC="js/util.js"></SCRIPT>
         <SCRIPT LANGUAGE="javascript" SRC="js/ImageManager.js"></SCRIPT>
@@ -26,5 +44,12 @@
         <SCRIPT LANGUAGE="javascript" SRC="js/Character.js"></SCRIPT>
         <SCRIPT LANGUAGE="javascript" SRC="js/Explosion.js"></SCRIPT>
 		<script LANGUAGE="javascript" src="js/game.js"></script>
+
+		<div id="wrap">
+            <div id="left_col">
+            </div>
+            <div id="right_col">
+            </div>
+        </div>
 	</body>
 </html>

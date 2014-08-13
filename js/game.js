@@ -7,25 +7,26 @@
 window.game = window.game || { };
 
 window.onload = function(){
-    var gLeft = document.getElementById("left_col");
-    var gRight = document.getElementById("left_col");
+    gLeft = document.getElementById("left_col");
+    gRight = document.getElementById("left_col");
+    gTable = document.getElementById("thetable");
 
     gQuestion = document.createElement("p");
-    var text = document.createTextNode("Questions will appear here");
+    var text = document.createTextNode(" ");
     gQuestion.appendChild(text);
     //document.body.appendChild(gQuestion);
     gLeft.appendChild(gQuestion);
+
+    gPinyin = document.createElement("p");
+    text = document.createTextNode(" ");
+    gPinyin.appendChild(text);
+    gLeft.appendChild(gPinyin);
 
     gCanvas = document.createElement("canvas");
     gContext = gCanvas.getContext("2d");
     gCanvas.width = 512;
     gCanvas.height = 480;
     gLeft.appendChild(gCanvas);
-
-    gPinyin = document.createElement("p");
-    text = document.createTextNode("Pinyin will appear here");
-    gPinyin.appendChild(text);
-    gLeft.appendChild(gPinyin);
 
     gWorld = {
         keyState: Array(),
@@ -162,19 +163,13 @@ function newGame() {
     nextCharacter();
     
     //gSounds.play("music", true);
+    
+    /*var new_tbody = document.createElement('tbody');
+    var tableRef = gTable.getElementsByTagName('tbody')[0];
+    tableRef.parentNode.replaceChild(new_tbody, tableRef)*/
 }
 function nextCharacter() {
-    /*var tableRef = document.getElementById('myTable').getElementsByTagName('tbody')[0];
 
-// Insert a row in the table at the last row
-var newRow   = tableRef.insertRow(tableRef.rows.length);
-
-// Insert a cell in the row at index 0
-var newCell  = newRow.insertCell(0);
-
-// Append a text node to the cell
-var newText  = document.createTextNode('New row')
-newCell.appendChild(newText);*/
     var wordindex = 0;
     var correctslot = getRandomInt(0, 3);
     for (var i = 0; i < 4; i++) {
@@ -202,7 +197,8 @@ newCell.appendChild(newText);*/
         gWorld.currentwords[i] = new game.Character(gWorld.characterpositions[i],
                                                     i,
                                                     i == correctslot,
-                                                    gWorld.words['character'][wordindex]);
+                                                    gWorld.words['character'][wordindex],
+                                                    gWorld.words['pinyin'][wordindex]);
         if (i == correctslot) {
             gWorld.currentquestion = gWorld.words['english'][wordindex];
             gQuestion.innerHTML = gWorld.words['english'][wordindex];
@@ -217,6 +213,36 @@ newCell.appendChild(newText);*/
     gWorld.player.pos = [gCanvas.width/2, gCanvas.height/2];
     
     spawnMonster();
+}
+function updateTable() {
+    if (gWorld.currentquestion) {
+        var tableRef = gTable.getElementsByTagName('tbody')[0];
+        //var newRow = tableRef.insertRow(tableRef.rows.length);
+        var newRow = tableRef.insertRow(0);
+        if (!gLastCorrect) {
+            newRow.className = "wrong";
+        }
+        var cell1 = newRow.insertCell(0);
+        var cell2 = newRow.insertCell(1);
+        var cell3 = newRow.insertCell(2);
+
+        var correctword = null;
+        for (var  i in gWorld.currentwords) {
+            if (gWorld.currentwords[i].iscorrect) {
+                correctword = gWorld.currentwords[i];
+                break;
+            }
+        }
+
+        var text = document.createTextNode(gWorld.currentquestion);
+        cell1.appendChild(text);
+
+        var text = document.createTextNode(correctword.pinyin);
+        cell2.appendChild(text);
+
+        var text = document.createTextNode(correctword.character);
+        cell3.appendChild(text);
+    }
 }
 function spawnMonster() {
     var n = Math.floor(gWorld.score / 5) + 1;
@@ -268,6 +294,8 @@ function checkCollisions() {
             gQuestion.innerHTML = " ";
             gPinyin.innerHTML = " ";
             gWorld.sounds.play("fail");
+            gLastCorrect = false;
+            updateTable();
             return;
         }
 
@@ -303,12 +331,16 @@ function checkCollisions() {
 
             if (char.iscorrect) {
                 gWorld.score++;
+                gLastCorrect = true;
+                updateTable();
                 nextCharacter();
                 gWorld.sounds.play("success");
             } else {
                 gWorld.state.setState(gWorld.state.states.END);
                 gQuestion.innerHTML = " ";
                 gPinyin.innerHTML = " ";
+                gLastCorrect = false;
+                updateTable();
                 gWorld.sounds.play("fail");
             }
         }

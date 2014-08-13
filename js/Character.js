@@ -2,11 +2,12 @@
 
 window.game = window.game || { };
 
-game.Character = function(pos, slotindex, iscorrect, character) {
+game.Character = function(pos, slotindex, iscorrect, character, pinyin) {
     game.Thing.call(this, pos, [32,32], [0, 0]);
     this.slotindex = slotindex;
     this.iscorrect = iscorrect;
     this.character = character;
+    this.pinyin = pinyin;
     
     // The character don't appear 3d so the reduced footprint looks odd.
     // Undo it.

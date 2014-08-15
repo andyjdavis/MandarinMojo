@@ -11,16 +11,19 @@ window.onload = function(){
     gRight = document.getElementById("left_col");
     gTable = document.getElementById("thetable");
 
-    gQuestion = document.createElement("p");
-    var text = document.createTextNode(" ");
-    gQuestion.appendChild(text);
-    //document.body.appendChild(gQuestion);
-    gLeft.appendChild(gQuestion);
-
-    gPinyin = document.createElement("p");
-    text = document.createTextNode(" ");
-    gPinyin.appendChild(text);
-    gLeft.appendChild(gPinyin);
+    var format = getParameterByName("format");
+	if (format == 1 || format == 2) {
+		gQuestion = document.createElement("p");
+        var text = document.createTextNode(" ");
+        gQuestion.appendChild(text);
+        gLeft.appendChild(gQuestion);
+	}
+	if (format == 0 || format == 2) {
+	    gPinyin = document.createElement("p");
+        text = document.createTextNode(" ");
+        gPinyin.appendChild(text);
+        gLeft.appendChild(gPinyin);
+	}
 
     gCanvas = document.createElement("canvas");
     gContext = gCanvas.getContext("2d");
@@ -118,6 +121,11 @@ function loadWords() {
 	if (getParameterByName("traditional") == 1) {
 		traditionaloffset = 1;
 	}
+	var squiglytoneoffset = 1;
+	if (getParameterByName("tone") == 1) {
+		squiglytoneoffset = 0;
+	}
+
 	var files = ["./lang/HSK Official With Definitions 2012 L1.txt",
 				 "./lang/HSK Official With Definitions 2012 L2.txt",
 				 "./lang/HSK Official With Definitions 2012 L3.txt",
@@ -146,7 +154,7 @@ function loadWords() {
 			    for (var i = 0; i < words.length; i += 5) {
 			    	if (words[i]) {
 					    gWorld.words['character'][word] = words[i + traditionaloffset];
-					    gWorld.words['pinyin'][word] = words[i + 2];
+					    gWorld.words['pinyin'][word] = words[i + 2 + squiglytoneoffset];
 					    gWorld.words['english'][word] = words[i + 4];
 					    //console.log(gWorld.words['character'][word]);
 					    word++;
@@ -201,8 +209,12 @@ function nextCharacter() {
                                                     gWorld.words['pinyin'][wordindex]);
         if (i == correctslot) {
             gWorld.currentquestion = gWorld.words['english'][wordindex];
-            gQuestion.innerHTML = gWorld.words['english'][wordindex];
-            gPinyin.innerHTML = gWorld.words['pinyin'][wordindex];
+            if (gQuestion) {
+                gQuestion.innerHTML = gWorld.words['english'][wordindex];
+            }
+            if (gPinyin) {
+                gPinyin.innerHTML = gWorld.words['pinyin'][wordindex];
+            }
         }
     }
 
@@ -291,8 +303,12 @@ function checkCollisions() {
         
         if (m.collideThing(gWorld.player)) {
             gWorld.state.setState(gWorld.state.states.END);
-            gQuestion.innerHTML = " ";
-            gPinyin.innerHTML = " ";
+            if (gQuestion) {
+                gQuestion.innerHTML = " ";
+            }
+            if (gPinyin) {
+                gPinyin.innerHTML = " ";
+            }
             gWorld.sounds.play("fail");
             gLastCorrect = false;
             updateTable();
@@ -337,8 +353,12 @@ function checkCollisions() {
                 gWorld.sounds.play("success");
             } else {
                 gWorld.state.setState(gWorld.state.states.END);
-                gQuestion.innerHTML = " ";
-                gPinyin.innerHTML = " ";
+                if (gQuestion) {
+                    gQuestion.innerHTML = " ";
+                }
+                if (gPinyin) {
+                    gPinyin.innerHTML = " ";
+                }
                 gLastCorrect = false;
                 updateTable();
                 gWorld.sounds.play("fail");

@@ -257,7 +257,7 @@ function updateTable() {
     }
 }
 function spawnMonster() {
-    var n = Math.floor(gWorld.score / 5) + 1;
+    var n = Math.floor(gWorld.score / 10) + 1;
 
     var door, pos, m;
     for (var i = 0;i < n;i++) {

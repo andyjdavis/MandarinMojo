@@ -11,6 +11,18 @@ window.onload = function(){
     gRight = document.getElementById("left_col");
     gTable = document.getElementById("thetable");
 
+    tl = document.getElementById("tl");
+    tr = document.getElementById("tr");
+    bl = document.getElementById("bl");
+    br = document.getElementById("br");
+    gSlots = [tl, bl, tr, br];
+
+    gCanvas = document.createElement("canvas");
+    gContext = gCanvas.getContext("2d");
+    gCanvas.width = 512;
+    gCanvas.height = 480;
+    gLeft.appendChild(gCanvas);
+
     var format = getParameterByName("format");
 	if (format == 1 || format == 2) {
 		gQuestion = document.createElement("p");
@@ -25,11 +37,7 @@ window.onload = function(){
         gLeft.appendChild(gPinyin);
 	}
 
-    gCanvas = document.createElement("canvas");
-    gContext = gCanvas.getContext("2d");
-    gCanvas.width = 512;
-    gCanvas.height = 480;
-    gLeft.appendChild(gCanvas);
+	gDivs = [tl, bl, tr, br, gQuestion, gPinyin];
 
     gWorld = {
         keyState: Array(),
@@ -43,10 +51,10 @@ window.onload = function(){
         words: Array(),
         currentwords: Array(),
         currentquestion: '',
-        characterpositions: Array([50, 80],
-                                  [50, 400],
-                                  [430, 80],
-                                  [430, 400]),
+        characterpositions: Array([40, 40], //tl
+                                  [40, 410], //bl
+                                  [410, 80], //tr
+                                  [410, 400]), //br
         loopCount: 0,
         score: 0,
         bestscore: 0,
@@ -73,7 +81,7 @@ window.onload = function(){
 function onKeyDown(event) {
     var state = gWorld.state.getState();
     if (state == gWorld.state.states.PREGAME || state == gWorld.state.states.END) {
-        if (event.keyCode == 68) {
+        if (event.keyCode == 69) {
             newGame();
         }
     }
@@ -83,37 +91,13 @@ function onKeyUp(event) {
     gWorld.keyState[event.keyCode] = false;
 }
 function onMouseClick(event) {
-    /*var state = gWorld.state.getState();
-
-    if (state == gWorld.state.states.INGAME) {
-        var mouseX;
-        var mouseY;
-        if ( event.offsetX == null ) { // Firefox
-            if (event.pageX || event.pageY) { 
-              mouseX = event.pageX;
-              mouseY = event.pageY;
-            }
-            else { 
-              mouseX = event.clientX + document.body.scrollLeft + document.documentElement.scrollLeft; 
-              mouseY = event.clientY + document.body.scrollTop + document.documentElement.scrollTop; 
-            } 
-            mouseX -= gCanvas.offsetLeft;
-            mouseY -= gCanvas.offsetTop;
-        } else {                       // Other browsers
-           mouseX = event.offsetX;
-           mouseY = event.offsetY;
+}
+function clearDivs() {
+    for (var i in gDivs) {
+        if (gDivs[i]) {
+            gDivs[i].innerHTML = "";
         }
-        target = [mouseX, mouseY];
-        
-        var playerX = gWorld.player.pos[0] + gWorld.player.size[0]/2;
-        var playerY = gWorld.player.pos[1] + gWorld.player.size[1]/2;
-        var vector = calcNormalVector(target, [playerX, playerY]);
-
-        var pos = [gWorld.player.pos[0], gWorld.player.pos[1]];
-
-        var projectile = new game.Projectile(pos, [vector[0]*100, vector[1]*100]);
-        gWorld.projectiles.push(projectile);
-    }*/
+    }
 }
 
 function loadWords() {
@@ -169,12 +153,6 @@ function newGame() {
     gWorld.score = 0;
     gWorld.state.setState(gWorld.state.states.INGAME);
     nextCharacter();
-    
-    //gSounds.play("music", true);
-    
-    /*var new_tbody = document.createElement('tbody');
-    var tableRef = gTable.getElementsByTagName('tbody')[0];
-    tableRef.parentNode.replaceChild(new_tbody, tableRef)*/
 }
 function nextCharacter() {
 
@@ -216,6 +194,19 @@ function nextCharacter() {
                 gPinyin.innerHTML = gWorld.words['pinyin'][wordindex];
             }
         }
+        gSlots[i].innerHTML = gWorld.words['character'][wordindex];
+    }
+
+    // the divs in gSlots will change size based on the number of charaters to be displayed.
+    // Adjust the object's pos and size so that collission detection works.
+    for (var i in gWorld.currentwords) {
+        char = gWorld.currentwords[i];
+        
+        var offsets = gSlots[i].getBoundingClientRect();
+        var top = offsets.top;
+        var left = offsets.left;
+        char.pos = [offsets.left, offsets.top];
+        char.size = [offsets.width, offsets.height];
     }
 
     gWorld.enemies = Array();
@@ -295,55 +286,39 @@ function updateGame(dt) {
         }
     }
 }
+function explodestuff() {
+    //explode monsters
+    for (var j in gWorld.enemies) {
+        gWorld.explosions.push(new game.Explosion(gWorld.enemies[j].pos));
+    }
 
+    //explode the characters
+    for (var j in gWorld.currentwords) {
+        gWorld.explosions.push(new game.Explosion(gWorld.currentwords[j].pos));
+    }
+}
 function checkCollisions() {
-    var m;
+    var enemy;
     for (var j = gWorld.enemies.length - 1; j >= 0;j--) {
-        m = gWorld.enemies[j];
+        enemy = gWorld.enemies[j];
         
-        if (m.collideThing(gWorld.player)) {
+        if (enemy.collideThing(gWorld.player)) {
+            explodestuff();
             gWorld.state.setState(gWorld.state.states.END);
-            if (gQuestion) {
-                gQuestion.innerHTML = " ";
-            }
-            if (gPinyin) {
-                gPinyin.innerHTML = " ";
-            }
+            clearDivs();
             gWorld.sounds.play("fail");
             gLastCorrect = false;
             updateTable();
             return;
         }
-
-        /*for (var i = gWorld.projectiles.length - 1;i >= 0;i--) {
-            p = gWorld.projectiles[i];
-        
-            if (p.collideThing(m)) {
-                //gWorld.sounds.play("explosion");
-                gWorld.explosions.push(new game.Explosion(m.pos));
-                gWorld.score++;
-                gWorld.enemies.splice(j, 1);
-                gWorld.projectiles.splice(i, 1);
-                spawnMonster();
-                continue;
-            }
-        }*/
     }
-    var char, charexploder;
+
+    var char;
     for (var i in gWorld.currentwords) {
         char = gWorld.currentwords[i];
+        
         if (char.collideThing(gWorld.player)) {
-            //explode monsters
-            for (var j = gWorld.enemies.length - 1; j >= 0;j--) {
-                m = gWorld.enemies[j];
-                gWorld.explosions.push(new game.Explosion(m.pos));
-            }
-
-            //explode the characters
-            for (var j in gWorld.currentwords) {
-                charexploder = gWorld.currentwords[j];
-                gWorld.explosions.push(new game.Explosion(char.pos));
-            }
+            explodestuff();
 
             if (char.iscorrect) {
                 gWorld.score++;
@@ -353,12 +328,7 @@ function checkCollisions() {
                 gWorld.sounds.play("success");
             } else {
                 gWorld.state.setState(gWorld.state.states.END);
-                if (gQuestion) {
-                    gQuestion.innerHTML = " ";
-                }
-                if (gPinyin) {
-                    gPinyin.innerHTML = " ";
-                }
+                clearDivs();
                 gLastCorrect = false;
                 updateTable();
                 gWorld.sounds.play("fail");
@@ -377,7 +347,7 @@ function drawInstructions(showImages) {
         //gContext.drawImage(gImages.getImage('exit'), 40, gCanvas.height/2, gSettings.tilesize, gSettings.tilesize);
         //gContext.drawImage(gImages.getImage('starship'), gCanvas.width - 80, gCanvas.height/2, 30, 30);
     }
-    drawText(gContext, "Press d to begin", gWorld.textsize, "white", gCanvas.width/3, 400);
+    drawText(gContext, "Press e to begin", gWorld.textsize, "white", gCanvas.width/3, 400);
 }
 function drawGame() {
     var img = gWorld.images.getImage('background');
@@ -411,13 +381,8 @@ function drawGame() {
         for (var i in gWorld.explosions) {
             gWorld.explosions[i].draw();
         }
-        drawText(gContext, gWorld.score, gWorld.textsize, gWorld.textcolor, 37, 55);
+        drawText(gContext, gWorld.score, gWorld.textsize, gWorld.textcolor, 10, 20);
 
-        for (var i in gWorld.currentwords) {
-            gWorld.currentwords[i].draw();
-        }
-        
-        //drawText(gContext, gWorld.currentquestion, gWorld.textsize, gWorld.textcolor, 200, 30);
     } else if (state == gWorld.state.states.END) {
         drawText(gContext, "Chinese Character Challenge", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 100);
         drawText(gContext, "You got "+gWorld.score+" in a row.", gWorld.textsize, gWorld.textcolor, 150, 200);
@@ -425,7 +390,7 @@ function drawGame() {
             gWorld.bestscore = gWorld.score;
         }
         drawText(gContext, "Your best score is "+gWorld.bestscore, gWorld.textsize, gWorld.textcolor, 150, 240);
-        drawText(gContext, "Press d to play again", gWorld.textsize, gWorld.textcolor, 150, 350);
+        drawText(gContext, "Press e to play again", gWorld.textsize, gWorld.textcolor, 150, 350);
         for (var i in gWorld.explosions) {
             gWorld.explosions[i].draw();
         }

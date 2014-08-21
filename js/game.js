@@ -36,6 +36,8 @@ window.onload = function(){
         gPinyin.appendChild(text);
         gLeft.appendChild(gPinyin);
 	}
+	gAudio = document.createElement("span");
+	gLeft = document.getElementById("foot").appendChild(gAudio);
 
 	gDivs = [tl, bl, tr, br, gQuestion, gPinyin];
 
@@ -76,6 +78,10 @@ window.onload = function(){
     gCanvas.addEventListener('click', onMouseClick);
 
     loadWords();
+
+    mainloop();
+    //var ONE_FRAME_TIME = 1000 / 60; // 60 per second
+    //setInterval( mainloop, ONE_FRAME_TIME );
 }
 
 function onKeyDown(event) {
@@ -193,6 +199,26 @@ function nextCharacter() {
             if (gPinyin) {
                 gPinyin.innerHTML = gWorld.words['pinyin'][wordindex];
             }
+
+            
+       var hp = {},
+          tts = {},
+          pinyin = '';
+
+      // build HanyuPinyin and ChineseTextToSpeech objects
+      hp = new HanyuPinyin();
+      tts = new ChineseTextToSpeech();
+
+      hp.setInput(gWorld.words['character'][wordindex]);
+      pinyin = hp.toString();
+      //tts.setPace(2000); // pace the speech to 2 seconds
+      tts.setInput(pinyin);
+
+      gAudio.innerHTML = tts.getHtml();
+      tts.speak();            
+            
+            
+            
         }
         gSlots[i].innerHTML = gWorld.words['character'][wordindex];
     }
@@ -209,13 +235,13 @@ function nextCharacter() {
         char.size = [offsets.width, offsets.height];
     }
 
-    gWorld.enemies = Array();
-    //gWorld.projectiles = Array();
-    //gWorld.explosions = Array();
-    
     gWorld.player.pos = [gCanvas.width/2, gCanvas.height/2];
-    
+
+    gWorld.enemies = Array();
     spawnMonster();
+
+    // insurance against monsters leaping forward
+    gWorld.then = 0;
 }
 function updateTable() {
     if (gWorld.currentquestion) {
@@ -245,6 +271,11 @@ function updateTable() {
 
         var text = document.createTextNode(correctword.character);
         cell3.appendChild(text);
+        
+        var rows = gTable.getElementsByTagName('TR');
+        if (rows.length > 20) {
+		    tableRef.removeChild(rows[rows.length-1]);
+		}
     }
 }
 function spawnMonster() {
@@ -350,18 +381,20 @@ function drawInstructions(showImages) {
     drawText(gContext, "Press e to begin", gWorld.textsize, "white", gCanvas.width/3, 400);
 }
 function drawGame() {
+    gContext.clearRect(0, 0, gCanvas.width, gCanvas.height);
+
     var img = gWorld.images.getImage('background');
     if (img) {
         gContext.drawImage(img, 0, 0);
     }
-    
+
     var state = gWorld.state.getState();
     if (state == gWorld.state.states.LOADING) {
         drawInstructions(false);
         var total = gWorld.sounds.sounds.length + gWorld.images.images.length;
         var loaded = gWorld.sounds.numSoundsLoaded + gWorld.images.numImagesLoaded;
         if (loaded < total) {
-            gContext.clearRect(0, 0, gCanvas.width, gCanvas.height);
+            //gContext.clearRect(0, 0, gCanvas.width, gCanvas.height);
             var text = "Loading...    "+loaded+"/"+total;
             drawText(gContext, text, gWorld.textsize, gWorld.textcolor, gCanvas.width/5,400);
             //return;
@@ -397,8 +430,9 @@ function drawGame() {
     }
 }
 
-//executed 60/second
 var mainloop = function() {
+    requestAnimationFrame(mainloop);
+
     if (gWorld == null) {
         return;
     }
@@ -407,21 +441,24 @@ var mainloop = function() {
         gWorld.now = Date.now();
         if (gWorld.then != 0) {
             gWorld.dt = (gWorld.now - gWorld.then)/1000;
-            
-            gWorld.loopCount++;
-            gWorld.loopCount %= 8; //stop it going to infinity
+            //gWorld.dt = (1000 / 60)/1000;
 
-            updateGame(gWorld.dt);
-            if (state == gWorld.state.states.INGAME) {
-                checkCollisions();
+            if (gWorld.dt > 0.25) {
+                console.log('large dt detected');
+                // skip this cycle
+            } else {
+                gWorld.loopCount++;
+                gWorld.loopCount %= 20; //stop it going to infinity
+
+                updateGame(gWorld.dt);
+                if (state == gWorld.state.states.INGAME) {
+                    checkCollisions();
+                }
+                drawGame();
             }
-            drawGame();
         }
         gWorld.then = gWorld.now;
     //}
 };
-
-var ONE_FRAME_TIME = 1000 / 60; // 60 per second
-setInterval( mainloop, ONE_FRAME_TIME );
 
 }());

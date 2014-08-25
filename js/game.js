@@ -23,29 +23,30 @@ window.onload = function(){
     gCanvas.height = 480;
     gLeft.appendChild(gCanvas);
 
-    var format = getParameterByName("format");
-	if (format == 1 || format == 2) {
-		gQuestion = document.createElement("p");
-        var text = document.createTextNode(" ");
-        gQuestion.appendChild(text);
-        gLeft.appendChild(gQuestion);
-	}
-	if (format == 0 || format == 2) {
+	if (getParameterByName("Pinyin") == 1) {
 	    gPinyin = document.createElement("p");
         text = document.createTextNode(" ");
         gPinyin.appendChild(text);
         gLeft.appendChild(gPinyin);
 	}
-	gAudio = document.createElement("span");
-	gLeft = document.getElementById("foot").appendChild(gAudio);
+	if (getParameterByName("Audio") == 1) {
+    	gAudio = document.createElement("span");
+    	document.getElementById("foot").appendChild(gAudio);
+	}
+	if (getParameterByName("English") == 1 || (!gPinyin && !gAudio)) {
+		gQuestion = document.createElement("p");
+        var text = document.createTextNode(" ");
+        gQuestion.appendChild(text);
+        gLeft.appendChild(gQuestion);
+	}
 
-	gDivs = [tl, bl, tr, br, gQuestion, gPinyin];
+	gDivs = [tl, bl, tr, br, gQuestion, gPinyin, gAudio];
 
     gWorld = {
         keyState: Array(),
         state: new game.StateManager(),
-        images: new game.ImageManager(),
-        sounds: new game.SoundManager(),
+        images: null,
+        sounds: null,
         player: new game.Player([gCanvas.width/2, gCanvas.height/2]),
         enemies: Array(),
         //projectiles: Array(),
@@ -66,8 +67,14 @@ window.onload = function(){
 
         then: Date.now(),
         now: 0,
-        dt: 0
+        dt: 0,
+
+        hp: new HanyuPinyin(),
+        tts: new ChineseTextToSpeech()
     };
+    gWorld.images = new game.ImageManager();
+    gWorld.sounds = new game.SoundManager();
+
     gWorld.state.setState(gWorld.state.states.LOADING);
     gWorld.words['character'] = Array();
     gWorld.words['pinyin'] = Array();
@@ -79,9 +86,9 @@ window.onload = function(){
 
     loadWords();
 
-    mainloop();
-    //var ONE_FRAME_TIME = 1000 / 60; // 60 per second
-    //setInterval( mainloop, ONE_FRAME_TIME );
+    //mainloop();
+    var ONE_FRAME_TIME = 1000 / 60; // 60 per second
+    setInterval( mainloop, ONE_FRAME_TIME );
 }
 
 function onKeyDown(event) {
@@ -161,6 +168,8 @@ function newGame() {
     nextCharacter();
 }
 function nextCharacter() {
+    // reset button down state
+    gWorld.keyState = [];
 
     var wordindex = 0;
     var correctslot = getRandomInt(0, 3);
@@ -199,26 +208,14 @@ function nextCharacter() {
             if (gPinyin) {
                 gPinyin.innerHTML = gWorld.words['pinyin'][wordindex];
             }
+            if (gAudio) {
+                gWorld.hp.setInput(gWorld.words['character'][wordindex]);
+                gWorld.tts.setPace(1000);
+                gWorld.tts.setInput(gWorld.hp.toString());
 
-            
-       var hp = {},
-          tts = {},
-          pinyin = '';
-
-      // build HanyuPinyin and ChineseTextToSpeech objects
-      hp = new HanyuPinyin();
-      tts = new ChineseTextToSpeech();
-
-      hp.setInput(gWorld.words['character'][wordindex]);
-      pinyin = hp.toString();
-      //tts.setPace(2000); // pace the speech to 2 seconds
-      tts.setInput(pinyin);
-
-      gAudio.innerHTML = tts.getHtml();
-      tts.speak();            
-            
-            
-            
+                gAudio.innerHTML = gWorld.tts.getHtml();
+                gWorld.tts.speak();
+            }
         }
         gSlots[i].innerHTML = gWorld.words['character'][wordindex];
     }
@@ -286,13 +283,13 @@ function spawnMonster() {
         door = Math.floor(Math.random() * 4) + 1;
 
         if (door == 1) {
-            pos = [-40, gCanvas.height/2];
+            pos = [-80, gCanvas.height/2];
         } else if (door == 2) {
-            pos = [gCanvas.width/2, -40];
+            pos = [gCanvas.width/2, -80];
         } else if (door == 3) {
-            pos = [gCanvas.width +10, gCanvas.height/2];
+            pos = [gCanvas.width + 80, gCanvas.height/2];
         } else if (door == 4) {
-            pos = [gCanvas.width/2, gCanvas.height+10];
+            pos = [gCanvas.width/2, gCanvas.height + 80];
         }
         m = new game.Monster(pos);
         gWorld.enemies.push(m);
@@ -356,7 +353,9 @@ function checkCollisions() {
                 gLastCorrect = true;
                 updateTable();
                 nextCharacter();
-                gWorld.sounds.play("success");
+                if (!gAudio) {
+                    gWorld.sounds.play("success");
+                }
             } else {
                 gWorld.state.setState(gWorld.state.states.END);
                 clearDivs();
@@ -431,7 +430,7 @@ function drawGame() {
 }
 
 var mainloop = function() {
-    requestAnimationFrame(mainloop);
+    //requestAnimationFrame(mainloop);
 
     if (gWorld == null) {
         return;
@@ -440,8 +439,8 @@ var mainloop = function() {
     //if (state == gWorld.state.states.INGAME) {
         gWorld.now = Date.now();
         if (gWorld.then != 0) {
-            gWorld.dt = (gWorld.now - gWorld.then)/1000;
-            //gWorld.dt = (1000 / 60)/1000;
+            //gWorld.dt = (gWorld.now - gWorld.then)/1000;
+            gWorld.dt = (1000 / 60)/1000;
 
             if (gWorld.dt > 0.25) {
                 console.log('large dt detected');

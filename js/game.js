@@ -43,6 +43,7 @@ window.onload = function(){
 	gDivs = [tl, bl, tr, br, gQuestion, gPinyin, gAudio];
 
     gWorld = {
+        debug: false,
         keyState: Array(),
         state: new game.StateManager(),
         images: null,
@@ -173,10 +174,14 @@ function nextCharacter() {
 
     var wordindex = 0;
     var correctslot = getRandomInt(0, 3);
+    //var correctslot = 0;
     for (var i = 0; i < 4; i++) {
         wordindex = -1;
         while (wordindex == -1) {
             wordindex = getRandomInt(0, gWorld.words['english'].length - 1);
+            //if (i == 0) {
+            //    wordindex = 170;
+            //}
             if (gWorld.words['character'][wordindex] == "") {
                 // bad data that slipped through.
                 wordindex = -1;
@@ -201,6 +206,9 @@ function nextCharacter() {
                                                     gWorld.words['character'][wordindex],
                                                     gWorld.words['pinyin'][wordindex]);
         if (i == correctslot) {
+            if (gWorld.debug) {
+                console.log("correct word index == "+ wordindex);
+            }
             gWorld.currentquestion = gWorld.words['english'][wordindex];
             if (gQuestion) {
                 gQuestion.innerHTML = gWorld.words['english'][wordindex];
@@ -209,7 +217,12 @@ function nextCharacter() {
                 gPinyin.innerHTML = gWorld.words['pinyin'][wordindex];
             }
             if (gAudio) {
-                gWorld.hp.setInput(gWorld.words['character'][wordindex]);
+                var correctchar = gWorld.words['character'][wordindex].split('').join(' ');
+                if (gWorld.debug) {
+                    console.log("setting tts input to " + correctchar);
+                }
+                //the split and the join make it read every character
+                gWorld.hp.setInput(correctchar);
                 gWorld.tts.setPace(1000);
                 gWorld.tts.setInput(gWorld.hp.toString());
 
@@ -247,10 +260,13 @@ function updateTable() {
         var newRow = tableRef.insertRow(0);
         if (!gLastCorrect) {
             newRow.className = "wrong";
+        } else {
+            newRow.className = "correct";
         }
         var cell1 = newRow.insertCell(0);
         var cell2 = newRow.insertCell(1);
         var cell3 = newRow.insertCell(2);
+        cell3.className = 'previouscharacter';
 
         var correctword = null;
         for (var  i in gWorld.currentwords) {
@@ -352,10 +368,10 @@ function checkCollisions() {
                 gWorld.score++;
                 gLastCorrect = true;
                 updateTable();
-                nextCharacter();
-                if (!gAudio) {
+                //if (!gAudio) {
                     gWorld.sounds.play("success");
-                }
+                //}
+                nextCharacter();
             } else {
                 gWorld.state.setState(gWorld.state.states.END);
                 clearDivs();

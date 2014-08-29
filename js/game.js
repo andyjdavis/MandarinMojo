@@ -87,9 +87,9 @@ window.onload = function(){
 
     loadWords();
 
-    //mainloop();
-    var ONE_FRAME_TIME = 1000 / 60; // 60 per second
-    setInterval( mainloop, ONE_FRAME_TIME );
+    mainloop();
+    //var ONE_FRAME_TIME = 1000 / 60; // 60 per second
+    //setInterval( mainloop, ONE_FRAME_TIME );
 }
 
 function onKeyDown(event) {
@@ -332,14 +332,14 @@ function updateGame(dt) {
 }
 function explodestuff() {
     //explode monsters
-    for (var j in gWorld.enemies) {
+    /*for (var j in gWorld.enemies) {
         gWorld.explosions.push(new game.Explosion(gWorld.enemies[j].pos));
     }
 
     //explode the characters
     for (var j in gWorld.currentwords) {
         gWorld.explosions.push(new game.Explosion(gWorld.currentwords[j].pos));
-    }
+    }*/
 }
 function checkCollisions() {
     var enemy;
@@ -446,7 +446,6 @@ function drawGame() {
 }
 
 var mainloop = function() {
-    //requestAnimationFrame(mainloop);
 
     if (gWorld == null) {
         return;
@@ -455,12 +454,12 @@ var mainloop = function() {
     //if (state == gWorld.state.states.INGAME) {
         gWorld.now = Date.now();
         if (gWorld.then != 0) {
-            //gWorld.dt = (gWorld.now - gWorld.then)/1000;
-            gWorld.dt = (1000 / 60)/1000;
+            gWorld.dt = (gWorld.now - gWorld.then)/1000;
+            //gWorld.dt = (1000 / 60)/1000;
 
             if (gWorld.dt > 0.25) {
                 console.log('large dt detected');
-                // skip this cycle
+                gWorld.dt = (1000 / 60)/1000; // 1/60th of a second.
             } else {
                 gWorld.loopCount++;
                 gWorld.loopCount %= 20; //stop it going to infinity
@@ -474,6 +473,15 @@ var mainloop = function() {
         }
         gWorld.then = gWorld.now;
     //}
+    requestAnimFrame(mainloop);
 };
+window.requestAnimFrame = (function(){
+  return  window.requestAnimationFrame       ||
+          window.webkitRequestAnimationFrame ||
+          window.mozRequestAnimationFrame    ||
+          function( callback ){
+            window.setTimeout(callback, 1000 / 60);
+          };
+})();
 
 }());

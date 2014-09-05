@@ -1,6 +1,11 @@
 /*
+ * NOTICE:  All information contained herein is, and remains
+ * the property of Andrew Davis.
+ * Dissemination of this information or reproduction of this material
+ * is strictly forbidden unless prior written permission is obtained.
+ * If you want to use this code for something, contact me via http://mandarinmojo.com.
+ * I am happy to discuss
  * This code does not come with any sort of warranty.
- * You are welcome to use it for whatever you like.
  */
 (function() {
 
@@ -43,22 +48,26 @@ window.onload = function(){
 	gDivs = [tl, bl, tr, br, gQuestion, gPinyin, gAudio];
 
     gWorld = {
-        debug: false,
+        debug: true,
         keyState: Array(),
         state: new game.StateManager(),
         images: null,
         sounds: null,
         player: new game.Player([gCanvas.width/2, gCanvas.height/2]),
         enemies: Array(),
-        //projectiles: Array(),
+        projectiles: Array(),
         explosions: Array(),
-        words: Array(),
-        currentwords: Array(),
-        currentquestion: '',
+
+        problems: Array(), //randomly ordered array of problem instances
+        currentproblem: null,
+
+        currentcharacters: Array(), // four instancs of game.Character for display
         characterpositions: Array([40, 40], //tl
                                   [40, 410], //bl
                                   [410, 80], //tr
                                   [410, 400]), //br
+        displaychars: false,
+
         loopCount: 0,
         score: 0,
         bestscore: 0,
@@ -77,9 +86,6 @@ window.onload = function(){
     gWorld.sounds = new game.SoundManager();
 
     gWorld.state.setState(gWorld.state.states.LOADING);
-    gWorld.words['character'] = Array();
-    gWorld.words['pinyin'] = Array();
-    gWorld.words['english'] = Array();
 
     window.addEventListener('keydown', onKeyDown, false);
     window.addEventListener('keyup', onKeyUp, false);
@@ -131,6 +137,7 @@ function loadWords() {
 				 "./lang/HSK Official With Definitions 2012 L5.txt",
 				 "./lang/HSK Official With Definitions 2012 L6.txt"];
 	var filestouse = Array();
+	var wordobjects = Array();
 	for (var i in files) {
 		var n = i;
 		var name = "HSK"+(++n);
@@ -144,80 +151,69 @@ function loadWords() {
 			if(xmlhttp.status==200 && xmlhttp.readyState==4) {
 				//replace new lines with tabs then split on tabs.
 			    var words = xmlhttp.responseText.replace(/(\r\n|\n|\r)/gm,"\t").split(/\t/g);
-			    
-			    var word = 0;
-			    if (gWorld.words['character'].length > 0) {
-			    	word = gWorld.words['character'].length;
-				}
+
 			    for (var i = 0; i < words.length; i += 5) {
-			    	if (words[i]) {
-					    gWorld.words['character'][word] = words[i + traditionaloffset];
-					    gWorld.words['pinyin'][word] = words[i + 2 + squiglytoneoffset];
-					    gWorld.words['english'][word] = words[i + 4];
-					    //console.log(gWorld.words['character'][word]);
-					    word++;
+			    	if (words[i] && words[i + traditionaloffset] != "") {
+					    wordobjects.push(new game.Word(words[i + traditionaloffset],
+                                                        words[i + 2 + squiglytoneoffset],
+					                                    words[i + 4],
+					                                    true));
 			        }
 			    }
 			}
 		}
 	}
+
+    var correctwordcharcount = 0;
+    var wrongword = null;
+    var wordarray = null;
+    var totalwordcount = wordobjects.length;
+
+	for (var i in wordobjects) {
+	    correctwordcharcount = wordobjects[i].character.length;
+	    wordarray = Array();
+	    wordarray.push(wordobjects[i]);
+	    while (wordarray.length < 4) {
+	        wrongword = wordobjects[getRandomInt(0, totalwordcount - 1)];
+
+	        wrongword = new game.Word(wrongword.character, wrongword.pinyin, wrongword.english, false);
+	        if (wrongword.character.length == correctwordcharcount) {
+	            wordarray.push(wrongword);
+	        }
+	    }
+	    gWorld.problems.push(new game.Problem(shuffleArray(wordarray)));
+	}
+	gWorld.problems = shuffleArray(gWorld.problems);
 }
 
 function newGame() {
     gWorld.score = 0;
     gWorld.state.setState(gWorld.state.states.INGAME);
+    //gWorld.then = 0; // insurance against monsters leaping forward
+
+    gWorld.player.pos = [gCanvas.width/2, gCanvas.height/2];
+    gWorld.enemies = Array();
     nextCharacter();
 }
 function nextCharacter() {
-    // reset button down state
-    gWorld.keyState = [];
 
-    var wordindex = 0;
-    var correctslot = getRandomInt(0, 3);
-    //var correctslot = 0;
-    for (var i = 0; i < 4; i++) {
-        wordindex = -1;
-        while (wordindex == -1) {
-            wordindex = getRandomInt(0, gWorld.words['english'].length - 1);
-            //if (i == 0) {
-            //    wordindex = 170;
-            //}
-            if (gWorld.words['character'][wordindex] == "") {
-                // bad data that slipped through.
-                wordindex = -1;
-                continue;
-            }
-            // check we don't display the same character twice at once.
-            for (var j = 0; j < 4; j++) {
-                if (i == j) {
-                    continue;
-                }
-                if (gWorld.currentwords[j]
-                    && gWorld.currentwords[j].character == gWorld.words['character'][wordindex]) {
+    //gWorld.keyState = []; // reset button down state
+    gWorld.currentcharacters = Array();
 
-                    wordindex = -1;
-                    continue;
-                }
-            }
-        }
-        gWorld.currentwords[i] = new game.Character(gWorld.characterpositions[i],
-                                                    i,
-                                                    i == correctslot,
-                                                    gWorld.words['character'][wordindex],
-                                                    gWorld.words['pinyin'][wordindex]);
-        if (i == correctslot) {
+    gWorld.currentproblem = gWorld.problems.pop();
+    for (var i = 0; i < gWorld.currentproblem.words.length; i++) {
+        if (gWorld.currentproblem.words[i].correct) {
             if (gWorld.debug) {
-                console.log("correct word index == "+ wordindex);
+                console.log("next problem is "+ gWorld.currentproblem.words[i].english);
             }
-            gWorld.currentquestion = gWorld.words['english'][wordindex];
             if (gQuestion) {
-                gQuestion.innerHTML = gWorld.words['english'][wordindex];
+                gQuestion.innerHTML = gWorld.currentproblem.words[i].english;
             }
             if (gPinyin) {
-                gPinyin.innerHTML = gWorld.words['pinyin'][wordindex];
+                gPinyin.innerHTML = gWorld.currentproblem.words[i].pinyin;
             }
             if (gAudio) {
-                var correctchar = gWorld.words['character'][wordindex].split('').join(' ');
+                var correctchar = gWorld.currentproblem.words[i].character.split('').join(' ');
                 if (gWorld.debug) {
                     console.log("setting tts input to " + correctchar);
                 }
@@ -230,31 +226,40 @@ function nextCharacter() {
                 gWorld.tts.speak();
             }
         }
-        gSlots[i].innerHTML = gWorld.words['character'][wordindex];
+        //
+    }
+    spawnMonsters();
+
+    window.setTimeout(showCharacters, 3000);
+}
+function showCharacters() {
+    for (var i = 0; i < gWorld.currentproblem.words.length; i++) {
+        gWorld.currentcharacters[i] = new game.Character(gWorld.characterpositions[i],
+                                                    i,
+                                                    gWorld.currentproblem.words[i].correct,
+                                                    gWorld.currentproblem.words[i].character,
+                                                    gWorld.currentproblem.words[i].pinyin,
+                                                    gWorld.currentproblem.words[i].english);
+    }
+    for (var i = 0; i < gWorld.currentproblem.words.length; i++) {
+        gSlots[i].innerHTML = gWorld.currentproblem.words[i].character;
     }
 
-    // the divs in gSlots will change size based on the number of charaters to be displayed.
-    // Adjust the object's pos and size so that collission detection works.
-    for (var i in gWorld.currentwords) {
-        char = gWorld.currentwords[i];
-        
+    // the divs in gSlots will change size based on the number of characters to be displayed.
+    // Adjust the object's pos and size so that collision detection works.
+    for (var i in gWorld.currentcharacters) {
+        char = gWorld.currentcharacters[i];
+
         var offsets = gSlots[i].getBoundingClientRect();
         var top = offsets.top;
         var left = offsets.left;
         char.pos = [offsets.left, offsets.top];
         char.size = [offsets.width, offsets.height];
+        char.correctFootprint();
     }
-
-    gWorld.player.pos = [gCanvas.width/2, gCanvas.height/2];
-
-    gWorld.enemies = Array();
-    spawnMonster();
-
-    // insurance against monsters leaping forward
-    gWorld.then = 0;
 }
 function updateTable() {
-    if (gWorld.currentquestion) {
+    if (gWorld.currentproblem) {
         var tableRef = gTable.getElementsByTagName('tbody')[0];
         //var newRow = tableRef.insertRow(tableRef.rows.length);
         var newRow = tableRef.insertRow(0);
@@ -269,14 +274,14 @@ function updateTable() {
         cell3.className = 'previouscharacter';
 
         var correctword = null;
-        for (var  i in gWorld.currentwords) {
-            if (gWorld.currentwords[i].iscorrect) {
-                correctword = gWorld.currentwords[i];
+        for (var  i in gWorld.currentcharacters) {
+            if (gWorld.currentcharacters[i].iscorrect) {
+                correctword = gWorld.currentcharacters[i];
                 break;
             }
         }
 
-        var text = document.createTextNode(gWorld.currentquestion);
+        var text = document.createTextNode(correctword.english);
         cell1.appendChild(text);
 
         var text = document.createTextNode(correctword.pinyin);
@@ -291,11 +296,11 @@ function updateTable() {
 		}
     }
 }
-function spawnMonster() {
+function spawnMonsters() {
     var n = Math.floor(gWorld.score / 10) + 1;
 
     var door, pos, m;
-    for (var i = 0;i < n;i++) {
+    while (gWorld.enemies.length < n) {
         door = Math.floor(Math.random() * 4) + 1;
 
         if (door == 1) {
@@ -319,11 +324,11 @@ function updateGame(dt) {
     for (var i in gWorld.enemies) {
         gWorld.enemies[i].update(dt);
     }
-    /*for (var i = gWorld.projectiles.length - 1;i >= 0;i--) {
+    for (var i = gWorld.projectiles.length - 1;i >= 0;i--) {
         if (gWorld.projectiles[i].update(dt) == false) {
             gWorld.projectiles.splice(i, 1);
         }
-    }*/
+    }
     for (var i = gWorld.explosions.length - 1;i >= 0;i--) {
         if (gWorld.explosions[i].update(dt) == false) {
             gWorld.explosions.splice(i, 1);
@@ -337,36 +342,45 @@ function explodestuff() {
     }
 
     //explode the characters
-    for (var j in gWorld.currentwords) {
-        gWorld.explosions.push(new game.Explosion(gWorld.currentwords[j].pos));
+    for (var j in gWorld.currentcharacters) {
+        gWorld.explosions.push(new game.Explosion(gWorld.currentcharacters[j].pos));
     }*/
+}
+function shootFireball() {
+    console.log('fireball');
+}
+function characterwrong() {
+    gWorld.sounds.play("fail");
+    gLastCorrect = false;
+    gWorld.problems.unshift(gWorld.currentproblem);
 }
 function checkCollisions() {
     var enemy;
     for (var j = gWorld.enemies.length - 1; j >= 0;j--) {
         enemy = gWorld.enemies[j];
-        
+
         if (enemy.collideThing(gWorld.player)) {
             explodestuff();
             gWorld.state.setState(gWorld.state.states.END);
             clearDivs();
-            gWorld.sounds.play("fail");
-            gLastCorrect = false;
+            characterwrong();
             updateTable();
             return;
         }
     }
 
     var char;
-    for (var i in gWorld.currentwords) {
-        char = gWorld.currentwords[i];
+    for (var i in gWorld.currentcharacters) {
+        char = gWorld.currentcharacters[i];
         
         if (char.collideThing(gWorld.player)) {
             explodestuff();
+            clearDivs();
 
             if (char.iscorrect) {
                 gWorld.score++;
                 gLastCorrect = true;
+                shootFireball(char.footprint.pos);
                 updateTable();
                 //if (!gAudio) {
                     gWorld.sounds.play("success");
@@ -374,11 +388,10 @@ function checkCollisions() {
                 nextCharacter();
             } else {
                 gWorld.state.setState(gWorld.state.states.END);
-                clearDivs();
-                gLastCorrect = false;
+                characterwrong();
                 updateTable();
-                gWorld.sounds.play("fail");
             }
+            break;
         }
     }
 }
@@ -420,9 +433,9 @@ function drawGame() {
         drawInstructions(true);
     } else if (state == gWorld.state.states.INGAME) {
         gWorld.player.draw();
-        /*for (var i in gWorld.projectiles) {
+        for (var i in gWorld.projectiles) {
             gWorld.projectiles[i].draw();
-        }*/
+        }
         for (var i in gWorld.enemies) {
             gWorld.enemies[i].draw();
         }
@@ -459,7 +472,8 @@ var mainloop = function() {
 
             if (gWorld.dt > 0.25) {
                 console.log('large dt detected');
-                gWorld.dt = (1000 / 60)/1000; // 1/60th of a second.
+                //gWorld.dt = (1000 / 60)/1000; // 1/60th of a second.
+                gWorld.dt = 0;
             } else {
                 gWorld.loopCount++;
                 gWorld.loopCount %= 20; //stop it going to infinity

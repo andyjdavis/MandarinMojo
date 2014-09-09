@@ -300,6 +300,9 @@ function spawnMonsters() {
     var n = Math.floor(gWorld.score / 10) + 1;
 
     var door, pos, m;
+    if (gWorld.debug) {
+        console.log("There are "+gWorld.enemies.length+" monsters but there should be "+n);
+    }
     while (gWorld.enemies.length < n) {
         door = Math.floor(Math.random() * 4) + 1;
 
@@ -347,7 +350,19 @@ function explodestuff() {
     }*/
 }
 function shootFireball() {
-    console.log('fireball');
+    if (gWorld.enemies.length > 0) {
+    }
+    var enemy = gWorld.enemies[gWorld.enemies.length - 1];
+    target = [enemy.pos[0], enemy.pos[1]];
+
+    var playerX = gWorld.player.pos[0] + gWorld.player.size[0]/2;
+    var playerY = gWorld.player.pos[1] + gWorld.player.size[1]/2;
+    var vector = calcNormalVector(target, [playerX, playerY]);
+
+    var pos = [gWorld.player.pos[0], gWorld.player.pos[1]];
+
+    var projectile = new game.Projectile(pos, [vector[0]*100, vector[1]*100]);
+    gWorld.projectiles.push(projectile);
 }
 function characterwrong() {
     gWorld.sounds.play("fail");
@@ -356,6 +371,7 @@ function characterwrong() {
 }
 function checkCollisions() {
     var enemy;
+    var projectile;
     for (var j = gWorld.enemies.length - 1; j >= 0;j--) {
         enemy = gWorld.enemies[j];
 
@@ -366,6 +382,19 @@ function checkCollisions() {
             characterwrong();
             updateTable();
             return;
+        }
+        for (var p in gWorld.projectiles) {
+            projectile = gWorld.projectiles[p];
+            if (enemy.collideThing(projectile)) {
+                gWorld.enemies.splice(j, 1);
+                gWorld.projectiles.splice(p, 1);
+                gWorld.explosions.push(new game.Explosion(projectile.pos));
+                spawnMonsters();
+                if (gWorld.debug) {
+                    console.log('enemy destroyed');
+                }
+                break;
+            }
         }
     }
 

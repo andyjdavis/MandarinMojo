@@ -440,10 +440,10 @@ function drawInstructions(showImages) {
 function drawGame() {
     gContext.clearRect(0, 0, gCanvas.width, gCanvas.height);
 
-    var img = gWorld.images.getImage('background');
-    if (img) {
-        gContext.drawImage(img, 0, 0);
-    }
+    //var img = gWorld.images.getImage('background');
+    //if (img) {
+        //gContext.drawImage(img, 0, 0);
+    //}
 
     var state = gWorld.state.getState();
     if (state == gWorld.state.states.LOADING) {

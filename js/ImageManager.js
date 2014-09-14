@@ -9,13 +9,13 @@ function onImageLoad() {
 game.ImageManager = function() {
     this.numImagesLoaded = 0;
     this.imagedict = {
-        'background': "images/background.png",
+        //'background': "images/background.png",
         'hero': "images/hero.png",
         'fireball': "images/fireball.png",
         'monster': "images/monster.png",
         'explosion': "images/explosion.png"
     };
-    this.images = Array(5);
+    this.images = Array(4);
     for (var name in this.imagedict) {
         this.images[name] = new Image();
         this.images[name].onload = onImageLoad;

@@ -11,35 +11,38 @@
 
 window.game = window.game || { };
 
-window.onload = function(){
-    gLeft = document.getElementById("left_col");
-    gRight = document.getElementById("left_col");
-    gTable = document.getElementById("thetable");
+var $ = function(id) { return document.getElementById(id); };
+var dc = function(tag) { return document.createElement(tag); };
 
-    tl = document.getElementById("tl");
-    tr = document.getElementById("tr");
-    bl = document.getElementById("bl");
-    br = document.getElementById("br");
+window.onload = function(){
+    gLeft = $("left_col");
+    gRight = $("left_col");
+    gTable = $("thetable");
+
+    tl = $("tl");
+    tr = $("tr");
+    bl = $("bl");
+    br = $("br");
     gSlots = [tl, bl, tr, br];
 
-    gCanvas = document.createElement("canvas");
+    gCanvas = dc("canvas");
     gContext = gCanvas.getContext("2d");
     gCanvas.width = 512;
     gCanvas.height = 480;
     gLeft.appendChild(gCanvas);
 
 	if (getParameterByName("Pinyin") == 1) {
-	    gPinyin = document.createElement("p");
+	    gPinyin = dc("p");
         text = document.createTextNode(" ");
         gPinyin.appendChild(text);
         gLeft.appendChild(gPinyin);
 	}
 	if (getParameterByName("Audio") == 1) {
-    	gAudio = document.createElement("span");
-    	document.getElementById("foot").appendChild(gAudio);
+        gAudio = dc("span");
+        $("foot").appendChild(gAudio);
 	}
 	if (getParameterByName("English") == 1 || (!gPinyin && !gAudio)) {
-		gQuestion = document.createElement("p");
+		gQuestion = dc("p");
         var text = document.createTextNode(" ");
         gQuestion.appendChild(text);
         gLeft.appendChild(gQuestion);

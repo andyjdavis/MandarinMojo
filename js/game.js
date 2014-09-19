@@ -11,9 +11,6 @@
 
 window.game = window.game || { };
 
-var $ = function(id) { return document.getElementById(id); };
-var dc = function(tag) { return document.createElement(tag); };
-
 window.onload = function(){
     gLeft = $("left_col");
     gRight = $("left_col");
@@ -63,6 +60,8 @@ window.onload = function(){
 
         problems: Array(), //randomly ordered array of problem instances
         currentproblem: null,
+        correctcharacter: null, //used to pass the correct character to playAudio()
+        playingaudio: false,
 
         currentcharacters: Array(), // four instancs of game.Character for display
         characterpositions: Array([40, 40], //tl
@@ -195,8 +194,29 @@ function newGame() {
     //gWorld.then = 0; // insurance against monsters leaping forward
 
     gWorld.player.pos = [gCanvas.width/2, gCanvas.height/2];
+    for (var i in gWorld.enemies) {
+        gWorld.enemies[i].die();
+    }
     gWorld.enemies = Array();
     nextCharacter();
+    gWorld.player.setvisibility("visible");
+}
+function playAudio() {
+    gWorld.playingaudio = true;
+    var correctchar = gWorld.correctcharacter.split('').join(' ');
+    if (gWorld.debug) {
+        console.log("setting tts input to " + correctchar);
+    }
+    //the split and the join make it read every character
+    gWorld.hp.setInput(correctchar);
+    gWorld.tts.setPace(1000);
+    gWorld.tts.setInput(gWorld.hp.toString());
+    gAudio.innerHTML = gWorld.tts.getHtml();
+    gWorld.tts.speak();
+    
+    
+    
+    gWorld.playingaudio = false;
 }
 function nextCharacter() {
 
@@ -216,24 +236,15 @@ function nextCharacter() {
                 gPinyin.innerHTML = gWorld.currentproblem.words[i].pinyin;
             }
             if (gAudio) {
-                var correctchar = gWorld.currentproblem.words[i].character.split('').join(' ');
-                if (gWorld.debug) {
-                    console.log("setting tts input to " + correctchar);
-                }
-                //the split and the join make it read every character
-                gWorld.hp.setInput(correctchar);
-                gWorld.tts.setPace(1000);
-                gWorld.tts.setInput(gWorld.hp.toString());
-
-                gAudio.innerHTML = gWorld.tts.getHtml();
-                gWorld.tts.speak();
+                gWorld.correctcharacter = gWorld.currentproblem.words[i].character;
+                playAudio();
             }
         }
         //
     }
     spawnMonsters();
 
-    window.setTimeout(showCharacters, 3000);
+    window.setTimeout(showCharacters, 4000);
 }
 function showCharacters() {
     for (var i = 0; i < gWorld.currentproblem.words.length; i++) {
@@ -284,19 +295,23 @@ function updateTable() {
             }
         }
 
-        var text = document.createTextNode(correctword.english);
-        cell1.appendChild(text);
+        if (correctword != null) {
+            var text = document.createTextNode(correctword.english);
+            cell1.appendChild(text);
 
-        var text = document.createTextNode(correctword.pinyin);
-        cell2.appendChild(text);
+            var text = document.createTextNode(correctword.pinyin);
+            cell2.appendChild(text);
 
-        var text = document.createTextNode(correctword.character);
-        cell3.appendChild(text);
-        
-        var rows = gTable.getElementsByTagName('TR');
+            var text = document.createTextNode(correctword.character);
+            cell3.appendChild(text);
+        } else {
+            console.log('null correctword detected');
+        }
+
+        /*var rows = gTable.getElementsByTagName('TR');
         if (rows.length > 20) {
 		    tableRef.removeChild(rows[rows.length-1]);
-		}
+		}*/
     }
 }
 function spawnMonsters() {
@@ -310,13 +325,13 @@ function spawnMonsters() {
         door = Math.floor(Math.random() * 4) + 1;
 
         if (door == 1) {
-            pos = [-80, gCanvas.height/2];
+            pos = [0, gCanvas.height/2];
         } else if (door == 2) {
-            pos = [gCanvas.width/2, -80];
+            pos = [gCanvas.width/2, 0];
         } else if (door == 3) {
-            pos = [gCanvas.width + 80, gCanvas.height/2];
+            pos = [gCanvas.width, gCanvas.height/2];
         } else if (door == 4) {
-            pos = [gCanvas.width/2, gCanvas.height + 80];
+            pos = [gCanvas.width/2, gCanvas.height];
         }
         m = new game.Monster(pos);
         gWorld.enemies.push(m);
@@ -343,14 +358,16 @@ function updateGame(dt) {
 }
 function explodestuff() {
     //explode monsters
-    /*for (var j in gWorld.enemies) {
-        gWorld.explosions.push(new game.Explosion(gWorld.enemies[j].pos));
+    for (var j in gWorld.enemies) {
+        //gWorld.explosions.push(new game.Explosion(gWorld.enemies[j].pos));
     }
 
     //explode the characters
     for (var j in gWorld.currentcharacters) {
-        gWorld.explosions.push(new game.Explosion(gWorld.currentcharacters[j].pos));
-    }*/
+        if (!gWorld.currentcharacters[j].iscorrect) {
+            gWorld.explosions.push(new game.Explosion(gWorld.currentcharacters[j].pos));
+        }
+    }
 }
 function shootFireball() {
     if (gWorld.enemies.length > 0) {
@@ -371,6 +388,8 @@ function characterwrong() {
     gWorld.sounds.play("fail");
     gLastCorrect = false;
     gWorld.problems.unshift(gWorld.currentproblem);
+    gWorld.player.setvisibility("hidden");
+    gWorld.explosions.push(new game.Explosion(gWorld.player.pos));
 }
 function checkCollisions() {
     var enemy;
@@ -389,6 +408,7 @@ function checkCollisions() {
         for (var p in gWorld.projectiles) {
             projectile = gWorld.projectiles[p];
             if (enemy.collideThing(projectile)) {
+                enemy.die();
                 gWorld.enemies.splice(j, 1);
                 gWorld.projectiles.splice(p, 1);
                 gWorld.explosions.push(new game.Explosion(projectile.pos));
@@ -412,12 +432,12 @@ function checkCollisions() {
             if (char.iscorrect) {
                 gWorld.score++;
                 gLastCorrect = true;
-                shootFireball(char.footprint.pos);
                 updateTable();
                 //if (!gAudio) {
                     gWorld.sounds.play("success");
                 //}
                 nextCharacter();
+                shootFireball(char.footprint.pos);
             } else {
                 gWorld.state.setState(gWorld.state.states.END);
                 characterwrong();
@@ -492,33 +512,36 @@ function drawGame() {
 
 var mainloop = function() {
 
-    if (gWorld == null) {
-        return;
-    }
-    state = gWorld.state.getState();
-    //if (state == gWorld.state.states.INGAME) {
-        gWorld.now = Date.now();
-        if (gWorld.then != 0) {
-            gWorld.dt = (gWorld.now - gWorld.then)/1000;
-            //gWorld.dt = (1000 / 60)/1000;
+    if (gWorld != null) {
+        state = gWorld.state.getState();
+        //if (state == gWorld.state.states.INGAME) {
+        if (gWorld.playingaudio) {
+            gWorld.then = 0; //stop time
+        } else {
+            gWorld.now = Date.now();
+            if (gWorld.then != 0) {
+                gWorld.dt = (gWorld.now - gWorld.then)/1000;
+                //gWorld.dt = (1000 / 60)/1000;
 
-            if (gWorld.dt > 0.25) {
-                console.log('large dt detected');
-                //gWorld.dt = (1000 / 60)/1000; // 1/60th of a second.
-                gWorld.dt = 0;
-            } else {
-                gWorld.loopCount++;
-                gWorld.loopCount %= 20; //stop it going to infinity
+                if (gWorld.dt > 0.25) {
+                    console.log('large dt detected');
+                    //gWorld.dt = (1000 / 60)/1000; // 1/60th of a second.
+                    gWorld.dt = 0;
+                } else {
+                    gWorld.loopCount++;
+                    gWorld.loopCount %= 20; //stop it going to infinity
 
-                updateGame(gWorld.dt);
-                if (state == gWorld.state.states.INGAME) {
-                    checkCollisions();
+                    updateGame(gWorld.dt);
+                    if (state == gWorld.state.states.INGAME) {
+                        checkCollisions();
+                    }
+                    drawGame();
                 }
-                drawGame();
             }
+            gWorld.then = gWorld.now;
         }
-        gWorld.then = gWorld.now;
-    //}
+    }
+
     requestAnimFrame(mainloop);
 };
 window.requestAnimFrame = (function(){

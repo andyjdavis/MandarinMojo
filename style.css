@@ -33,6 +33,11 @@ canvas {border:1px solid DarkGreen;background:url(images/background.png)}
 table td, table td * {
     vertical-align: top;
 }
+#tablewrapper {
+    overflow-yXX: scroll;
+    overflow-x:hidden;
+    height:95vh;
+}
 .char {
     color:#FFDF00;
 }

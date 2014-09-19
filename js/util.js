@@ -1,3 +1,31 @@
+var $ = function(id) { return document.getElementById(id); };
+var dc = function(tag) { return document.createElement(tag); };
+
+function createDiv(parent, imagesrc, width, height) {
+    var screen = $(parent);
+
+    div = dc("div");
+    div.style.position = "absolute";
+    div.style.left = "0px";
+    div.style.width = width;
+    div.style.height = height;
+    div.style.overflow = "hidden";
+    
+    div.style.backgroundImage = "url("+imagesrc+")";
+
+    /*var img = new Image();
+    img.src = imagesrc;
+    img.style.position = "absolute";
+    img.style.left = "0px";
+    img.style.widght = width;
+    img.style.height = height;
+
+    div.appendChild(img);
+    div.img = img;	// assign the image to a property so we have easy access to the image later*/
+    screen.appendChild(div);
+    
+    return div;
+}
 function getParameterByName(name) {
     name = name.replace(/[\[]/, "\\[").replace(/[\]]/, "\\]");
     var regex = new RegExp("[\\?&]" + name + "=([^&#]*)"),

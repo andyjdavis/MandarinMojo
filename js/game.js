@@ -48,12 +48,12 @@ window.onload = function(){
 	gDivs = [tl, bl, tr, br, gQuestion, gPinyin, gAudio];
 
     gWorld = {
-        debug: true,
+        debug: false,
         keyState: Array(),
         state: new game.StateManager(),
         images: null,
         sounds: null,
-        player: new game.Player([gCanvas.width/2, gCanvas.height/2]),
+        player: new game.Player([64, 85]),
         enemies: Array(),
         projectiles: Array(),
         explosions: Array(),
@@ -175,12 +175,14 @@ function loadWords() {
 	    correctwordcharcount = wordobjects[i].character.length;
 	    wordarray = Array();
 	    wordarray.push(wordobjects[i]);
+
 	    while (wordarray.length < 4) {
 	        wrongword = wordobjects[getRandomInt(0, totalwordcount - 1)];
+	        if (wrongword.character.length == correctwordcharcount
+	            && wrongword.character != wordobjects[i].character) {
 
-	        wrongword = new game.Word(wrongword.character, wrongword.pinyin, wrongword.english, false);
-	        if (wrongword.character.length == correctwordcharcount) {
-	            wordarray.push(wrongword);
+                wrongword = new game.Word(wrongword.character, wrongword.pinyin, wrongword.english, false);
+                wordarray.push(wrongword);
 	        }
 	    }
 	    gWorld.problems.push(new game.Problem(shuffleArray(wordarray)));
@@ -193,7 +195,7 @@ function newGame() {
     gWorld.state.setState(gWorld.state.states.INGAME);
     //gWorld.then = 0; // insurance against monsters leaping forward
 
-    gWorld.player.pos = [gCanvas.width/2, gCanvas.height/2];
+    //gWorld.player.pos = [gCanvas.width/2, gCanvas.height/2];
     for (var i in gWorld.enemies) {
         gWorld.enemies[i].die();
     }
@@ -245,8 +247,7 @@ function nextCharacter() {
     spawnMonsters();
 
     window.setTimeout(showCharacters, 4000);
-}
-function showCharacters() {
+    
     for (var i = 0; i < gWorld.currentproblem.words.length; i++) {
         gWorld.currentcharacters[i] = new game.Character(gWorld.characterpositions[i],
                                                     i,
@@ -255,6 +256,19 @@ function showCharacters() {
                                                     gWorld.currentproblem.words[i].pinyin,
                                                     gWorld.currentproblem.words[i].english);
     }
+}
+function showCharacters() {
+    if (gWorld.state.getState() == gWorld.state.states.END) {
+        return; // Player has died.
+    }
+    /*for (var i = 0; i < gWorld.currentproblem.words.length; i++) {
+        gWorld.currentcharacters[i] = new game.Character(gWorld.characterpositions[i],
+                                                    i,
+                                                    gWorld.currentproblem.words[i].correct,
+                                                    gWorld.currentproblem.words[i].character,
+                                                    gWorld.currentproblem.words[i].pinyin,
+                                                    gWorld.currentproblem.words[i].english);
+    }*/
     for (var i = 0; i < gWorld.currentproblem.words.length; i++) {
         gSlots[i].innerHTML = gWorld.currentproblem.words[i].character;
     }
@@ -263,6 +277,7 @@ function showCharacters() {
     // Adjust the object's pos and size so that collision detection works.
     for (var i in gWorld.currentcharacters) {
         char = gWorld.currentcharacters[i];
+        char.visible = true;
 
         var offsets = gSlots[i].getBoundingClientRect();
         var top = offsets.top;
@@ -370,9 +385,24 @@ function explodestuff() {
     }
 }
 function shootFireball() {
-    if (gWorld.enemies.length > 0) {
+    if (gWorld.enemies.length <= 0) {
+        return;
     }
-    var enemy = gWorld.enemies[gWorld.enemies.length - 1];
+
+    // Find the closest enemy.
+    var enemy = null;
+    var leastdistance = null;
+    var distance = null;
+    for (var i in gWorld.enemies) {
+        distance = Math.abs(calcDistance(calcVector(gWorld.player.pos, gWorld.enemies[i].pos)));
+        if (enemy == null || distance < leastdistance) {
+            enemy = gWorld.enemies[i];
+            leastdistance = distance;
+            continue;
+        }
+    }
+
+    //var enemy = gWorld.enemies[gWorld.enemies.length - 1];
     target = [enemy.pos[0], enemy.pos[1]];
 
     var playerX = gWorld.player.pos[0] + gWorld.player.size[0]/2;
@@ -399,8 +429,8 @@ function checkCollisions() {
 
         if (enemy.collideThing(gWorld.player)) {
             explodestuff();
-            gWorld.state.setState(gWorld.state.states.END);
             clearDivs();
+            gWorld.state.setState(gWorld.state.states.END);
             characterwrong();
             updateTable();
             return;
@@ -424,7 +454,10 @@ function checkCollisions() {
     var char;
     for (var i in gWorld.currentcharacters) {
         char = gWorld.currentcharacters[i];
-        
+        if (!char.visible) {
+            continue;
+        }
+
         if (char.collideThing(gWorld.player)) {
             explodestuff();
             clearDivs();
@@ -459,6 +492,8 @@ function drawInstructions(showImages) {
         //gContext.drawImage(gImages.getImage('starship'), gCanvas.width - 80, gCanvas.height/2, 30, 30);
     }
     drawText(gContext, "Press e to begin", gWorld.textsize, "white", gCanvas.width/3, 400);
+
+    gWorld.player.draw();
 }
 function drawGame() {
     gContext.clearRect(0, 0, gCanvas.width, gCanvas.height);

@@ -12,8 +12,12 @@ game.Player.prototype.constructor = game.Player;
  
 game.Player.prototype.draw = function() {
     //game.Thing.prototype.draw.call(this, this.pos, 'hero');
-    this.div.style.left = this.pos[0]+"px";
-    this.div.style.top = this.pos[1]+"px";
+    if (this.div.style.left != this.pos[0]+"px") {
+        this.div.style.left = this.pos[0]+"px";
+    }
+    if (this.div.style.top != this.pos[1]+"px") {
+        this.div.style.top = this.pos[1]+"px";
+    }
 }
 game.Player.prototype.setvisibility = function(visibility) {
     this.div.style.visibility = visibility;

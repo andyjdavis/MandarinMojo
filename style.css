@@ -21,7 +21,7 @@
 	top:1px;
 }
 
-body {background-color:#3e842f;color:#E6EFE5;font:18pt Verdana, Geneva, sans-serif;}
+body {color:#E6EFE5;font:18pt Verdana, Geneva, sans-serif;background: url("images/bg.png")  repeat;padding:0;margin:0;}
 p {text-align:center;width:512px;height:28px;}
 canvas {border:1px solid DarkGreen;background:url(images/background.png)}
 

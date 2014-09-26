@@ -48,7 +48,7 @@ window.onload = function(){
 	gDivs = [tl, bl, tr, br, gQuestion, gPinyin, gAudio];
 
     gWorld = {
-        debug: false,
+        debug: true,
         keyState: Array(),
         state: new game.StateManager(),
         images: null,
@@ -60,8 +60,6 @@ window.onload = function(){
 
         problems: Array(), //randomly ordered array of problem instances
         currentproblem: null,
-        correctcharacter: null, //used to pass the correct character to playAudio()
-        playingaudio: false,
 
         currentcharacters: Array(), // four instancs of game.Character for display
         characterpositions: Array([40, 40], //tl
@@ -204,21 +202,21 @@ function newGame() {
     gWorld.player.setvisibility("visible");
 }
 function playAudio() {
-    gWorld.playingaudio = true;
-    var correctchar = gWorld.correctcharacter.split('').join(' ');
+    var correct = gWorld.currentproblem.getCorrectWord().character;//.split('').join(' ');
+    //var correct = gWorld.currentproblem.getCorrectWord().pinyin;
     if (gWorld.debug) {
-        console.log("setting tts input to " + correctchar);
+        console.log("setting hanyi pinyin input to " + correct);
     }
     //the split and the join make it read every character
-    gWorld.hp.setInput(correctchar);
-    gWorld.tts.setPace(1000);
+    gWorld.hp.setInput(correct);
+    //gWorld.tts.setPace(1000);
     gWorld.tts.setInput(gWorld.hp.toString());
+    if (gWorld.debug) {
+        console.log("setting tts input to " + gWorld.hp.toString());
+    }
     gAudio.innerHTML = gWorld.tts.getHtml();
-    gWorld.tts.speak();
     
-    
-    
-    gWorld.playingaudio = false;
+    window.setTimeout(gWorld.tts.speak, 1000);
 }
 function nextCharacter() {
 
@@ -238,7 +236,7 @@ function nextCharacter() {
                 gPinyin.innerHTML = gWorld.currentproblem.words[i].pinyin;
             }
             if (gAudio) {
-                gWorld.correctcharacter = gWorld.currentproblem.words[i].character;
+                //gWorld.correctcharacter = gWorld.currentproblem.words[i].character;
                 playAudio();
             }
         }
@@ -555,31 +553,27 @@ var mainloop = function() {
     if (gWorld != null) {
         state = gWorld.state.getState();
         //if (state == gWorld.state.states.INGAME) {
-        if (gWorld.playingaudio) {
-            gWorld.then = 0; //stop time
-        } else {
-            gWorld.now = Date.now();
-            if (gWorld.then != 0) {
-                gWorld.dt = (gWorld.now - gWorld.then)/1000;
-                //gWorld.dt = (1000 / 60)/1000;
+        gWorld.now = Date.now();
+        if (gWorld.then != 0) {
+            gWorld.dt = (gWorld.now - gWorld.then)/1000;
+            //gWorld.dt = (1000 / 60)/1000;
 
-                if (gWorld.dt > 0.25) {
-                    console.log('large dt detected');
-                    //gWorld.dt = (1000 / 60)/1000; // 1/60th of a second.
-                    gWorld.dt = 0;
-                } else {
-                    gWorld.loopCount++;
-                    gWorld.loopCount %= 20; //stop it going to infinity
+            if (gWorld.dt > 0.25) {
+                console.log('large dt detected');
+                //gWorld.dt = (1000 / 60)/1000; // 1/60th of a second.
+                gWorld.dt = 0;
+            } else {
+                gWorld.loopCount++;
+                gWorld.loopCount %= 20; //stop it going to infinity
 
-                    updateGame(gWorld.dt);
-                    if (state == gWorld.state.states.INGAME) {
-                        checkCollisions();
-                    }
-                    drawGame();
+                updateGame(gWorld.dt);
+                if (state == gWorld.state.states.INGAME) {
+                    checkCollisions();
                 }
+                drawGame();
             }
-            gWorld.then = gWorld.now;
         }
+        gWorld.then = gWorld.now;
     }
 
     requestAnimFrame(mainloop);

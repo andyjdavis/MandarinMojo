@@ -56,7 +56,7 @@ window.onload = function(){
         player: new game.Player([64, 85]),
         enemies: Array(),
         projectiles: Array(),
-        explosions: Array(),
+        decorations: Array(),
 
         problems: Array(), //randomly ordered array of problem instances
         currentproblem: null,
@@ -365,26 +365,29 @@ function updateGame(dt) {
             gWorld.projectiles.splice(i, 1);
         }
     }
-    for (var i = gWorld.explosions.length - 1;i >= 0;i--) {
-        if (gWorld.explosions[i].update(dt) == false) {
-            gWorld.explosions.splice(i, 1);
+    for (var i = gWorld.decorations.length - 1;i >= 0;i--) {
+        if (gWorld.decorations[i].update(dt) == false) {
+            gWorld.decorations.splice(i, 1);
         }
     }
 }
 function explodestuff() {
     //explode monsters
     for (var j in gWorld.enemies) {
-        //gWorld.explosions.push(new game.Explosion(gWorld.enemies[j].pos));
+        //gWorld.decorations.push(new game.Explosion(gWorld.enemies[j].pos));
     }
 
     //explode the characters
     for (var j in gWorld.currentcharacters) {
         if (!gWorld.currentcharacters[j].iscorrect) {
-            gWorld.explosions.push(new game.Explosion(gWorld.currentcharacters[j].pos));
+            gWorld.decorations.push(new game.Explosion(gWorld.currentcharacters[j].pos));
         }
     }
 }
-function shootFireball() {
+function createAura() {
+    gWorld.decorations.push(new game.Aura('white', 1, 0.1));
+}
+function shootProjectile() {
     if (gWorld.enemies.length <= 0) {
         return;
     }
@@ -419,7 +422,7 @@ function characterwrong() {
     gLastCorrect = false;
     gWorld.problems.unshift(gWorld.currentproblem);
     gWorld.player.setvisibility("hidden");
-    gWorld.explosions.push(new game.Explosion(gWorld.player.pos));
+    gWorld.decorations.push(new game.Explosion(gWorld.player.pos));
 }
 function checkCollisions() {
     var enemy;
@@ -441,7 +444,7 @@ function checkCollisions() {
                 enemy.die();
                 gWorld.enemies.splice(j, 1);
                 gWorld.projectiles.splice(p, 1);
-                gWorld.explosions.push(new game.Explosion(projectile.pos));
+                gWorld.decorations.push(new game.Explosion(projectile.pos));
                 spawnMonsters();
                 if (gWorld.debug) {
                     console.log('enemy destroyed');
@@ -469,8 +472,9 @@ function checkCollisions() {
                 //if (!gAudio) {
                     gWorld.sounds.play("success");
                 //}
+                createAura();
                 nextCharacter();
-                shootFireball(char.footprint.pos);
+                shootProjectile();
             } else {
                 gWorld.state.setState(gWorld.state.states.END);
                 characterwrong();
@@ -495,6 +499,7 @@ function drawInstructions(showImages) {
 
     gWorld.player.draw();
 }
+    
 function drawGame() {
     gContext.clearRect(0, 0, gCanvas.width, gCanvas.height);
 
@@ -526,8 +531,8 @@ function drawGame() {
         for (var i in gWorld.enemies) {
             gWorld.enemies[i].draw();
         }
-        for (var i in gWorld.explosions) {
-            gWorld.explosions[i].draw();
+        for (var i in gWorld.decorations) {
+            gWorld.decorations[i].draw();
         }
         drawText(gContext, gWorld.score, gWorld.textsize, gWorld.textcolor, 10, 20);
 
@@ -539,8 +544,8 @@ function drawGame() {
         }
         drawText(gContext, "Your best score is "+gWorld.bestscore, gWorld.textsize, gWorld.textcolor, 150, 240);
         drawText(gContext, "Press e to play again", gWorld.textsize, gWorld.textcolor, 150, 350);
-        for (var i in gWorld.explosions) {
-            gWorld.explosions[i].draw();
+        for (var i in gWorld.decorations) {
+            gWorld.decorations[i].draw();
         }
     }
 }

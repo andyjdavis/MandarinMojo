@@ -125,9 +125,9 @@ function loadWords() {
 	if (getParameterByName("traditional") == 1) {
 		traditionaloffset = 1;
 	}
-	var squiglytoneoffset = 1;
+	var squiglytoneoffset = 1; // hē
 	if (getParameterByName("tone") == 1) {
-		squiglytoneoffset = 0;
+		squiglytoneoffset = 0; // he1
 	}
 
 	var files = ["./lang/HSK Official With Definitions 2012 L1.txt",
@@ -154,8 +154,10 @@ function loadWords() {
 
 			    for (var i = 0; i < words.length; i += 5) {
 			    	if (words[i] && words[i + traditionaloffset] != "") {
+
 					    wordobjects.push(new game.Word(words[i + traditionaloffset],
                                                         words[i + 2 + squiglytoneoffset],
+                                                        squiglytoneoffset == 1 ? words[i + 2] : null,
 					                                    words[i + 4],
 					                                    true));
 			        }
@@ -168,19 +170,24 @@ function loadWords() {
     var wrongword = null;
     var wordarray = null;
     var totalwordcount = wordobjects.length;
+    var attempts = 0;
 
 	for (var i in wordobjects) {
 	    correctwordcharcount = wordobjects[i].character.length;
 	    wordarray = Array();
 	    wordarray.push(wordobjects[i]);
+	    attempts = 0;
 
 	    while (wordarray.length < 4) {
 	        wrongword = wordobjects[getRandomInt(0, totalwordcount - 1)];
-	        if (wrongword.character.length == correctwordcharcount
-	            && wrongword.character != wordobjects[i].character) {
+	        if (attempts > 10 || (wrongword.character.length == correctwordcharcount
+                    	          && wrongword.character != wordobjects[i].character)) {
 
-                wrongword = new game.Word(wrongword.character, wrongword.pinyin, wrongword.english, false);
+                wrongword = new game.Word(wrongword.character, wrongword.pinyin, wrongword.getToRead(), wrongword.english, false);
                 wordarray.push(wrongword);
+                attempts = 0;
+	        } else {
+	            attempts++;
 	        }
 	    }
 	    gWorld.problems.push(new game.Problem(shuffleArray(wordarray)));
@@ -202,20 +209,22 @@ function newGame() {
     gWorld.player.setvisibility("visible");
 }
 function playAudio() {
-    var correct = gWorld.currentproblem.getCorrectWord().character;//.split('').join(' ');
-    //var correct = gWorld.currentproblem.getCorrectWord().pinyin;
+    var correct = gWorld.currentproblem.getCorrectWord();
+
+    var s = correct.getToRead();
+    s = s.replace(/(\d+)/g, "$1 "); // put spaces between the syllables
+    s = s.toLowerCase();
+    
+    // replace some sounds that don't have audio files
+    // this makes ba4ba5 not work.
+    s = s.replace("5", "4");
+
+    gWorld.tts.setInput(s);
     if (gWorld.debug) {
-        console.log("setting hanyi pinyin input to " + correct);
-    }
-    //the split and the join make it read every character
-    gWorld.hp.setInput(correct);
-    //gWorld.tts.setPace(1000);
-    gWorld.tts.setInput(gWorld.hp.toString());
-    if (gWorld.debug) {
-        console.log("setting tts input to " + gWorld.hp.toString());
+        console.log("setting tts input to " + s);
     }
     gAudio.innerHTML = gWorld.tts.getHtml();
-    
+
     window.setTimeout(gWorld.tts.speak, 1000);
 }
 function nextCharacter() {
@@ -412,7 +421,7 @@ function shootProjectile() {
 
     var pos = [gWorld.player.pos[0], gWorld.player.pos[1]];
 
-    var projectile = new game.Projectile(pos, [vector[0]*100, vector[1]*100]);
+    var projectile = new game.Projectile(pos, [vector[0] * 200, vector[1] * 200]);
     gWorld.projectiles.push(projectile);
 }
 function characterwrong() {

@@ -413,7 +413,7 @@ function shootProjectile() {
     }
 
     //var enemy = gWorld.enemies[gWorld.enemies.length - 1];
-    target = [enemy.pos[0], enemy.pos[1]];
+    target = [enemy.pos[0] + enemy.size[0]/2, enemy.pos[1] + enemy.size[1]/2];
 
     var playerX = gWorld.player.pos[0] + gWorld.player.size[0]/2;
     var playerY = gWorld.player.pos[1] + gWorld.player.size[1]/2;
@@ -451,7 +451,7 @@ function checkCollisions() {
                 enemy.die();
                 gWorld.enemies.splice(j, 1);
                 gWorld.projectiles.splice(p, 1);
-                gWorld.decorations.push(new game.Explosion(projectile.pos));
+                gWorld.decorations.push(new game.Explosion(enemy.pos));
                 spawnMonsters();
                 if (gWorld.debug) {
                     console.log('enemy destroyed');

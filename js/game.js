@@ -48,7 +48,7 @@ window.onload = function(){
 	gDivs = [tl, bl, tr, br, gQuestion, gPinyin, gAudio];
 
     gWorld = {
-        debug: true,
+        debug: false,
         keyState: Array(),
         state: new game.StateManager(),
         images: null,
@@ -585,7 +585,7 @@ var mainloop = function() {
         gWorld.then = gWorld.now;
     }
 
-    requestAnimFrame(mainloop);
+    window.requestAnimFrame(mainloop);
 };
 window.requestAnimFrame = (function(){
   return  window.requestAnimationFrame       ||

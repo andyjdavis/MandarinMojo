@@ -25,10 +25,6 @@ body {color:#E6EFE5;font:18pt Verdana, Geneva, sans-serif;background: url("image
 p {text-align:center;width:512px;height:28px;}
 canvas {border:1px solid DarkGreen;background:url(images/background.png)}
 
-#wrap {
-   width:100%;
-   margin:0 auto;
-}
 #left_col {
    width:512px;
 }
@@ -65,3 +61,7 @@ table td, table td * {
     color:#FFDF00;
 }
 
+audio.tts {
+    visibility: hidden;
+    display: none;
+}

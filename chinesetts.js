@@ -134,12 +134,12 @@ var ChineseTextToSpeech = function() {
   function finishAudioHtml() {
 
     // style sheet making the HTML5 audio invisible
-    _outputHtml += '<style id="sheet" type="text/css">';
+    /*_outputHtml += '<style id="sheet" type="text/css">';
     _outputHtml += 'audio.tts {';
     _outputHtml += ' visibility: hidden;';
     _outputHtml += ' display: none;';
     _outputHtml += '}';
-    _outputHtml += '</style>';
+    _outputHtml += '</style>';*/
   }
 
   // builds HTML tone bank with unique tones
@@ -196,6 +196,13 @@ var ChineseTextToSpeech = function() {
      * @return ChineseTextToSpeech object
      */
     setInput: function (inputString) {
+        //ADDED BY ANDREW
+        // reset everything so we can setInput multiple times.
+        _pinyinDeck = [];
+        _toneBank = [];
+        _timeDeck = [];
+        _toneBankHTML = '';
+        _outputHtml = '';
 
       _inputPinyin = inputString.trim();
 

@@ -7,7 +7,6 @@
 	display:inline-block;
 	cursor:pointer;
 	color:#ffffff;
-	font-family:arial;
 	font-size:17px;
 	padding:16px 31px;
 	text-decoration:none;
@@ -43,7 +42,7 @@ canvas {border:1px solid DarkGreen;background:url(images/background.png)}
 #thetable {
     width: 100%;
     border-collapse: collapse;
-    font:16pt Arial; 
+    font:16pt;
 }
 #thetable td {
     padding-left: 20px;

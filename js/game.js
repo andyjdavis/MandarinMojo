@@ -48,7 +48,7 @@ window.onload = function(){
 	gDivs = [tl, bl, tr, br, gQuestion, gPinyin, gAudio];
 
     gWorld = {
-        debug: false,
+        debug: true,
         keyState: Array(),
         state: new game.StateManager(),
         images: null,
@@ -59,6 +59,7 @@ window.onload = function(){
         decorations: Array(),
 
         problems: Array(), //randomly ordered array of problem instances
+        solvedproblems: Array(),
         currentproblem: null,
 
         currentcharacters: Array(), // four instancs of game.Character for display
@@ -71,6 +72,10 @@ window.onload = function(){
         loopCount: 0,
         score: 0,
         bestscore: 0,
+        streak: 0,
+
+        wordsdiv: $('wordcount'),
+        scorediv: $('score'),
 
         textcolor: 'White',
         textsize: '18pt Arial',
@@ -197,6 +202,7 @@ function loadWords() {
 
 function newGame() {
     gWorld.score = 0;
+    gWorld.streak = 0;
     gWorld.state.setState(gWorld.state.states.INGAME);
     //gWorld.then = 0; // insurance against monsters leaping forward
 
@@ -207,6 +213,8 @@ function newGame() {
     gWorld.enemies = Array();
     nextCharacter();
     gWorld.player.setvisibility("visible");
+
+    updateScoreDivs();
 }
 function playAudio() {
     var correct = gWorld.currentproblem.getCorrectWord();
@@ -231,6 +239,11 @@ function nextCharacter() {
 
     //gWorld.keyState = []; // reset button down state
     gWorld.currentcharacters = Array();
+
+    if (gWorld.problems.length == 0) {
+        gWorld.solvedproblems = gWorld.problems;
+        gWorld.solvedproblems = null;
+    }
 
     gWorld.currentproblem = gWorld.problems.pop();
     for (var i = 0; i < gWorld.currentproblem.words.length; i++) {
@@ -337,7 +350,9 @@ function updateTable() {
     }
 }
 function spawnMonsters() {
-    var n = Math.floor(gWorld.score / 10) + 1;
+    var totalcount = gWorld.problems.length + gWorld.solvedproblems.length + 1;
+    var percentsolved = gWorld.solvedproblems.length / totalcount;
+    var n = Math.ceil(percentsolved * 10);
 
     var door, pos, m;
     if (gWorld.debug) {
@@ -424,12 +439,45 @@ function shootProjectile() {
     var projectile = new game.Projectile(pos, [vector[0] * 200, vector[1] * 200]);
     gWorld.projectiles.push(projectile);
 }
+function updateScoreDivs() {
+    var s = gWorld.solvedproblems.length + "/" + (gWorld.problems.length + gWorld.solvedproblems.length + 1);
+    gWorld.wordsdiv.innerHTML = "words: " + s;
+
+    gWorld.scorediv.innerHTML = "score: " + gWorld.score;
+}
+function charactercorrect() {
+    gWorld.score++;
+    gWorld.streak++;
+
+    if (gWorld.streak == 5) {
+        console.log('five in a row');
+        gWorld.score += 2;
+    } else if (gWorld.streak == 10) {
+        console.log('ten in a row');
+        gWorld.score += 5;
+    }
+
+    gLastCorrect = true;
+
+    updateTable();
+    //if (!gAudio) {
+        gWorld.sounds.play("success");
+    //}
+    createAura();
+    gWorld.solvedproblems.push(gWorld.currentproblem);
+    nextCharacter();
+    updateScoreDivs();
+}
 function characterwrong() {
     gWorld.sounds.play("fail");
     gLastCorrect = false;
-    gWorld.problems.unshift(gWorld.currentproblem);
-    gWorld.player.setvisibility("hidden");
+    //gWorld.problems.unshift(gWorld.currentproblem);
+    gWorld.problems.splice(gWorld.problems.length - 2, 0, gWorld.currentproblem);
+    //gWorld.player.setvisibility("hidden");
     gWorld.decorations.push(new game.Explosion(gWorld.player.pos));
+    updateTable();
+    gWorld.streak = 0;
+    nextCharacter();
 }
 function checkCollisions() {
     var enemy;
@@ -438,11 +486,14 @@ function checkCollisions() {
         enemy = gWorld.enemies[j];
 
         if (enemy.collideThing(gWorld.player)) {
+            enemy.die();
+            gWorld.enemies.splice(j, 1);
+            gWorld.decorations.push(new game.Explosion(enemy.pos));
+
             explodestuff();
             clearDivs();
-            gWorld.state.setState(gWorld.state.states.END);
+            //gWorld.state.setState(gWorld.state.states.END);
             characterwrong();
-            updateTable();
             return;
         }
         for (var p in gWorld.projectiles) {
@@ -473,19 +524,11 @@ function checkCollisions() {
             clearDivs();
 
             if (char.iscorrect) {
-                gWorld.score++;
-                gLastCorrect = true;
-                updateTable();
-                //if (!gAudio) {
-                    gWorld.sounds.play("success");
-                //}
-                createAura();
-                nextCharacter();
                 shootProjectile();
+                charactercorrect();
             } else {
-                gWorld.state.setState(gWorld.state.states.END);
+                //gWorld.state.setState(gWorld.state.states.END);
                 characterwrong();
-                updateTable();
             }
             break;
         }
@@ -493,10 +536,10 @@ function checkCollisions() {
 }
 
 function drawInstructions(showImages) {
-    drawText(gContext, "Chinese Character Challenge", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 100);
-    drawText(gContext, "Collect the correct character", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 200);
+    drawText(gContext, "Mandarin Mojo", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 100);
+    drawText(gContext, "Collect the correct characters", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 200);
     drawText(gContext, "Avoid the goblins", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 240);
-    drawText(gContext, "Press wasd to move", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 300);
+    drawText(gContext, "Use the arrow keys to move", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 300);
     //drawText(gContext, "Use the mouse to aim and fire", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 350);
     if (showImages) {
         //gContext.drawImage(gImages.getImage('exit'), 40, gCanvas.height/2, gSettings.tilesize, gSettings.tilesize);
@@ -541,7 +584,9 @@ function drawGame() {
         for (var i in gWorld.decorations) {
             gWorld.decorations[i].draw();
         }
-        drawText(gContext, gWorld.score, gWorld.textsize, gWorld.textcolor, 10, 20);
+
+        //drawText(gContext, s, gWorld.textsize, gWorld.textcolor, 10, 20);
+        //drawText(gContext, gWorld.score, gWorld.textsize, gWorld.textcolor, 480, 20);
 
     } else if (state == gWorld.state.states.END) {
         drawText(gContext, "Chinese Character Challenge", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 100);

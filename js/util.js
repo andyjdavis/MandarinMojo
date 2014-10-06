@@ -54,10 +54,16 @@ function drawBox(context, x, y, width, height, color) {
     context.strokeStyle = color;
     context.stroke();
 }
-function drawText(context, text, font, style, x, y) {
+function drawText(context, text, font, style, x, y, opacity) {
+    if (opacity) {
+        gContext.globalAlpha = opacity;
+    }
     context.font = font;
     context.fillStyle = style;
     context.fillText(text, x, y);
+    if (opacity) {
+        gContext.globalAlpha = 1.0;
+    }
 }
 function angleToVector(ang) {
     return [Math.cos(ang), Math.sin(ang)]

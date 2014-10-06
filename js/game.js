@@ -48,7 +48,7 @@ window.onload = function(){
 	gDivs = [tl, bl, tr, br, gQuestion, gPinyin, gAudio];
 
     gWorld = {
-        debug: true,
+        debug: false,
         keyState: Array(),
         state: new game.StateManager(),
         images: null,
@@ -73,6 +73,7 @@ window.onload = function(){
         score: 0,
         bestscore: 0,
         streak: 0,
+        message: null,
 
         wordsdiv: $('wordcount'),
         scorediv: $('score'),
@@ -241,8 +242,11 @@ function nextCharacter() {
     gWorld.currentcharacters = Array();
 
     if (gWorld.problems.length == 0) {
-        gWorld.solvedproblems = gWorld.problems;
-        gWorld.solvedproblems = null;
+        gWorld.problems = gWorld.solvedproblems;
+        gWorld.solvedproblems = [];
+
+        gWorld.message = new game.Message('Do it again');
+        gWorld.score += gWorld.problems.length;
     }
 
     gWorld.currentproblem = gWorld.problems.pop();
@@ -376,6 +380,11 @@ function spawnMonsters() {
 }
 
 function updateGame(dt) {
+    if (gWorld.message) {
+        if (gWorld.message.update(dt) == false) {
+            gWorld.message = null;
+        }
+    }
     if (gWorld.player) {
         gWorld.player.update(dt);
     }
@@ -449,12 +458,26 @@ function charactercorrect() {
     gWorld.score++;
     gWorld.streak++;
 
+    var n = null;
     if (gWorld.streak == 5) {
-        console.log('five in a row');
+        n = 5;
         gWorld.score += 2;
     } else if (gWorld.streak == 10) {
-        console.log('ten in a row');
+        n = 10;
         gWorld.score += 5;
+    } else if (gWorld.streak == 20) {
+        n = 20;
+        gWorld.score += 10;
+    }
+    else if (gWorld.streak == 50) {
+        n = 50;
+        gWorld.score += 20;
+    } else if (gWorld.streak % 100 == 0) {
+        n = gWorld.streak;
+        gWorld.score += gWorld.streak/2 ;
+    }
+    if (n) {
+        gWorld.message = new game.Message(n + ' in a row');
     }
 
     gLastCorrect = true;
@@ -574,6 +597,9 @@ function drawGame() {
     } else if (state == gWorld.state.states.PREGAME) {
         drawInstructions(true);
     } else if (state == gWorld.state.states.INGAME) {
+        if (gWorld.message) {
+            gWorld.message.draw();
+        }
         gWorld.player.draw();
         for (var i in gWorld.projectiles) {
             gWorld.projectiles[i].draw();

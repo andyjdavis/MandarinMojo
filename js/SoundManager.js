@@ -19,7 +19,7 @@ game.SoundManager = function() {
         for (var key in this.sounds) {
             //this.sounds[key].preload = "auto";
             this.sounds[key].addEventListener('loadeddata', onSoundLoad);
-            this.sounds[key].volume = 0.4;
+            this.sounds[key].volume = 0.2;
         }
     } catch(e) {
         alert("Web Audio not supported");

@@ -16,3 +16,16 @@ The word/character lists are from http://www.hskhsk.com/word-lists.html
 The success sound is from http://www.freesound.org/people/grunz/sounds/109662/
 
 The failure sounds is from http://soundbible.com/992-Right-Cross.html
+
+The graphics are from http://open.commonly.cc  www.kenney.nl
+
+
+
+
+TODO
+
+replace player with p1 from Kenney
+
+replace background image with green tiles from Kenney
+
+replace goblins with slime, flies and snails

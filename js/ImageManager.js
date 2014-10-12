@@ -10,7 +10,7 @@ game.ImageManager = function() {
     this.numImagesLoaded = 0;
     this.imagedict = {
         //'background': "images/background.png",
-        'hero': "images/hero.png",
+        'hero': "images/player/p1_spritesheet.png",
         'fireball': "images/fireball.png",
         'monster': "images/monster.png",
         'explosion': "images/explosion.png"

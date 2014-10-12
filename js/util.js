@@ -1,10 +1,13 @@
 var $ = function(id) { return document.getElementById(id); };
 var dc = function(tag) { return document.createElement(tag); };
 
-function createDiv(parent, imagesrc, width, height) {
+function createDiv(parent, imagesrc, width, height, id) {
     var screen = $(parent);
 
     div = dc("div");
+    if (id) {
+        div.setAttribute("id", id);
+    }
     div.style.position = "absolute";
     div.style.left = "0px";
     div.style.width = width;

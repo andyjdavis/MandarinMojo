@@ -12,7 +12,7 @@ game.ImageManager = function() {
         //'background': "images/background.png",
         'hero': "images/player/p1_spritesheet.png",
         'fireball': "images/fireball.png",
-        'monster': "images/monster.png",
+        'monster': "images/enemies_spritesheet.png",
         'explosion': "images/explosion.png"
     };
     this.images = Array(4);

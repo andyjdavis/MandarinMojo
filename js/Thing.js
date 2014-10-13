@@ -8,7 +8,7 @@ game.Thing = function(pos, size, vel) {
     if (this.size != undefined) {
         this.footprint = [this.size[0], this.size[1]/3];
     }
-    
+
     if (vel == undefined) {
         this.vel = [0, 0];
     } else {

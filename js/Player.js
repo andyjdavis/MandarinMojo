@@ -4,10 +4,16 @@ window.game = window.game || { };
 
 game.Player = function(pos) {
     game.Thing.call(this, pos, [32, 48]);
+
+    // Make the player's footprint bigger to make the top character appearing
+    // over the top of the player less noticable.
+    this.footprint = [this.size[0], this.size[1]/2];
+
     this.maxvel = 200;
     this.frame = 0;
     this.maxframe = 10;
     this.walking = false;
+    this.goingleft = false;
     //this.div = createDiv("left_col", "images/player/p1_spritesheet.png", "32px", "32px", 'playerdiv');
     
     // these came from images/player/p1_spritesheet.txt
@@ -44,7 +50,7 @@ game.Player.prototype.draw = function() {
     var sourceWidth = 72;
     var sourceHeight = 97;
     if (this.walking) {
-        if (gWorld.loopCount % 6 == 0) {
+        if (gWorld.loopCount % 5 == 0) {
             this.frame++;
         }
         if (this.frame > this.maxframe) {
@@ -52,8 +58,21 @@ game.Player.prototype.draw = function() {
         }
         var sourceX = this.walkingsourcelocations[this.frame][0];
         var sourceY = this.walkingsourcelocations[this.frame][1];
+
+        if (this.goingleft) {
+            gContext.save();
+            var flipAxis = this.pos[0] + this.size[0]/2;
+            gContext.translate(flipAxis, 0);
+            gContext.scale(-1, 1);
+            gContext.translate(-flipAxis, 0);
+        }
+
         gContext.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, this.pos[0], this.pos[1], this.size[0], this.size[1]);
         //this.div.style.backgroundPosition = "-"+sourceX+"px -"+sourceY+"px";
+
+        if (this.goingleft) {
+            gContext.restore();
+        }
     } else {
         var sourceX = this.standingsourcelocations[0];
         var sourceY = this.standingsourcelocations[1];
@@ -61,11 +80,12 @@ game.Player.prototype.draw = function() {
     }
 }
 game.Player.prototype.setvisibility = function(visibility) {
-    this.div.style.visibility = visibility;
+    //this.div.style.visibility = visibility;
 }
 
 game.Player.prototype.update = function(dt) {
     this.walking = false;
+    this.goingleft = false;
 
     if (gWorld.keyState[87] || gWorld.keyState[38]) { //up
         //this.vel[1] = -this.maxvel;
@@ -81,6 +101,7 @@ game.Player.prototype.update = function(dt) {
         //this.vel[0] = -this.maxvel;
         this.pos[0] = Math.round(this.pos[0] - this.maxvel * dt);
         this.walking = true;
+        this.goingleft = true;
     }
     if (gWorld.keyState[68] || gWorld.keyState[39]) { //right
         //this.vel[0] = this.maxvel;

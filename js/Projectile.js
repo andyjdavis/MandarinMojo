@@ -35,7 +35,6 @@ game.Projectile.prototype.draw = function() {
         gContext.rotate(angle); // rotate
         
         gContext.translate(-xtranslate, -ytranslate);
-        //gContext.drawImage(img, sourceWidth * gWorld.loopCount, 0, sourceWidth, sourceWidth, this.pos[0], this.pos[1], this.size[0], this.size[1]);
         gContext.drawImage(img, sourceX, 0, sourceWidth, sourceWidth, this.pos[0], this.pos[1], this.size[0], this.size[1]);
         gContext.restore(); // restore original states (no rotation etc)
     }

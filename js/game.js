@@ -561,8 +561,8 @@ function checkCollisions() {
 function drawInstructions(showImages) {
     drawText(gContext, "Mandarin Mojo", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 100);
     drawText(gContext, "Collect the correct characters", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 210);
-    drawText(gContext, "Avoid the goblins", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 240);
-    drawText(gContext, "Streaks earns bonus points", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 270);
+    drawText(gContext, "Avoid the critters", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 240);
+    drawText(gContext, "Streaks earn bonus points", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 270);
     drawText(gContext, "Use the arrow keys to move", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 300);
     //drawText(gContext, "Use the mouse to aim and fire", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 350);
     if (showImages) {
@@ -601,13 +601,13 @@ function drawGame() {
         if (gWorld.message) {
             gWorld.message.draw();
         }
-        gWorld.player.draw();
         for (var i in gWorld.projectiles) {
             gWorld.projectiles[i].draw();
         }
         for (var i in gWorld.enemies) {
             gWorld.enemies[i].draw();
         }
+        gWorld.player.draw();
         for (var i in gWorld.decorations) {
             gWorld.decorations[i].draw();
         }

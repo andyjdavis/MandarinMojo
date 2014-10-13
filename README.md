@@ -24,8 +24,4 @@ The graphics are from http://open.commonly.cc  www.kenney.nl
 
 TODO
 
-replace player with p1 from Kenney
-
 replace background image with green tiles from Kenney
-
-replace goblins with slime, flies and snails

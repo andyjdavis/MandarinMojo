@@ -50,7 +50,7 @@ game.Player.prototype.draw = function() {
     var sourceWidth = 72;
     var sourceHeight = 97;
     if (this.walking) {
-        if (gWorld.loopCount % 5 == 0) {
+        if (gWorld.loopCount % 2 == 0) {
             this.frame++;
         }
         if (this.frame > this.maxframe) {

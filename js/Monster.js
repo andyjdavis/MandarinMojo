@@ -54,7 +54,7 @@ game.Monster.prototype.draw = function() {
         return;
     }
 
-    if (gWorld.loopCount % 6 == 0) {
+    if (gWorld.loopCount % 10 == 0) {
         this.frame++;
     }
     if (this.frame > this.maxframe) {

@@ -54,6 +54,7 @@ table td, table td * {
 #tablewrapper {
     overflow-x:hidden;
     height:95vh;
+    z-index:1000;
 }
 .char {
     color:#FFDF00;
@@ -62,7 +63,7 @@ table td, table td * {
     position:absolute;
     top:0px;
     left:0px;
-    width:100%;
+    width:520px;
     height:100%;
     background-color:DarkGreen;
     visibility: hidden;

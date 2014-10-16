@@ -581,11 +581,8 @@ function drawInstructions(showImages) {
     drawText(gContext, "Avoid the critters", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 240);
     drawText(gContext, "Streaks earn bonus points", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 270);
     drawText(gContext, "Use the arrow keys to move", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 300);
-    //drawText(gContext, "Use the mouse to aim and fire", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 350);
-    if (showImages) {
-        //gContext.drawImage(gImages.getImage('exit'), 40, gCanvas.height/2, gSettings.tilesize, gSettings.tilesize);
-        //gContext.drawImage(gImages.getImage('starship'), gCanvas.width - 80, gCanvas.height/2, 30, 30);
-    }
+    drawText(gContext, "Press p to pause", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 330);
+
     drawText(gContext, "Press e to begin", gWorld.textsize, "white", gCanvas.width/3, 400);
 
     gWorld.player.draw();

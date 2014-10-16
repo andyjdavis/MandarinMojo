@@ -108,7 +108,13 @@ function onKeyDown(event) {
     var state = gWorld.state.getState();
     if (state == gWorld.state.states.PREGAME || state == gWorld.state.states.END) {
         if (event.keyCode == 69) {
+            // e
             newGame();
+        }
+    } else if (state == gWorld.state.states.INGAME || state == gWorld.state.states.PAUSED) {
+        if (event.keyCode == 80) {
+            // p
+            pause();
         }
     }
     gWorld.keyState[event.keyCode] = true;
@@ -117,6 +123,17 @@ function onKeyUp(event) {
     gWorld.keyState[event.keyCode] = false;
 }
 function onMouseClick(event) {
+}
+function pause() {
+    var state = gWorld.state.getState();
+    if (state == gWorld.state.states.INGAME) {
+        gWorld.state.setState(gWorld.state.states.PAUSED);
+        $("paused").style.visibility = 'visible';
+    } else if (state == gWorld.state.states.PAUSED) {
+        gWorld.state.setState(gWorld.state.states.INGAME);
+        $("paused").style.visibility = 'hidden';
+    }
+    //ignore p if in any other state
 }
 function clearDivs() {
     for (var i in gDivs) {
@@ -632,10 +649,10 @@ function drawGame() {
 var mainloop = function() {
 
     if (gWorld != null) {
-        state = gWorld.state.getState();
-        //if (state == gWorld.state.states.INGAME) {
         gWorld.now = Date.now();
-        if (gWorld.then != 0) {
+
+        state = gWorld.state.getState();
+        if (state != gWorld.state.states.PAUSED && gWorld.then != 0) {
             gWorld.dt = (gWorld.now - gWorld.then)/1000;
             //gWorld.dt = (1000 / 60)/1000;
 

@@ -7,8 +7,9 @@ game.StateManager = function() {
         LOADING: 0,
         PREGAME: 1,
         INGAME: 2,
-        BETWEENLEVELS: 3,
-        END: 4
+        PAUSED: 3,
+        BETWEENLEVELS: 4,
+        END: 5
     };
     this.state = this.states.LOADING;
 };

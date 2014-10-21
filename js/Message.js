@@ -17,8 +17,8 @@ game.Message.prototype = new game.Thing();
 game.Message.prototype.constructor = game.Message;
 
 game.Message.prototype.draw = function() {
-    drawText(gContext, "Bonus!", '44pt Arial', 'yellow', 170, 200, 0.1);
-    drawText(gContext, this.message, '44pt Arial', 'yellow', 135, 270, 0.1);
+    //drawText(gContext, "Bonus!", '44pt Arial', 'yellow', 170, 200, 0.1);
+    drawText(gContext, this.message, '48pt Arial', 'yellow', 135, 270, 0.2);
 };
 game.Message.prototype.update = function(dt) {
     //game.Thing.prototype.update.call(this, dt);

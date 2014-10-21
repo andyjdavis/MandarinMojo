@@ -49,6 +49,7 @@ window.onload = function(){
 
     gWorld = {
         debug: false,
+        mode: getParameterByName('mode'), // 0 == challenge, 1 == practice
         keyState: Array(),
         state: new game.StateManager(),
         images: null,
@@ -221,8 +222,13 @@ function loadWords() {
 function newGame() {
     gWorld.score = 0;
     gWorld.streak = 0;
+    if (gWorld.currentproblem) {
+        //throw the current problem back into the mix
+        gWorld.problems.push(gWorld.currentproblem);
+        gWorld.currentproblem = null;
+    }
+    resetDeck();
     gWorld.state.setState(gWorld.state.states.INGAME);
-    //gWorld.then = 0; // insurance against monsters leaping forward
 
     //gWorld.player.pos = [gCanvas.width/2, gCanvas.height/2];
     for (var i in gWorld.enemies) {
@@ -253,17 +259,25 @@ function playAudio() {
 
     window.setTimeout(gWorld.tts.speak, 1000);
 }
+function resetDeck() {
+    if (gWorld.problems.length == 0) {
+        gWorld.problems = gWorld.solvedproblems;
+        gWorld.message = new game.Message('Do it again');
+    } else {
+        gWorld.problems = gWorld.problems.concat(gWorld.solvedproblems);
+    }
+    gWorld.problems = shuffleArray(gWorld.problems);
+
+    gWorld.solvedproblems = [];
+    //gWorld.score += gWorld.problems.length;
+}
 function nextCharacter() {
 
     //gWorld.keyState = []; // reset button down state
     gWorld.currentcharacters = Array();
 
     if (gWorld.problems.length == 0) {
-        gWorld.problems = gWorld.solvedproblems;
-        gWorld.solvedproblems = [];
-
-        gWorld.message = new game.Message('Do it again');
-        gWorld.score += gWorld.problems.length;
+        resetDeck();
     }
 
     gWorld.currentproblem = gWorld.problems.pop();
@@ -287,7 +301,7 @@ function nextCharacter() {
     }
     spawnMonsters();
 
-    window.setTimeout(showCharacters, 4000);
+    window.setTimeout(showCharacters, 2000);
     
     for (var i = 0; i < gWorld.currentproblem.words.length; i++) {
         gWorld.currentcharacters[i] = new game.Character(gWorld.characterpositions[i],
@@ -469,7 +483,10 @@ function updateScoreDivs() {
     var s = gWorld.solvedproblems.length + "/" + (gWorld.problems.length + gWorld.solvedproblems.length + 1);
     gWorld.wordsdiv.innerHTML = "words: " + s;
 
-    gWorld.scorediv.innerHTML = "score: " + gWorld.score;
+    // if not practicing update score
+    if (gWorld.mode != 1) {
+        gWorld.scorediv.innerHTML = "score: " + gWorld.score;
+    }
 }
 function charactercorrect() {
     gWorld.score++;
@@ -478,20 +495,20 @@ function charactercorrect() {
     var n = null;
     if (gWorld.streak == 5) {
         n = 5;
-        gWorld.score += 2;
+        //gWorld.score += 2;
     } else if (gWorld.streak == 10) {
         n = 10;
-        gWorld.score += 5;
+        //gWorld.score += 5;
     } else if (gWorld.streak == 20) {
         n = 20;
-        gWorld.score += 10;
+        //gWorld.score += 10;
     }
     else if (gWorld.streak == 50) {
         n = 50;
-        gWorld.score += 20;
+        //gWorld.score += 20;
     } else if (gWorld.streak % 100 == 0) {
         n = gWorld.streak;
-        gWorld.score += gWorld.streak/2 ;
+        //gWorld.score += gWorld.streak/2 ;
     }
     if (n) {
         gWorld.message = new game.Message(n + ' in a row');
@@ -511,13 +528,18 @@ function charactercorrect() {
 function characterwrong() {
     gWorld.sounds.play("fail");
     gLastCorrect = false;
-    //gWorld.problems.unshift(gWorld.currentproblem);
-    gWorld.problems.splice(gWorld.problems.length - 2, 0, gWorld.currentproblem);
+    
     //gWorld.player.setvisibility("hidden");
     gWorld.decorations.push(new game.Explosion(gWorld.player.pos));
     updateTable();
     gWorld.streak = 0;
-    nextCharacter();
+    // if not practicing, game over
+    if (gWorld.mode != 1) {
+        gWorld.state.setState(gWorld.state.states.END);
+    } else {
+        gWorld.problems.splice(gWorld.problems.length - 2, 0, gWorld.currentproblem);
+        nextCharacter();
+    }
 }
 function checkCollisions() {
     var enemy;
@@ -532,7 +554,10 @@ function checkCollisions() {
 
             explodestuff();
             clearDivs();
-            //gWorld.state.setState(gWorld.state.states.END);
+            // if not practicing, game over
+            if (gWorld.mode != 1) {
+                gWorld.state.setState(gWorld.state.states.END);
+            }
             characterwrong();
             return;
         }
@@ -567,7 +592,6 @@ function checkCollisions() {
                 shootProjectile();
                 charactercorrect();
             } else {
-                //gWorld.state.setState(gWorld.state.states.END);
                 characterwrong();
             }
             break;
@@ -579,7 +603,7 @@ function drawInstructions(showImages) {
     drawText(gContext, "Mandarin Mojo", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 100);
     drawText(gContext, "Collect the correct characters", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 210);
     drawText(gContext, "Avoid the critters", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 240);
-    drawText(gContext, "Streaks earn bonus points", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 270);
+    //drawText(gContext, "Streaks earn bonus points", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 270);
     drawText(gContext, "Use the arrow keys to move", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 300);
     drawText(gContext, "Press p to pause", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 330);
 
@@ -630,7 +654,7 @@ function drawGame() {
         //drawText(gContext, gWorld.score, gWorld.textsize, gWorld.textcolor, 480, 20);
 
     } else if (state == gWorld.state.states.END) {
-        drawText(gContext, "Chinese Character Challenge", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 100);
+        //drawText(gContext, "Chinese Character Challenge", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 100);
         drawText(gContext, "You got "+gWorld.score+" in a row.", gWorld.textsize, gWorld.textcolor, 150, 200);
         if (gWorld.score > gWorld.bestscore) {
             gWorld.bestscore = gWorld.score;

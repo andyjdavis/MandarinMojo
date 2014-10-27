@@ -92,7 +92,7 @@
 还是	還是	hai2shi5	háishi	or; still; nevertheless; had better
 害怕	害怕	hai4pa4	hàipà	afraid of; to fear
 黑板	黑板	hei1ban3	hēibǎn	blackboard
-后来	后來	hou4lai2	hòulái	afterwards; after; later
+后来	後來	hou4lai2	hòulái	afterwards; after; later
 护照	護照	hu4zhao4	hùzhào	passport
 花	花	hua1	huā	flower; blossom; spend money; cost
 画	畫	hua4	huà	draw; picture; painting
@@ -188,7 +188,7 @@
 请假	請假	qing3jia4	qǐngjià	to ask for time off
 秋	秋	qiu1	qiū	autumn; fall; harvest time
 裙子	裙子	qun2zi5	qúnzi	skirt
-然后	然后	ran2hou4	ránhòu	then; afterwards
+然后	然後	ran2hou4	ránhòu	then; afterwards
 热情	熱情	re4qing2	rèqíng	cordial; warm; enthusiastic
 认为	認為	ren4wei2	rènwéi	believe; think that
 认真	認真	ren4zhen1	rènzhēn	serious; earnest; take seriously
@@ -295,6 +295,6 @@
 自行车	自行車	zi4xing2che1	zìxíngchē	bike; bicycle
 总是	總是	zong3shi4	zǒngshì	always; eventually
 嘴	嘴	zui3	zuǐ	mouth
-最后	最后	zui4hou4	zuìhòu	last; final; ultimately
+最后	最後	zui4hou4	zuìhòu	last; final; ultimately
 最近	最近	zui4jin4	zuìjìn	recently; lately; these days
 作业	作業	zuo4ye4	zuòyè	school assignment; homework; task

@@ -28,8 +28,6 @@ TODO
 
 重新, and the pinyin was correct with chóng xīn, but the audio said zhòng xīn
 
-Add the ability to turn off sound effects aside from the speech
-
 Missing audio:
 绿 lv4
 某 mou3

@@ -27,11 +27,11 @@ game.SoundManager = function() {
 }
 game.SoundManager.prototype.togglemute = function() {
     if (this.enabled) {
-        this.stop('music');
+        //this.stop('music');
         this.enabled = !this.enabled;
     } else {
         this.enabled = !this.enabled;
-        this.play('music', true);
+        //this.play('music', true);
     }
 }
 game.SoundManager.prototype.play = function(name, loop) {

@@ -106,6 +106,7 @@ window.onload = function(){
 }
 
 function onKeyDown(event) {
+    //console.log(event.keyCode);
     var state = gWorld.state.getState();
     if (state == gWorld.state.states.PREGAME || state == gWorld.state.states.END) {
         if (event.keyCode == 69) {
@@ -116,6 +117,10 @@ function onKeyDown(event) {
         if (event.keyCode == 80) {
             // p
             pause();
+        }
+        if (event.keyCode == 77) {
+            // m
+            mute();
         }
     }
     gWorld.keyState[event.keyCode] = true;
@@ -135,6 +140,14 @@ function pause() {
         $("paused").style.visibility = 'hidden';
     }
     //ignore p if in any other state
+}
+function mute() {
+    gWorld.sounds.togglemute();
+    if (gWorld.sounds.enabled) {
+        gWorld.message = new game.Message('unmuted');
+    } else {
+        gWorld.message = new game.Message('muted');
+    }
 }
 function clearDivs() {
     for (var i in gDivs) {
@@ -603,8 +616,8 @@ function drawInstructions(showImages) {
     drawText(gContext, "Mandarin Mojo", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 100);
     drawText(gContext, "Collect the correct characters", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 210);
     drawText(gContext, "Avoid the critters", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 240);
-    //drawText(gContext, "Streaks earn bonus points", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 270);
-    drawText(gContext, "Use the arrow keys to move", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 300);
+    drawText(gContext, "Use the arrow keys to move", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 270);
+    drawText(gContext, "Press m to mute sound effects", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 300);
     drawText(gContext, "Press p to pause", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 330);
 
     drawText(gContext, "Press e to begin", gWorld.textsize, "white", gCanvas.width/3, 400);

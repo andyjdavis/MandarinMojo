@@ -432,8 +432,11 @@ function updateGame(dt) {
     if (gWorld.player) {
         gWorld.player.update(dt);
     }
-    for (var i in gWorld.enemies) {
-        gWorld.enemies[i].update(dt);
+    for (var i = gWorld.enemies.length - 1;i >= 0;i--) {
+        if (gWorld.enemies[i].update(dt) == false) {
+            gWorld.enemies.splice(i, 1);
+            spawnMonsters();
+        }
     }
     for (var i = gWorld.projectiles.length - 1;i >= 0;i--) {
         if (gWorld.projectiles[i].update(dt) == false) {
@@ -561,6 +564,9 @@ function checkCollisions() {
         enemy = gWorld.enemies[j];
 
         if (enemy.collideThing(gWorld.player)) {
+            if (enemy.isDead()) {
+                continue;
+            }
             enemy.die();
             gWorld.enemies.splice(j, 1);
             gWorld.decorations.push(new game.Explosion(enemy.pos));
@@ -577,13 +583,13 @@ function checkCollisions() {
         for (var p in gWorld.projectiles) {
             projectile = gWorld.projectiles[p];
             if (enemy.collideThing(projectile)) {
-                enemy.die();
-                gWorld.enemies.splice(j, 1);
+                enemy.hit();
+                //gWorld.enemies.splice(j, 1);
                 gWorld.projectiles.splice(p, 1);
                 gWorld.decorations.push(new game.Explosion(enemy.pos));
                 spawnMonsters();
                 if (gWorld.debug) {
-                    console.log('enemy destroyed');
+                    console.log('enemy hit');
                 }
                 break;
             }

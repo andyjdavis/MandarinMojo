@@ -61,6 +61,7 @@ function drawText(context, text, font, style, x, y, opacity) {
     if (opacity) {
         gContext.globalAlpha = opacity;
     }
+    context.textAlign = 'center';
     context.font = font;
     context.fillStyle = style;
     context.fillText(text, x, y);

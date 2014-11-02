@@ -619,14 +619,15 @@ function checkCollisions() {
 }
 
 function drawInstructions(showImages) {
-    drawText(gContext, "Mandarin Mojo", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 100);
-    drawText(gContext, "Collect the correct characters", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 210);
-    drawText(gContext, "Avoid the critters", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 240);
-    drawText(gContext, "Use the arrow keys to move", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 270);
-    drawText(gContext, "Press m to mute sound effects", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 300);
-    drawText(gContext, "Press p to pause", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 330);
+    x = gCanvas.width/2;
+    drawText(gContext, "Mandarin Mojo", gWorld.textsize, gWorld.textcolor, x, 100);
+    drawText(gContext, "Collect the correct characters", gWorld.textsize, gWorld.textcolor, x, 210);
+    drawText(gContext, "Avoid the critters", gWorld.textsize, gWorld.textcolor, x, 240);
+    drawText(gContext, "Use the arrow keys to move", gWorld.textsize, gWorld.textcolor, x, 270);
+    drawText(gContext, "Press m to mute sound effects", gWorld.textsize, gWorld.textcolor, x, 300);
+    drawText(gContext, "Press p to pause", gWorld.textsize, gWorld.textcolor, x, 330);
 
-    drawText(gContext, "Press e to begin", gWorld.textsize, "white", gCanvas.width/3, 400);
+    drawText(gContext, "Press e to begin", gWorld.textsize, "white", x, 400);
 
     gWorld.player.draw();
 }
@@ -647,7 +648,7 @@ function drawGame() {
         if (loaded < total) {
             //gContext.clearRect(0, 0, gCanvas.width, gCanvas.height);
             var text = "Loading...    "+loaded+"/"+total;
-            drawText(gContext, text, gWorld.textsize, gWorld.textcolor, gCanvas.width/5,400);
+            drawText(gContext, text, gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 400);
             //return;
         } else {
             gWorld.state.setState(gWorld.state.states.PREGAME);
@@ -674,12 +675,12 @@ function drawGame() {
 
     } else if (state == gWorld.state.states.END) {
         //drawText(gContext, "Chinese Character Challenge", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 100);
-        drawText(gContext, "You got "+gWorld.score+" in a row.", gWorld.textsize, gWorld.textcolor, 150, 200);
+        drawText(gContext, "You got "+gWorld.score+" in a row.", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 200);
         if (gWorld.score > gWorld.bestscore) {
             gWorld.bestscore = gWorld.score;
         }
-        drawText(gContext, "Your best score is "+gWorld.bestscore, gWorld.textsize, gWorld.textcolor, 150, 240);
-        drawText(gContext, "Press e to play again", gWorld.textsize, gWorld.textcolor, 150, 350);
+        drawText(gContext, "Your best score is "+gWorld.bestscore, gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 240);
+        drawText(gContext, "Press e to play again", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 350);
         for (var i in gWorld.decorations) {
             gWorld.decorations[i].draw();
         }

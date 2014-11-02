@@ -24,6 +24,8 @@ The graphics are from http://open.commonly.cc  www.kenney.nl
 
 TODO
 
+Post high score to twitter http://twitter.com/home?status=blurb
+
 究 in 研究 was pronounced as fourth tone instead of first tone.
 
 重新, and the pinyin was correct with chóng xīn, but the audio said zhòng xīn
@@ -47,8 +49,6 @@ Missing audio:
 i think all of 说不定 didn't play audio but maybe 说 played
 规矩的矩 jǔ in guījǔ
 学问的问 wen in xuéwen
-
-More powerful monsters? stronger? faster? Something to add variety.
 
 Player disappears when standing still in Safari 8.0
 

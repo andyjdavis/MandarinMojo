@@ -77,7 +77,7 @@ window.onload = function(){
         message: null,
 
         wordsdiv: $('wordcount'),
-        scorediv: $('score'),
+        //scorediv: $('score'),
 
         textcolor: 'White',
         textsize: '18pt Arial',
@@ -251,7 +251,7 @@ function newGame() {
     nextCharacter();
     gWorld.player.setvisibility("visible");
 
-    updateScoreDivs();
+    updateScoreDisplay();
 }
 function playAudio() {
     var correct = gWorld.currentproblem.getCorrectWord();
@@ -495,13 +495,13 @@ function shootProjectile() {
     var projectile = new game.Projectile(pos, [vector[0] * 200, vector[1] * 200]);
     gWorld.projectiles.push(projectile);
 }
-function updateScoreDivs() {
+function updateScoreDisplay() {
     var s = gWorld.solvedproblems.length + "/" + (gWorld.problems.length + gWorld.solvedproblems.length + 1);
     gWorld.wordsdiv.innerHTML = "words: " + s;
 
     // if not practicing update score
     if (gWorld.mode != 1) {
-        gWorld.scorediv.innerHTML = "score: " + gWorld.score;
+        //gWorld.scorediv.innerHTML = "score: " + gWorld.score;
     }
 }
 function charactercorrect() {
@@ -539,7 +539,7 @@ function charactercorrect() {
     createAura();
     gWorld.solvedproblems.push(gWorld.currentproblem);
     nextCharacter();
-    updateScoreDivs();
+    updateScoreDisplay();
 }
 function characterwrong() {
     gWorld.sounds.play("fail");

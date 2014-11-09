@@ -24,7 +24,7 @@ The graphics are from http://open.commonly.cc  www.kenney.nl
 
 TODO
 
-Post high score to twitter http://twitter.com/home?status=blurb
+Make it work if someone goes direct to game.htm with no URL params
 
 究 in 研究 was pronounced as fourth tone instead of first tone.
 

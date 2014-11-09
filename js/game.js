@@ -74,6 +74,7 @@ window.onload = function(){
         score: 0,
         bestscore: 0,
         streak: 0,
+        newbest: false,
         message: null,
 
         wordsdiv: $('wordcount'),
@@ -121,6 +122,12 @@ function onKeyDown(event) {
         if (event.keyCode == 77) {
             // m
             mute();
+        }
+    }
+    if (state == gWorld.state.states.END) {
+        if (event.keyCode == 84 && gWorld.newbest && gWorld.score > 30) {
+            // t
+            window.open("http://twitter.com/home?status=I have been practicing my Mandarin and got a highscore of "+gWorld.bestscore+" on mandarinmojo.com", "_blank");
         }
     }
     gWorld.keyState[event.keyCode] = true;
@@ -235,6 +242,7 @@ function loadWords() {
 function newGame() {
     gWorld.score = 0;
     gWorld.streak = 0;
+    gWorld.newbest = false;
     if (gWorld.currentproblem) {
         //throw the current problem back into the mix
         gWorld.problems.push(gWorld.currentproblem);
@@ -507,6 +515,10 @@ function updateScoreDisplay() {
 function charactercorrect() {
     gWorld.score++;
     gWorld.streak++;
+    if (gWorld.score > gWorld.bestscore) {
+        gWorld.bestscore = gWorld.score;
+        gWorld.newbest = true;
+    }
 
     var n = null;
     if (gWorld.streak == 5) {
@@ -675,12 +687,15 @@ function drawGame() {
 
     } else if (state == gWorld.state.states.END) {
         //drawText(gContext, "Chinese Character Challenge", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 100);
-        drawText(gContext, "You got "+gWorld.score+" in a row.", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 200);
-        if (gWorld.score > gWorld.bestscore) {
-            gWorld.bestscore = gWorld.score;
+        drawText(gContext, "You got "+gWorld.score+" in a row.", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 150);
+        drawText(gContext, "Your best score is "+gWorld.bestscore, gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 190);
+        if (gWorld.newbest) {
+            drawText(gContext, "New best score!!", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 270);
+            if (gWorld.score > 30) {
+                drawText(gContext, "Press t to tell twitter", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 310);
+            }
         }
-        drawText(gContext, "Your best score is "+gWorld.bestscore, gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 240);
-        drawText(gContext, "Press e to play again", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 350);
+        drawText(gContext, "Press e to play again", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 390);
         for (var i in gWorld.decorations) {
             gWorld.decorations[i].draw();
         }

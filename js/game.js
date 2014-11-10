@@ -209,6 +209,10 @@ function loadWords() {
 			}
 		}
 	}
+	if (wordobjects.length == 0) {
+	    // No words were loaded so the URL parameters are most likely missing.
+	    window.location.replace('index.html');
+	}
 
     var correctwordcharcount = 0;
     var wrongword = null;

@@ -24,6 +24,10 @@ The graphics are from http://open.commonly.cc  www.kenney.nl
 
 TODO
 
+World map. area between arenas.
+http://opengameart.org/content/tiny-16-basic
+near bottom of comments is 32px version.
+
 究 in 研究 was pronounced as fourth tone instead of first tone.
 
 重新, and the pinyin was correct with chóng xīn, but the audio said zhòng xīn

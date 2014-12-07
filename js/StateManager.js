@@ -5,17 +5,37 @@ window.game = window.game || { };
 game.StateManager = function() {
     this.states = {
         LOADING: 0,
-        PREGAME: 1,
-        INGAME: 2,
-        PAUSED: 3,
-        BETWEENLEVELS: 4,
-        END: 5
+        ARENAINTRO: 1,
+        ARENA: 2,
+        ARENAEND: 3,
+        PAUSED: 4,
     };
-    this.state = this.states.LOADING;
+    this.setState(this.states.LOADING);
 };
 
 game.StateManager.prototype.setState = function(s) {
-    this.state = s; //should be doing some checking here
+    this.state = s;
+
+    if (this.stateengine) {
+        this.stateengine.end();
+    }
+    switch(this.state) {
+        case this.states.LOADING:
+            this.stateengine = new game.State_Loading();
+            break;
+        case this.states.ARENAINTRO:
+            this.stateengine = new game.State_ArenaIntro();
+            break;
+        case this.states.ARENA:
+            this.stateengine = new game.State_Arena();
+            break;
+        case this.states.ARENAEND:
+            this.stateengine = new game.State_ArenaEnd();
+            break;
+        default:
+            console.log('unknown state:'+s);
+    }
+    this.stateengine.start();
 };
 game.StateManager.prototype.getState = function(s) {
     return this.state;

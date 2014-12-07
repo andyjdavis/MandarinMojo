@@ -1,0 +1,31 @@
+//(function() {
+
+window.game = window.game || { };
+
+game.State_ArenaIntro = function() {
+}
+game.State_ArenaIntro.prototype = new game.Thing();
+game.State_ArenaIntro.prototype.constructor = game.State_ArenaIntro;
+
+game.State_ArenaIntro.prototype.start = function() {
+};
+game.State_ArenaIntro.prototype.end = function() {
+};
+
+game.State_ArenaIntro.prototype.draw = function() {
+    x = gCanvas.width/2;
+    drawText(gContext, "Mandarin Mojo", gWorld.textsize, gWorld.textcolor, x, 100);
+    drawText(gContext, "Collect the correct characters", gWorld.textsize, gWorld.textcolor, x, 210);
+    drawText(gContext, "Avoid the critters", gWorld.textsize, gWorld.textcolor, x, 240);
+    drawText(gContext, "Use the arrow keys to move", gWorld.textsize, gWorld.textcolor, x, 270);
+    drawText(gContext, "Press m to mute sound effects", gWorld.textsize, gWorld.textcolor, x, 300);
+    drawText(gContext, "Press p to pause", gWorld.textsize, gWorld.textcolor, x, 330);
+
+    drawText(gContext, "Press e to begin", gWorld.textsize, "white", x, 400);
+
+    gWorld.player.draw();
+};
+game.State_ArenaIntro.prototype.update = function(dt) {
+};
+
+//}());

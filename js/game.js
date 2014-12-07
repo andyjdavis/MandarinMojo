@@ -51,7 +51,7 @@ window.onload = function(){
         debug: false,
         mode: getParameterByName('mode'), // 0 == challenge, 1 == practice
         keyState: Array(),
-        state: new game.StateManager(),
+        state: new game.StateManager(), // Defaults to state LOADING.
         images: null,
         sounds: null,
         player: new game.Player([64, 85]),
@@ -93,8 +93,6 @@ window.onload = function(){
     gWorld.images = new game.ImageManager();
     gWorld.sounds = new game.SoundManager();
 
-    gWorld.state.setState(gWorld.state.states.LOADING);
-
     window.addEventListener('keydown', onKeyDown, false);
     window.addEventListener('keyup', onKeyUp, false);
     gCanvas.addEventListener('click', onMouseClick);
@@ -109,12 +107,12 @@ window.onload = function(){
 function onKeyDown(event) {
     //console.log(event.keyCode);
     var state = gWorld.state.getState();
-    if (state == gWorld.state.states.PREGAME || state == gWorld.state.states.END) {
+    if (state == gWorld.state.states.ARENAINTRO || state == gWorld.state.states.ARENAEND) {
         if (event.keyCode == 69) {
             // e
             newGame();
         }
-    } else if (state == gWorld.state.states.INGAME || state == gWorld.state.states.PAUSED) {
+    } else if (state == gWorld.state.states.ARENA || state == gWorld.state.states.PAUSED) {
         if (event.keyCode == 80) {
             // p
             pause();
@@ -124,7 +122,7 @@ function onKeyDown(event) {
             mute();
         }
     }
-    if (state == gWorld.state.states.END) {
+    if (state == gWorld.state.states.ARENAEND) {
         if (event.keyCode == 84 && gWorld.newbest && gWorld.score > 30) {
             // t
             window.open("http://twitter.com/home?status=I have been practicing my Mandarin and got a highscore of "+gWorld.bestscore+" on mandarinmojo.com", "_blank");
@@ -139,11 +137,11 @@ function onMouseClick(event) {
 }
 function pause() {
     var state = gWorld.state.getState();
-    if (state == gWorld.state.states.INGAME) {
+    if (state == gWorld.state.states.ARENA) {
         gWorld.state.setState(gWorld.state.states.PAUSED);
         $("paused").style.visibility = 'visible';
     } else if (state == gWorld.state.states.PAUSED) {
-        gWorld.state.setState(gWorld.state.states.INGAME);
+        gWorld.state.setState(gWorld.state.states.ARENA);
         $("paused").style.visibility = 'hidden';
     }
     //ignore p if in any other state
@@ -253,7 +251,7 @@ function newGame() {
         gWorld.currentproblem = null;
     }
     resetDeck();
-    gWorld.state.setState(gWorld.state.states.INGAME);
+    gWorld.state.setState(gWorld.state.states.ARENA);
 
     //gWorld.player.pos = [gCanvas.width/2, gCanvas.height/2];
     for (var i in gWorld.enemies) {
@@ -338,7 +336,7 @@ function nextCharacter() {
     }
 }
 function showCharacters() {
-    if (gWorld.state.getState() == gWorld.state.states.END) {
+    if (gWorld.state.getState() == gWorld.state.states.ARENAEND) {
         return; // Player has died.
     }
     /*for (var i = 0; i < gWorld.currentproblem.words.length; i++) {
@@ -567,7 +565,7 @@ function characterwrong() {
     gWorld.streak = 0;
     // if not practicing, game over
     if (gWorld.mode != 1) {
-        gWorld.state.setState(gWorld.state.states.END);
+        gWorld.state.setState(gWorld.state.states.ARENAEND);
     } else {
         gWorld.problems.splice(gWorld.problems.length - 2, 0, gWorld.currentproblem);
         nextCharacter();
@@ -591,7 +589,7 @@ function checkCollisions() {
             clearDivs();
             // if not practicing, game over
             if (gWorld.mode != 1) {
-                gWorld.state.setState(gWorld.state.states.END);
+                gWorld.state.setState(gWorld.state.states.ARENAEND);
             }
             characterwrong();
             return;
@@ -633,20 +631,6 @@ function checkCollisions() {
         }
     }
 }
-
-function drawInstructions(showImages) {
-    x = gCanvas.width/2;
-    drawText(gContext, "Mandarin Mojo", gWorld.textsize, gWorld.textcolor, x, 100);
-    drawText(gContext, "Collect the correct characters", gWorld.textsize, gWorld.textcolor, x, 210);
-    drawText(gContext, "Avoid the critters", gWorld.textsize, gWorld.textcolor, x, 240);
-    drawText(gContext, "Use the arrow keys to move", gWorld.textsize, gWorld.textcolor, x, 270);
-    drawText(gContext, "Press m to mute sound effects", gWorld.textsize, gWorld.textcolor, x, 300);
-    drawText(gContext, "Press p to pause", gWorld.textsize, gWorld.textcolor, x, 330);
-
-    drawText(gContext, "Press e to begin", gWorld.textsize, "white", x, 400);
-
-    gWorld.player.draw();
-}
     
 function drawGame() {
     gContext.clearRect(0, 0, gCanvas.width, gCanvas.height);
@@ -657,52 +641,8 @@ function drawGame() {
     //}
 
     var state = gWorld.state.getState();
-    if (state == gWorld.state.states.LOADING) {
-        drawInstructions(false);
-        var total = gWorld.sounds.sounds.length + gWorld.images.images.length;
-        var loaded = gWorld.sounds.numSoundsLoaded + gWorld.images.numImagesLoaded;
-        if (loaded < total) {
-            //gContext.clearRect(0, 0, gCanvas.width, gCanvas.height);
-            var text = "Loading...    "+loaded+"/"+total;
-            drawText(gContext, text, gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 400);
-            //return;
-        } else {
-            gWorld.state.setState(gWorld.state.states.PREGAME);
-        }
-    } else if (state == gWorld.state.states.PREGAME) {
-        drawInstructions(true);
-    } else if (state == gWorld.state.states.INGAME) {
-        if (gWorld.message) {
-            gWorld.message.draw();
-        }
-        for (var i in gWorld.projectiles) {
-            gWorld.projectiles[i].draw();
-        }
-        for (var i in gWorld.enemies) {
-            gWorld.enemies[i].draw();
-        }
-        gWorld.player.draw();
-        for (var i in gWorld.decorations) {
-            gWorld.decorations[i].draw();
-        }
-
-        //drawText(gContext, s, gWorld.textsize, gWorld.textcolor, 10, 20);
-        //drawText(gContext, gWorld.score, gWorld.textsize, gWorld.textcolor, 480, 20);
-
-    } else if (state == gWorld.state.states.END) {
-        //drawText(gContext, "Chinese Character Challenge", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 100);
-        drawText(gContext, "You got "+gWorld.score+" in a row.", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 150);
-        drawText(gContext, "Your best score is "+gWorld.bestscore, gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 190);
-        if (gWorld.newbest) {
-            drawText(gContext, "New best score!!", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 270);
-            if (gWorld.score > 30) {
-                drawText(gContext, "Press t to tell twitter", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 310);
-            }
-        }
-        drawText(gContext, "Press e to play again", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 390);
-        for (var i in gWorld.decorations) {
-            gWorld.decorations[i].draw();
-        }
+    if (state != gWorld.state.states.PAUSED) {
+        gWorld.state.stateengine.draw();
     }
 }
 
@@ -725,7 +665,7 @@ var mainloop = function() {
                 gWorld.loopCount %= 20; //stop it going to infinity
 
                 updateGame(gWorld.dt);
-                if (state == gWorld.state.states.INGAME) {
+                if (state == gWorld.state.states.ARENA) {
                     checkCollisions();
                 }
                 drawGame();

@@ -13,6 +13,11 @@ game.State_ArenaIntro.prototype.end = function() {
 };
 
 game.State_ArenaIntro.prototype.draw = function() {
+    var img = gWorld.images.getImage('background');
+    if (img) {
+        gContext.drawImage(img, 0, 0);
+    }
+
     x = gCanvas.width/2;
     drawText(gContext, "Mandarin Mojo", gWorld.textsize, gWorld.textcolor, x, 100);
     drawText(gContext, "Collect the correct characters", gWorld.textsize, gWorld.textcolor, x, 210);

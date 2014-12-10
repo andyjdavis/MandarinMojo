@@ -13,6 +13,10 @@ game.State_Arena.prototype.end = function() {
 };
 
 game.State_Arena.prototype.draw = function() {
+    var img = gWorld.images.getImage('background');
+    if (img) {
+        gContext.drawImage(img, 0, 0);
+    }
     if (gWorld.message) {
         gWorld.message.draw();
     }

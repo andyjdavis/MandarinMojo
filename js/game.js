@@ -434,6 +434,9 @@ function spawnMonsters() {
 }
 
 function updateGame(dt) {
+    if (gWorld.state.stateengine) {
+        gWorld.state.stateengine.update(dt);
+    }
     if (gWorld.message) {
         if (gWorld.message.update(dt) == false) {
             gWorld.message = null;
@@ -634,11 +637,6 @@ function checkCollisions() {
     
 function drawGame() {
     gContext.clearRect(0, 0, gCanvas.width, gCanvas.height);
-
-    //var img = gWorld.images.getImage('background');
-    //if (img) {
-        //gContext.drawImage(img, 0, 0);
-    //}
 
     var state = gWorld.state.getState();
     if (state != gWorld.state.states.PAUSED) {

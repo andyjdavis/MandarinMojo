@@ -13,6 +13,11 @@ game.State_ArenaEnd.prototype.end = function() {
 };
 
 game.State_ArenaEnd.prototype.draw = function() {
+    var img = gWorld.images.getImage('background');
+    if (img) {
+        gContext.drawImage(img, 0, 0);
+    }
+
     //drawText(gContext, "Chinese Character Challenge", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 100);
     drawText(gContext, "You got "+gWorld.score+" in a row.", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 150);
     drawText(gContext, "Your best score is "+gWorld.bestscore, gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 190);

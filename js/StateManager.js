@@ -9,6 +9,7 @@ game.StateManager = function() {
         ARENA: 2,
         ARENAEND: 3,
         PAUSED: 4,
+        MAP: 5,
     };
     this.setState(this.states.LOADING);
 };
@@ -31,6 +32,9 @@ game.StateManager.prototype.setState = function(s) {
             break;
         case this.states.ARENAEND:
             this.stateengine = new game.State_ArenaEnd();
+            break;
+        case this.states.MAP:
+            this.stateengine = new game.State_Map();
             break;
         default:
             console.log('unknown state:'+s);

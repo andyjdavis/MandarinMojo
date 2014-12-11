@@ -22,8 +22,8 @@ game.State_Loading.prototype.draw = function() {
         drawText(gContext, text, gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 400);
         //return;
     } else {
-        //gWorld.state.setState(gWorld.state.states.ARENAINTRO);
-        gWorld.state.setState(gWorld.state.states.MAP);
+        gWorld.state.setState(gWorld.state.states.ARENAINTRO);
+        //gWorld.state.setState(gWorld.state.states.MAP);
     }
 };
 game.State_Loading.prototype.update = function(dt) {

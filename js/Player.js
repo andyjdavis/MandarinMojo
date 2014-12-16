@@ -35,20 +35,21 @@ game.Player = function(pos) {
 game.Player.prototype = new game.Thing();
 game.Player.prototype.constructor = game.Player;
 
-game.Player.prototype.draw = function() {
+game.Player.prototype.draw = function(cameraposition) {
     var img = gWorld.images.getImage('hero');
     if (!img) {
         return;
     }
-    //game.Thing.prototype.draw.call(this, this.pos, 'hero');
-    /*if (this.div.style.left != this.pos[0]+"px") {
-        this.div.style.left = this.pos[0]+"px";
+    if (!cameraposition) {
+        cameraposition = [0, 0];
     }
-    if (this.div.style.top != this.pos[1]+"px") {
-        this.div.style.top = this.pos[1]+"px";
-    }*/
+
     var sourceWidth = 72;
     var sourceHeight = 97;
+
+    var drawX = this.pos[0] - cameraposition[0];
+    var drawY = this.pos[1] - cameraposition[1];
+
     if (this.walking) {
         if (gWorld.loopCount % 2 == 0) {
             this.frame++;
@@ -61,14 +62,13 @@ game.Player.prototype.draw = function() {
 
         if (this.goingleft) {
             gContext.save();
-            var flipAxis = this.pos[0] + this.size[0]/2;
+            var flipAxis = drawX + this.size[0]/2;
             gContext.translate(flipAxis, 0);
             gContext.scale(-1, 1);
             gContext.translate(-flipAxis, 0);
         }
 
-        gContext.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, this.pos[0], this.pos[1], this.size[0], this.size[1]);
-        //this.div.style.backgroundPosition = "-"+sourceX+"px -"+sourceY+"px";
+        gContext.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, drawX, drawY, this.size[0], this.size[1]);
 
         if (this.goingleft) {
             gContext.restore();
@@ -76,7 +76,7 @@ game.Player.prototype.draw = function() {
     } else {
         var sourceX = this.standingsourcelocations[0];
         var sourceY = this.standingsourcelocations[1];
-        gContext.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, this.pos[0], this.pos[1], this.size[0], this.size[1]);
+        gContext.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, drawX, drawY, this.size[0], this.size[1]);
     }
 }
 game.Player.prototype.setvisibility = function(visibility) {
@@ -111,8 +111,8 @@ game.Player.prototype.update = function(dt) {
     //if (gWorld.keyState[32]) { //spacebar - guns
     //    this.shoot();
     //}
-    
-    if (this.pos[0] < 30) {
+
+    /*if (this.pos[0] < 30) {
         this.pos[0] = 30;
     }
     if (this.pos[1] < 30) {
@@ -123,7 +123,7 @@ game.Player.prototype.update = function(dt) {
     }
     if (this.pos[1] + this.size[1] > gCanvas.height - 30) {
         this.pos[1] = gCanvas.height - 30 - this.size[1];
-    }
+    }*/
     //game.Thing.prototype.update.call(this, dt);
 }
 

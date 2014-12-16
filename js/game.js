@@ -11,7 +11,7 @@
 
 window.game = window.game || { };
 
-window.onload = function(){
+window.onload = function() {
     gLeft = $("left_col");
     gRight = $("left_col");
     gTable = $("thetable");
@@ -23,10 +23,11 @@ window.onload = function(){
     gSlots = [tl, bl, tr, br];
 
     gCanvas = dc("canvas");
-    gContext = gCanvas.getContext("2d");
     gCanvas.width = 512;
     gCanvas.height = 480;
     gLeft.appendChild(gCanvas);
+
+    gContext = gCanvas.getContext("2d");
 
 	if (getParameterByName("Pinyin") == 1) {
 	    gPinyin = dc("p");
@@ -54,7 +55,6 @@ window.onload = function(){
         state: new game.StateManager(), // Defaults to state LOADING.
         images: null,
         sounds: null,
-        player: new game.Player([64, 85]),
         enemies: Array(),
         projectiles: Array(),
         decorations: Array(),
@@ -248,9 +248,6 @@ function updateGame(dt) {
         if (gWorld.message.update(dt) == false) {
             gWorld.message = null;
         }
-    }
-    if (gWorld.player) {
-        gWorld.player.update(dt);
     }
 }
     

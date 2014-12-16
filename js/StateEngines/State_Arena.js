@@ -3,19 +3,20 @@
 window.game = window.game || { };
 
 game.State_Arena = function() {
+    this.player = new game.Player([64, 85]);
 }
 game.State_Arena.prototype = new game.Thing();
 game.State_Arena.prototype.constructor = game.State_Arena;
 
 game.State_Arena.prototype.start = function() {
     this.resetDeck();
-    //gWorld.player.pos = [gCanvas.width/2, gCanvas.height/2];
+    //this.player.pos = [gCanvas.width/2, gCanvas.height/2];
     for (var i in gWorld.enemies) {
         gWorld.enemies[i].die();
     }
     gWorld.enemies = Array();
     this.nextCharacter();
-    gWorld.player.setvisibility("visible");
+    this.player.setvisibility("visible");
     this.updateScoreDisplay();
 };
 game.State_Arena.prototype.end = function() {
@@ -35,7 +36,7 @@ game.State_Arena.prototype.draw = function() {
     for (var i in gWorld.enemies) {
         gWorld.enemies[i].draw();
     }
-    gWorld.player.draw();
+    this.player.draw();
     for (var i in gWorld.decorations) {
         gWorld.decorations[i].draw();
     }
@@ -60,6 +61,7 @@ game.State_Arena.prototype.update = function(dt) {
             gWorld.decorations.splice(i, 1);
         }
     }
+    this.player.update(dt);
     this.checkCollisions();
 };
 
@@ -69,7 +71,7 @@ game.State_Arena.prototype.checkCollisions = function() {
     for (var j = gWorld.enemies.length - 1; j >= 0;j--) {
         enemy = gWorld.enemies[j];
 
-        if (enemy.collideThing(gWorld.player)) {
+        if (enemy.collideThing(this.player)) {
             if (enemy.isDead()) {
                 continue;
             }
@@ -109,7 +111,7 @@ game.State_Arena.prototype.checkCollisions = function() {
             continue;
         }
 
-        if (char.collideThing(gWorld.player)) {
+        if (char.collideThing(this.player)) {
             this.explodestuff();
             this.clearDivs();
 
@@ -153,7 +155,7 @@ game.State_Arena.prototype.shootProjectile = function() {
     var leastdistance = null;
     var distance = null;
     for (var i in gWorld.enemies) {
-        distance = Math.abs(calcDistance(calcVector(gWorld.player.pos, gWorld.enemies[i].pos)));
+        distance = Math.abs(calcDistance(calcVector(this.player.pos, gWorld.enemies[i].pos)));
         if (enemy == null || distance < leastdistance) {
             enemy = gWorld.enemies[i];
             leastdistance = distance;
@@ -164,11 +166,11 @@ game.State_Arena.prototype.shootProjectile = function() {
     //var enemy = gWorld.enemies[gWorld.enemies.length - 1];
     target = [enemy.pos[0] + enemy.size[0]/2, enemy.pos[1] + enemy.size[1]/2];
 
-    var playerX = gWorld.player.pos[0] + gWorld.player.size[0]/2;
-    var playerY = gWorld.player.pos[1] + gWorld.player.size[1]/2;
+    var playerX = this.player.pos[0] + this.player.size[0]/2;
+    var playerY = this.player.pos[1] + this.player.size[1]/2;
     var vector = calcNormalVector(target, [playerX, playerY]);
 
-    var pos = [gWorld.player.pos[0], gWorld.player.pos[1]];
+    var pos = [this.player.pos[0], this.player.pos[1]];
 
     var projectile = new game.Projectile(pos, [vector[0] * 200, vector[1] * 200]);
     gWorld.projectiles.push(projectile);
@@ -218,8 +220,8 @@ game.State_Arena.prototype.characterwrong = function() {
     gWorld.sounds.play("fail");
     gLastCorrect = false;
 
-    //gWorld.player.setvisibility("hidden");
-    gWorld.decorations.push(new game.Explosion(gWorld.player.pos));
+    //this.player.setvisibility("hidden");
+    gWorld.decorations.push(new game.Explosion(this.player.pos));
     this.updateTable();
     gWorld.streak = 0;
     // if not practicing, game over
@@ -385,7 +387,7 @@ game.State_Arena.prototype.showCharacters = function() {
     }
 };
 game.State_Arena.prototype.createAura = function() {
-    gWorld.decorations.push(new game.Aura('white', 1, 0.1));
+    gWorld.decorations.push(new game.Aura(this.player, 'white', 1, 0.1));
 };
 game.State_Arena.prototype.playAudio = function() {
     var correct = gWorld.currentproblem.getCorrectWord();

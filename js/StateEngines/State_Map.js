@@ -4,6 +4,7 @@ window.game = window.game || { };
 
 game.State_Map = function() {
     this.cameraposition = [0, 0];
+    this.player = new game.Player([gCanvas.width/2, gCanvas.height/2]);
 }
 game.State_Map.prototype = new game.Thing();
 game.State_Map.prototype.constructor = game.State_Map;
@@ -34,11 +35,18 @@ game.State_Map.prototype.draw = function() {
                 gWorld.map.drawForegroundTile(x, y, 32, 32, this.cameraposition);
             }
         }
+        this.player.draw(this.cameraposition);
     }
 };
 game.State_Map.prototype.update = function(dt) {
-    this.cameraposition[0] += 1;
-    this.cameraposition[1] += 1;
+    this.player.update(dt);
+
+    var canvasWidth = gCanvas.width;
+    if (this.player.pos[0] - this.cameraposition[0] > (canvasWidth * 0.7)) {
+        this.cameraposition[0] += 2;
+    } else if (this.cameraposition[0] > 0 && this.player.pos[0] - this.cameraposition[0] < (canvasWidth * 0.3)) {
+        this.cameraposition[0] -= 2;
+    }
 };
 
 //}());

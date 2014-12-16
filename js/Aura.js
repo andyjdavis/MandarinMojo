@@ -2,7 +2,8 @@
 
 window.game = window.game || { };
 
-game.Aura = function(color, lifespan, opacity) {
+game.Aura = function(centerobj, color, lifespan, opacity) {
+    this.centerobj = centerobj;
     this.color = color;
     this.lifespan = lifespan;
     this.opacity = opacity;
@@ -44,8 +45,8 @@ game.Aura.prototype.draw = function() {
     }
 };
 game.Aura.prototype.update = function(dt) {
-    this.pos = [gWorld.player.pos[0] + gWorld.player.size[0]/2,
-                gWorld.player.pos[1] + gWorld.player.size[1]/2];
+    this.pos = [this.centerobj.pos[0] + this.centerobj.size[0]/2,
+                this.centerobj.pos[1] + this.centerobj.size[1]/2];
 
     this.angle -= 2*dt;
     this.age += dt;

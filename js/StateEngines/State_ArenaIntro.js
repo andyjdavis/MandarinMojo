@@ -28,7 +28,7 @@ game.State_ArenaIntro.prototype.draw = function() {
 
     drawText(gContext, "Press e to begin", gWorld.textsize, "white", x, 400);
 
-    gWorld.player.draw();
+    //gWorld.player.draw();
 };
 game.State_ArenaIntro.prototype.update = function(dt) {
 };

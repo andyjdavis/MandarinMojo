@@ -5,6 +5,11 @@ window.game = window.game || { };
 game.State_Map = function() {
     this.cameraposition = [0, 0];
     this.player = new game.Player([gCanvas.width/2, gCanvas.height/2]);
+
+    this.cameraright = false;
+    this.cameraleft = false;
+    this.cameraup = false;
+    this.cameradown = false;
 }
 game.State_Map.prototype = new game.Thing();
 game.State_Map.prototype.constructor = game.State_Map;
@@ -41,11 +46,40 @@ game.State_Map.prototype.draw = function() {
 game.State_Map.prototype.update = function(dt) {
     this.player.update(dt);
 
-    var canvasWidth = gCanvas.width;
-    if (this.player.pos[0] - this.cameraposition[0] > (canvasWidth * 0.7)) {
-        this.cameraposition[0] += 2;
-    } else if (this.cameraposition[0] > 0 && this.player.pos[0] - this.cameraposition[0] < (canvasWidth * 0.3)) {
-        this.cameraposition[0] -= 2;
+    if (this.player.pos[0] - this.cameraposition[0] > (gCanvas.width * 0.8)) {
+        this.cameraright = true;
+    } else if (this.cameraposition[0] > 0 && this.player.pos[0] - this.cameraposition[0] < (gCanvas.width * 0.2)) {
+        this.cameraleft = true;
+    }
+    if (this.player.pos[1] - this.cameraposition[1] > (gCanvas.height * 0.8)) {
+        this.cameradown = true;
+    } else if (this.cameraposition[1] > 0 && this.player.pos[1] - this.cameraposition[1] < (gCanvas.height * 0.2)) {
+        this.cameraup = true;
+    }
+
+    var speed = 6;
+    if (this.cameraright) {
+        this.cameraposition[0] += speed;
+    } else if (this.cameraleft) {
+        this.cameraposition[0] -= speed;
+        this.cameraposition[0] = this.cameraposition[0] < 0 ? 0 : this.cameraposition[0];
+    }
+    if (this.cameradown) {
+        this.cameraposition[1] += speed;
+    } else if (this.cameraup) {
+        this.cameraposition[1] -= speed;
+        this.cameraposition[1] = this.cameraposition[1] < 0 ? 0 : this.cameraposition[1];
+    }
+
+    if (this.player.pos[0] - this.cameraposition[0] < (gCanvas.width * 0.25)) {
+        this.cameraright = false;
+    } else if (this.player.pos[0] - this.cameraposition[0] > (gCanvas.width * 0.75)) {
+        this.cameraleft = false;
+    }
+    if (this.player.pos[1] - this.cameraposition[1] < (gCanvas.height * 0.25)) {
+        this.cameradown = false;
+    } else if (this.player.pos[1] - this.cameraposition[1] > (gCanvas.height * 0.75)) {
+        this.cameraup = false;
     }
 };
 

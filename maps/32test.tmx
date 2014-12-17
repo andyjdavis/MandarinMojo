@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<map version="1.0" orientation="orthogonal" width="32" height="32" tilewidth="32" tileheight="32">
+ <tileset firstgid="1" name="Tiny32-Complete-Spritesheet-Repack3" tilewidth="32" tileheight="32">
+  <image source="Tiny32-Complete-Spritesheet-Repack3.png" trans="ff00ff" width="512" height="512"/>
+ </tileset>
+ <layer name="background" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJzzYWBg8EHD+nTE6HaP2j+w9tPTbnR3kKrHAAmPRPv1B4H9Axn/1LafGAxSmzpA/h8MYTRq/8i1fxSP4lE8ikfxKB7FwwMDAEKlwVg=
+  </data>
+ </layer>
+ <layer name="backgrounddecoration" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJxjYBgFowABAgbATl8o7TcAdg8F4DnQDqATsBtoBxAB5tLQbHzp3xeP3CgYBaNgFIyCUTAKRsEoGAXEAgDOKQKr
+  </data>
+ </layer>
+ <layer name="impassable" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJzt0SEOACAMBMFa+v8Hg8HVNCEImEnW1JxoBAA/y9Uoyov7nbv9s6rf7wCAt0yfqgC9
+  </data>
+ </layer>
+ <layer name="foreground" width="32" height="32">
+  <data encoding="base64" compression="zlib">
+   eJztzjENAAAIA7DZwr8xHOwi4WkVNAGa+Q4AAAAcWO0aADo=
+  </data>
+ </layer>
+ <objectgroup name="Object Layer 1" width="32" height="32">
+  <object name="arena 1" x="415" y="319" width="35" height="35">
+   <properties>
+    <property name="HSK level" value="1"/>
+    <property name="index" value="0"/>
+   </properties>
+  </object>
+ </objectgroup>
+</map>

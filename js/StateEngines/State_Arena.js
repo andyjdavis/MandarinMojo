@@ -11,10 +11,10 @@ game.State_Arena.prototype.constructor = game.State_Arena;
 game.State_Arena.prototype.start = function() {
     this.resetDeck();
     //this.player.pos = [gCanvas.width/2, gCanvas.height/2];
-    for (var i in gWorld.enemies) {
-        gWorld.enemies[i].die();
+    for (var i in this.enemies) {
+        this.enemies[i].die();
     }
-    gWorld.enemies = Array();
+    this.enemies = Array();
     this.nextCharacter();
     this.player.setvisibility("visible");
     this.updateScoreDisplay();
@@ -33,8 +33,8 @@ game.State_Arena.prototype.draw = function() {
     for (var i in gWorld.projectiles) {
         gWorld.projectiles[i].draw();
     }
-    for (var i in gWorld.enemies) {
-        gWorld.enemies[i].draw();
+    for (var i in this.enemies) {
+        this.enemies[i].draw();
     }
     this.player.draw();
     for (var i in gWorld.decorations) {
@@ -45,9 +45,9 @@ game.State_Arena.prototype.draw = function() {
     //drawText(gContext, gWorld.score, gWorld.textsize, gWorld.textcolor, 480, 20);
 };
 game.State_Arena.prototype.update = function(dt) {
-    for (var i = gWorld.enemies.length - 1;i >= 0;i--) {
-        if (gWorld.enemies[i].update(dt) == false) {
-            gWorld.enemies.splice(i, 1);
+    for (var i = this.enemies.length - 1;i >= 0;i--) {
+        if (this.enemies[i].update(dt, this.player) == false) {
+            this.enemies.splice(i, 1);
             this.spawnMonsters();
         }
     }
@@ -68,15 +68,15 @@ game.State_Arena.prototype.update = function(dt) {
 game.State_Arena.prototype.checkCollisions = function() {
     var enemy;
     var projectile;
-    for (var j = gWorld.enemies.length - 1; j >= 0;j--) {
-        enemy = gWorld.enemies[j];
+    for (var j = this.enemies.length - 1; j >= 0;j--) {
+        enemy = this.enemies[j];
 
         if (enemy.collideThing(this.player)) {
             if (enemy.isDead()) {
                 continue;
             }
             enemy.die();
-            gWorld.enemies.splice(j, 1);
+            this.enemies.splice(j, 1);
             gWorld.decorations.push(new game.Explosion(enemy.pos));
 
             this.explodestuff();
@@ -92,7 +92,7 @@ game.State_Arena.prototype.checkCollisions = function() {
             projectile = gWorld.projectiles[p];
             if (enemy.collideThing(projectile)) {
                 enemy.hit();
-                //gWorld.enemies.splice(j, 1);
+                //this.enemies.splice(j, 1);
                 gWorld.projectiles.splice(p, 1);
                 gWorld.decorations.push(new game.Explosion(enemy.pos));
                 this.spawnMonsters();
@@ -127,8 +127,8 @@ game.State_Arena.prototype.checkCollisions = function() {
 };
 game.State_Arena.prototype.explodestuff = function() {
     //explode monsters
-    for (var j in gWorld.enemies) {
-        //gWorld.decorations.push(new game.Explosion(gWorld.enemies[j].pos));
+    for (var j in this.enemies) {
+        //gWorld.decorations.push(new game.Explosion(this.enemies[j].pos));
     }
 
     //explode the characters
@@ -146,7 +146,7 @@ game.State_Arena.prototype.clearDivs = function() {
     }
 };
 game.State_Arena.prototype.shootProjectile = function() {
-    if (gWorld.enemies.length <= 0) {
+    if (this.enemies.length <= 0) {
         return;
     }
 
@@ -154,16 +154,16 @@ game.State_Arena.prototype.shootProjectile = function() {
     var enemy = null;
     var leastdistance = null;
     var distance = null;
-    for (var i in gWorld.enemies) {
-        distance = Math.abs(calcDistance(calcVector(this.player.pos, gWorld.enemies[i].pos)));
+    for (var i in this.enemies) {
+        distance = Math.abs(calcDistance(calcVector(this.player.pos, this.enemies[i].pos)));
         if (enemy == null || distance < leastdistance) {
-            enemy = gWorld.enemies[i];
+            enemy = this.enemies[i];
             leastdistance = distance;
             continue;
         }
     }
 
-    //var enemy = gWorld.enemies[gWorld.enemies.length - 1];
+    //var enemy = this.enemies[this.enemies.length - 1];
     target = [enemy.pos[0] + enemy.size[0]/2, enemy.pos[1] + enemy.size[1]/2];
 
     var playerX = this.player.pos[0] + this.player.size[0]/2;
@@ -285,9 +285,9 @@ game.State_Arena.prototype.spawnMonsters = function() {
 
     var door, pos, m;
     if (gWorld.debug) {
-        console.log("There are "+gWorld.enemies.length+" monsters but there should be "+n);
+        console.log("There are "+this.enemies.length+" monsters but there should be "+n);
     }
-    while (gWorld.enemies.length < n) {
+    while (this.enemies.length < n) {
         door = Math.floor(Math.random() * 4) + 1;
 
         if (door == 1) {
@@ -300,7 +300,7 @@ game.State_Arena.prototype.spawnMonsters = function() {
             pos = [gCanvas.width/2, gCanvas.height];
         }
         m = new game.Monster(pos);
-        gWorld.enemies.push(m);
+        this.enemies.push(m);
     }
 };
 game.State_Arena.prototype.resetDeck = function() {

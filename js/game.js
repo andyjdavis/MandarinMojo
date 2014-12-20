@@ -55,7 +55,6 @@ window.onload = function() {
         state: new game.StateManager(), // Defaults to state LOADING.
         images: null,
         sounds: null,
-        enemies: Array(),
         projectiles: Array(),
         decorations: Array(),
 

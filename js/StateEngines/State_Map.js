@@ -45,6 +45,7 @@ game.State_Map.prototype.draw = function() {
 };
 game.State_Map.prototype.update = function(dt) {
     this.player.update(dt);
+    this.checkCollisions();
 
     if (this.player.pos[0] - this.cameraposition[0] > (gCanvas.width * 0.8)) {
         this.cameraright = true;
@@ -82,5 +83,32 @@ game.State_Map.prototype.update = function(dt) {
         this.cameraup = false;
     }
 };
+game.State_Map.prototype.checkCollisions = function() {
+    if (!gWorld.map) {
+        return false;
+    }
+    var objectlayer = gWorld.map.getObjectLayer();
+    for (var i in objectlayer.objects) {
+        if (objectlayer.objects[i].type == 'arena') {
+            if (this.checkCollision(objectlayer.objects[i])) {
+                // Enter the arena.
+                console.log(objectlayer.objects[i].properties.level);
+                gWorld.state.setState(gWorld.state.states.ARENAINTRO);
+            }
+        }
+    }
+
+    return true;
+};
+game.State_Map.prototype.checkCollision = function(obj) {
+    if (this.player.pos[0] + this.player.size[0] < obj.x
+        || this.player.pos[0] > obj.x + obj.width
+        || this.player.pos[1] + this.player.size[1] < obj.y
+        || this.player.pos[1] > obj.y + obj.height
+    ) {
+        return false;
+    }
+    return true;
+}
 
 //}());

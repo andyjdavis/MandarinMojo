@@ -102,15 +102,15 @@ game.Monster.prototype.draw = function() {
         gContext.restore();
     }
 };
-game.Monster.prototype.update = function(dt) {
+game.Monster.prototype.update = function(dt, player) {
     if (this.isDead() && Date.now() > this.timeDied + 2000) {
         return false;
     }
     if (this.isDead()) {
         return true;
     }
-    if (gWorld.player != undefined) {
-        var vect = calcNormalVector(gWorld.player.pos, this.pos);
+    if (player != undefined) {
+        var vect = calcNormalVector(player.pos, this.pos);
         var maxvar = null;
         switch(this.type) {
             case 0:

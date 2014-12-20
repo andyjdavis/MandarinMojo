@@ -6,21 +6,11 @@ game.Map = function(jsonobj) {
     this.jsonobj = jsonobj;
     //alert(this.jsonobj.layers[0].name);
 
-    this.background1layer = "background";
-    this.background2layer = "backgrounddecoration";
-    //this.impassablelayer = "impassable";
+    this.objectlayer = "Object Layer";
     this.forebackground1layer = "foreground";
-
-    /*this.numImagesLoaded = 0;
-    this.imagedict = {
-        'tiles': "basictiles_2.png"
-    };
-    this.images = Array(1);
-    for (var name in this.imagedict) {
-        this.images[name] = new Image();
-        this.images[name].onload = onImageLoad;
-        this.images[name].src = this.imagedict[name];
-    }*/
+    this.impassablelayer = "impassable";
+    this.background2layer = "backgrounddecoration";
+    this.background1layer = "background";
 };
 
 game.Map.prototype._drawTile = function(x, y, drawWidth, drawHeight, layerName, cameraposition) {
@@ -83,7 +73,15 @@ game.Map.prototype.getMapDimensions = function() {
 
 game.Map.prototype.tilePassable = function(x, y) {
 };
-
+game.Map.prototype.getObjectLayer = function() {
+    for (var i in this.jsonobj.layers) {
+        layer = this.jsonobj.layers[i];
+        if (layer.name == this.objectlayer) {
+            return layer;
+        }
+    }
+    return null;
+}
 //gImages = new game.ImageManager();
 
 //}());

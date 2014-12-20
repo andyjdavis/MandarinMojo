@@ -46,21 +46,21 @@
         }, 
         {
          "height":32,
-         "name":"Object Layer 1",
+         "name":"Object Layer",
          "objects":[
                 {
                  "height":35,
                  "name":"arena 1",
                  "properties":
                     {
-                     "HSK level":"1",
-                     "index":"0"
+                     "index":"0",
+                     "level":"1"
                     },
-                 "type":"",
+                 "type":"arena",
                  "visible":true,
                  "width":35,
-                 "x":415,
-                 "y":319
+                 "x":417,
+                 "y":320
                 }],
          "opacity":1,
          "type":"objectgroup",

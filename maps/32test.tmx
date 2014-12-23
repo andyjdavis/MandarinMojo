@@ -26,8 +26,9 @@
  <objectgroup name="Object Layer" width="32" height="32">
   <object name="arena 1" type="arena" x="417" y="320" width="35" height="35">
    <properties>
-    <property name="index" value="0"/>
     <property name="level" value="1"/>
+    <property name="wordcount" value="50"/>
+    <property name="wordindex" value="0"/>
    </properties>
   </object>
  </objectgroup>

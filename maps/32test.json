@@ -53,8 +53,9 @@
                  "name":"arena 1",
                  "properties":
                     {
-                     "index":"0",
-                     "level":"1"
+                     "level":"1",
+                     "wordcount":"50",
+                     "wordindex":"0"
                     },
                  "type":"arena",
                  "visible":true,

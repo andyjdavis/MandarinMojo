@@ -3,6 +3,10 @@
 window.game = window.game || { };
 
 game.State_ArenaEnd = function() {
+    this.decorations = null;
+    this.level = 0;
+    this.wordcount = 0;
+    this.got = 0;
 }
 game.State_ArenaEnd.prototype = new game.Thing();
 game.State_ArenaEnd.prototype.constructor = game.State_ArenaEnd;
@@ -19,20 +23,24 @@ game.State_ArenaEnd.prototype.draw = function() {
     }
 
     //drawText(gContext, "Chinese Character Challenge", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 100);
-    drawText(gContext, "You got "+gWorld.score+" in a row.", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 150);
-    drawText(gContext, "Your best score is "+gWorld.bestscore, gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 190);
-    if (gWorld.newbest) {
-        drawText(gContext, "New best score!!", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 270);
-        if (gWorld.score > 30) {
-            drawText(gContext, "Press t to tell twitter", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 310);
-        }
+    drawText(gContext, "You got "+this.got+"/"+this.wordcount, gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 150);
+    if (this.got == this.needed) {
+        drawText(gContext, "Arena complete!", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 270);
+    } else {
+        drawText(gContext, "Arena failed", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 270);
     }
-    drawText(gContext, "Press e to play again", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 390);
-    for (var i in gWorld.decorations) {
-        gWorld.decorations[i].draw();
+    drawText(gContext, "Press e to exit the arena", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 390);
+    for (var i in this.decorations) {
+        this.decorations[i].draw();
     }
 };
 game.State_ArenaEnd.prototype.update = function(dt) {
 };
+game.State_ArenaEnd.prototype.onKeyDown = function(event) {
+    // "e"
+    if (event.keyCode == 69) {
+        gWorld.state.setState(gWorld.state.states.MAP);
+    }
+}
 
 //}());

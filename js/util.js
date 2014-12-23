@@ -35,6 +35,14 @@ function getParameterByName(name) {
         results = regex.exec(location.search);
     return results == null ? "" : decodeURIComponent(results[1].replace(/\+/g, " "));
 }
+function updateObjects(arr, dt, arg) {
+    for (var i = arr.length - 1;i >= 0;i--) {
+        if (arr[i].update(dt, arg) == false) {
+            arr.splice(i, 1);
+        }
+    }
+    //return arr;
+}
 function getRandomInt(min, max) {
     return Math.floor(Math.random() * (max - min + 1)) + min;
 }

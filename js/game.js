@@ -55,8 +55,6 @@ window.onload = function() {
         state: new game.StateManager(), // Defaults to state LOADING.
         images: null,
         sounds: null,
-        projectiles: Array(),
-        decorations: Array(),
 
         problems: Array(), //randomly ordered array of problem instances
         solvedproblems: Array(),
@@ -105,11 +103,14 @@ window.onload = function() {
 
 function onKeyDown(event) {
     //console.log(event.keyCode);
-    var state = gWorld.state.getState();
-    if (state == gWorld.state.states.ARENAINTRO || state == gWorld.state.states.ARENAEND) {
+    var stateengine = gWorld.state.stateengine;
+    if (typeof stateengine.onKeyDown === 'function') {
+        stateengine.onKeyDown(event);
+    }
+    /*if (state == gWorld.state.states.ARENAINTRO || state == gWorld.state.states.ARENAEND) {
         if (event.keyCode == 69) {
             // e
-            newGame();
+            //newGame();
         }
     } else if (state == gWorld.state.states.ARENA || state == gWorld.state.states.PAUSED) {
         if (event.keyCode == 80) {
@@ -120,7 +121,7 @@ function onKeyDown(event) {
             // m
             mute();
         }
-    }
+    }*/
     gWorld.keyState[event.keyCode] = true;
 }
 function onKeyUp(event) {
@@ -169,7 +170,8 @@ function loadWords() {
 	for (var i in files) {
 		var n = i;
 		var name = "HSK"+(++n);
-		if (getParameterByName(name)) {
+		wordobjects[i] = Array();
+		//if (getParameterByName(name)) {
 			var xmlhttp = window.XMLHttpRequest ? new XMLHttpRequest() : new ActiveXObject('Microsoft.XMLHTTP');
 			xmlhttp.onreadystatechange = function() {
 				
@@ -180,55 +182,54 @@ function loadWords() {
 				//replace new lines with tabs then split on tabs.
 			    var words = xmlhttp.responseText.replace(/(\r\n|\n|\r)/gm,"\t").split(/\t/g);
 
-			    for (var i = 0; i < words.length; i += 5) {
-			    	if (words[i] && words[i + traditionaloffset] != "") {
+			    for (var j = 0; j < words.length; j += 5) {
+			    	if (words[j] && words[j + traditionaloffset] != "") {
 
-					    wordobjects.push(new game.Word(words[i + traditionaloffset],
-                                                        words[i + 2 + squiglytoneoffset],
-                                                        squiglytoneoffset == 1 ? words[i + 2] : null,
-					                                    words[i + 4],
+					    wordobjects[i].push(new game.Word(words[j + traditionaloffset],
+                                                        words[j + 2 + squiglytoneoffset],
+                                                        squiglytoneoffset == 1 ? words[j + 2] : null,
+					                                    words[j + 4],
 					                                    true));
 			        }
 			    }
 			}
-		}
-	}
-	if (wordobjects.length == 0) {
-	    // No words were loaded so the URL parameters are most likely missing.
-	    window.location.replace('index.html');
+		//}
 	}
 
-    var correctwordcharcount = 0;
-    var wrongword = null;
-    var wordarray = null;
-    var totalwordcount = wordobjects.length;
-    var attempts = 0;
+    for (var i in files) {
+        var correctwordcharcount = 0;
+        var wrongword = null;
+        var wordarray = null;
+        var totalwordcount = wordobjects[i].length;
+        var attempts = 0;
+        gWorld.problems[i] = Array();
 
-	for (var i in wordobjects) {
-	    correctwordcharcount = wordobjects[i].character.length;
-	    wordarray = Array();
-	    wordarray.push(wordobjects[i]);
-	    attempts = 0;
+	    for (var j in wordobjects[i]) {
+	        correctwordcharcount = wordobjects[i][j].character.length;
+	        wordarray = Array();
+	        wordarray.push(wordobjects[i][j]);
+	        attempts = 0;
 
-	    while (wordarray.length < 4) {
-	        wrongword = wordobjects[getRandomInt(0, totalwordcount - 1)];
-	        if (attempts > 10 || (wrongword.character.length == correctwordcharcount
-                    	          && wrongword.character != wordobjects[i].character)) {
+	        while (wordarray.length < 4) {
+	            wrongword = wordobjects[i][getRandomInt(0, totalwordcount - 1)];
+	            if (attempts > 10 || (wrongword.character.length == correctwordcharcount
+                        	          && wrongword.character != wordobjects[i][j].character)) {
 
-                wrongword = new game.Word(wrongword.character, wrongword.pinyin, wrongword.getToRead(), wrongword.english, false);
-                wordarray.push(wrongword);
-                attempts = 0;
-	        } else {
-	            attempts++;
+                    wrongword = new game.Word(wrongword.character, wrongword.pinyin, wrongword.getToRead(), wrongword.english, false);
+                    wordarray.push(wrongword);
+                    attempts = 0;
+	            } else {
+	                attempts++;
+	            }
 	        }
+	        gWorld.problems[i].push(new game.Problem(shuffleArray(wordarray)));
 	    }
-	    gWorld.problems.push(new game.Problem(shuffleArray(wordarray)));
-	}
-	gWorld.problems = shuffleArray(gWorld.problems);
+	    gWorld.problems[i] = shuffleArray(gWorld.problems[i]);
+    }
 }
 
 function newGame() {
-    gWorld.score = 0;
+    /*gWorld.score = 0;
     gWorld.streak = 0;
     gWorld.newbest = false;
     if (gWorld.currentproblem) {
@@ -236,7 +237,7 @@ function newGame() {
         gWorld.problems.push(gWorld.currentproblem);
         gWorld.currentproblem = null;
     }
-    gWorld.state.setState(gWorld.state.states.ARENA);
+    gWorld.state.setState(gWorld.state.states.ARENA);*/
 }
 
 function updateGame(dt) {

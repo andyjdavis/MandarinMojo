@@ -92,8 +92,10 @@ game.State_Map.prototype.checkCollisions = function() {
         if (objectlayer.objects[i].type == 'arena') {
             if (this.checkCollision(objectlayer.objects[i])) {
                 // Enter the arena.
-                console.log(objectlayer.objects[i].properties.level);
-                gWorld.state.setState(gWorld.state.states.ARENAINTRO);
+                var state = gWorld.state.setState(gWorld.state.states.ARENAINTRO);
+                state.level = objectlayer.objects[i].properties.level;
+                state.wordindex = objectlayer.objects[i].properties.wordindex;
+                state.wordcount = objectlayer.objects[i].properties.wordcount;
             }
         }
     }

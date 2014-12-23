@@ -3,6 +3,9 @@
 window.game = window.game || { };
 
 game.State_ArenaIntro = function() {
+    this.level = 0;
+    this.wordindex = 0;
+    this.wordcount = 0;
 }
 game.State_ArenaIntro.prototype = new game.Thing();
 game.State_ArenaIntro.prototype.constructor = game.State_ArenaIntro;
@@ -31,6 +34,16 @@ game.State_ArenaIntro.prototype.draw = function() {
     //gWorld.player.draw();
 };
 game.State_ArenaIntro.prototype.update = function(dt) {
+};
+game.State_ArenaIntro.prototype.onKeyDown = function(event) {
+    // "e"
+    if (event.keyCode == 69) {
+        var state = gWorld.state.setState(gWorld.state.states.ARENA);
+        console.log('supplying '+this.level);
+        state.setLevel(this.level);
+        state.wordindex = this.wordindex;
+        state.wordcount = this.wordcount;
+    }
 };
 
 //}());

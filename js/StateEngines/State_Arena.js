@@ -4,20 +4,27 @@ window.game = window.game || { };
 
 game.State_Arena = function() {
     this.player = new game.Player([64, 85]);
+
+    this._level = -1;
+    this.wordindex = -1;
+    this.wordcount = -1;
+
+    this._problems = null;
+    this._currentproblem = null;
+    this._lastCorrect = false;
+    this._currentcharacters = null;
 }
 game.State_Arena.prototype = new game.Thing();
 game.State_Arena.prototype.constructor = game.State_Arena;
 
 game.State_Arena.prototype.start = function() {
-    this.resetDeck();
     //this.player.pos = [gCanvas.width/2, gCanvas.height/2];
-    for (var i in this.enemies) {
-        this.enemies[i].die();
-    }
+    //for (var i in this.enemies) {
+    //    this.enemies[i].die();
+    //}
     this.enemies = Array();
-    this.nextCharacter();
-    this.player.setvisibility("visible");
-    this.updateScoreDisplay();
+    this.projectiles = Array();
+    this.decorations = Array();
 };
 game.State_Arena.prototype.end = function() {
 };
@@ -30,39 +37,41 @@ game.State_Arena.prototype.draw = function() {
     if (gWorld.message) {
         gWorld.message.draw();
     }
-    for (var i in gWorld.projectiles) {
-        gWorld.projectiles[i].draw();
+    for (var i in this.projectiles) {
+        this.projectiles[i].draw();
     }
     for (var i in this.enemies) {
         this.enemies[i].draw();
     }
     this.player.draw();
-    for (var i in gWorld.decorations) {
-        gWorld.decorations[i].draw();
+    for (var i in this.decorations) {
+        this.decorations[i].draw();
     }
 
     //drawText(gContext, s, gWorld.textsize, gWorld.textcolor, 10, 20);
-    //drawText(gContext, gWorld.score, gWorld.textsize, gWorld.textcolor, 480, 20);
+    drawText(gContext, this.wordcount, gWorld.textsize, gWorld.textcolor, 480, 20);
 };
 game.State_Arena.prototype.update = function(dt) {
-    for (var i = this.enemies.length - 1;i >= 0;i--) {
+    /*for (var i = this.enemies.length - 1;i >= 0;i--) {
         if (this.enemies[i].update(dt, this.player) == false) {
             this.enemies.splice(i, 1);
             this.spawnMonsters();
         }
-    }
-    for (var i = gWorld.projectiles.length - 1;i >= 0;i--) {
-        if (gWorld.projectiles[i].update(dt) == false) {
-            gWorld.projectiles.splice(i, 1);
-        }
-    }
-    for (var i = gWorld.decorations.length - 1;i >= 0;i--) {
-        if (gWorld.decorations[i].update(dt) == false) {
-            gWorld.decorations.splice(i, 1);
-        }
-    }
+    }*/
+    updateObjects(this.enemies, dt, this.player);
+    updateObjects(this.projectiles, dt);
+    updateObjects(this.decorations, dt);
+
     this.player.update(dt);
     this.checkCollisions();
+
+    this.spawnMonsters();
+};
+game.State_Arena.prototype.setLevel = function(level) {
+    this._level = level;
+    this._problems = gWorld.problems[this._level - 1].slice(0); //copy the array
+    this.nextCharacter();
+    this.updateScoreDisplay();
 };
 
 game.State_Arena.prototype.checkCollisions = function() {
@@ -77,24 +86,24 @@ game.State_Arena.prototype.checkCollisions = function() {
             }
             enemy.die();
             this.enemies.splice(j, 1);
-            gWorld.decorations.push(new game.Explosion(enemy.pos));
+            this.decorations.push(new game.Explosion(enemy.pos));
 
             this.explodestuff();
             this.clearDivs();
             // if not practicing, game over
             if (gWorld.mode != 1) {
-                gWorld.state.setState(gWorld.state.states.ARENAEND);
+                this.gotoend();
             }
             this.characterwrong();
             return;
         }
-        for (var p in gWorld.projectiles) {
-            projectile = gWorld.projectiles[p];
+        for (var p in this.projectiles) {
+            projectile = this.projectiles[p];
             if (enemy.collideThing(projectile)) {
                 enemy.hit();
                 //this.enemies.splice(j, 1);
-                gWorld.projectiles.splice(p, 1);
-                gWorld.decorations.push(new game.Explosion(enemy.pos));
+                this.projectiles.splice(p, 1);
+                this.decorations.push(new game.Explosion(enemy.pos));
                 this.spawnMonsters();
                 if (gWorld.debug) {
                     console.log('enemy hit');
@@ -105,8 +114,8 @@ game.State_Arena.prototype.checkCollisions = function() {
     }
 
     var char;
-    for (var i in gWorld.currentcharacters) {
-        char = gWorld.currentcharacters[i];
+    for (var i in this._currentcharacters) {
+        char = this._currentcharacters[i];
         if (!char.visible) {
             continue;
         }
@@ -125,16 +134,24 @@ game.State_Arena.prototype.checkCollisions = function() {
         }
     }
 };
+game.State_Arena.prototype.gotoend = function() {
+    var state = gWorld.state.setState(gWorld.state.states.ARENAEND);
+    state.decorations = this.decorations;
+    state.level = this._level;
+    state.wordcount = this.wordcount;
+
+    state.got = gWorld.score;
+};
 game.State_Arena.prototype.explodestuff = function() {
     //explode monsters
     for (var j in this.enemies) {
-        //gWorld.decorations.push(new game.Explosion(this.enemies[j].pos));
+        //this.decorations.push(new game.Explosion(this.enemies[j].pos));
     }
 
     //explode the characters
-    for (var j in gWorld.currentcharacters) {
-        if (!gWorld.currentcharacters[j].iscorrect) {
-            gWorld.decorations.push(new game.Explosion(gWorld.currentcharacters[j].pos));
+    for (var j in this._currentcharacters) {
+        if (!this._currentcharacters[j].iscorrect) {
+            this.decorations.push(new game.Explosion(this._currentcharacters[j].pos));
         }
     }
 };
@@ -173,7 +190,7 @@ game.State_Arena.prototype.shootProjectile = function() {
     var pos = [this.player.pos[0], this.player.pos[1]];
 
     var projectile = new game.Projectile(pos, [vector[0] * 200, vector[1] * 200]);
-    gWorld.projectiles.push(projectile);
+    this.projectiles.push(projectile);
 };
 game.State_Arena.prototype.charactercorrect = function() {
     gWorld.score++;
@@ -205,35 +222,28 @@ game.State_Arena.prototype.charactercorrect = function() {
         gWorld.message = new game.Message(n + ' in a row');
     }
 
-    gLastCorrect = true;
+    this._lastcorrect = true;
 
     this.updateTable();
     //if (!gAudio) {
         gWorld.sounds.play("success");
     //}
     this.createAura();
-    gWorld.solvedproblems.push(gWorld.currentproblem);
+    gWorld.solvedproblems.push(this._currentproblem);
     this.nextCharacter();
     this.updateScoreDisplay();
 };
 game.State_Arena.prototype.characterwrong = function() {
     gWorld.sounds.play("fail");
-    gLastCorrect = false;
+    this._lastcorrect = false;
 
-    //this.player.setvisibility("hidden");
-    gWorld.decorations.push(new game.Explosion(this.player.pos));
+    this.decorations.push(new game.Explosion(this.player.pos));
     this.updateTable();
     gWorld.streak = 0;
-    // if not practicing, game over
-    if (gWorld.mode != 1) {
-        gWorld.state.setState(gWorld.state.states.ARENAEND);
-    } else {
-        gWorld.problems.splice(gWorld.problems.length - 2, 0, gWorld.currentproblem);
-        this.nextCharacter();
-    }
+    this.gotoend();
 };
 game.State_Arena.prototype.updateScoreDisplay = function() {
-    var s = gWorld.solvedproblems.length + "/" + (gWorld.problems.length + gWorld.solvedproblems.length + 1);
+    var s = gWorld.solvedproblems.length + "/" + (this._problems.length + gWorld.solvedproblems.length + 1);
     gWorld.wordsdiv.innerHTML = "words: " + s;
 
     // if not practicing update score
@@ -242,11 +252,11 @@ game.State_Arena.prototype.updateScoreDisplay = function() {
     }
 }
 game.State_Arena.prototype.updateTable = function() {
-    if (gWorld.currentproblem) {
+    if (this._currentproblem) {
         var tableRef = gTable.getElementsByTagName('tbody')[0];
         //var newRow = tableRef.insertRow(tableRef.rows.length);
         var newRow = tableRef.insertRow(0);
-        if (!gLastCorrect) {
+        if (!this._lastcorrect) {
             newRow.className = "wrong";
         } else {
             newRow.className = "correct";
@@ -257,9 +267,9 @@ game.State_Arena.prototype.updateTable = function() {
         cell3.className = 'previouscharacter';
 
         var correctword = null;
-        for (var  i in gWorld.currentcharacters) {
-            if (gWorld.currentcharacters[i].iscorrect) {
-                correctword = gWorld.currentcharacters[i];
+        for (var  i in this._currentcharacters) {
+            if (this._currentcharacters[i].iscorrect) {
+                correctword = this._currentcharacters[i];
                 break;
             }
         }
@@ -279,7 +289,7 @@ game.State_Arena.prototype.updateTable = function() {
     }
 };
 game.State_Arena.prototype.spawnMonsters = function() {
-    var totalcount = gWorld.problems.length + gWorld.solvedproblems.length + 1;
+    var totalcount = this.wordcount;
     var percentsolved = gWorld.solvedproblems.length / totalcount;
     var n = Math.ceil(percentsolved * 10);
 
@@ -303,41 +313,25 @@ game.State_Arena.prototype.spawnMonsters = function() {
         this.enemies.push(m);
     }
 };
-game.State_Arena.prototype.resetDeck = function() {
-    if (gWorld.problems.length == 0) {
-        gWorld.problems = gWorld.solvedproblems;
-        gWorld.message = new game.Message('Do it again');
-    } else {
-        gWorld.problems = gWorld.problems.concat(gWorld.solvedproblems);
-    }
-    gWorld.problems = shuffleArray(gWorld.problems);
-
-    gWorld.solvedproblems = [];
-    //gWorld.score += gWorld.problems.length;
-};
 game.State_Arena.prototype.nextCharacter = function() {
 
     //gWorld.keyState = []; // reset button down state
-    gWorld.currentcharacters = Array();
+    this._currentcharacters = Array();
 
-    if (gWorld.problems.length == 0) {
-        this.resetDeck();
-    }
-
-    gWorld.currentproblem = gWorld.problems.pop();
-    for (var i = 0; i < gWorld.currentproblem.words.length; i++) {
-        if (gWorld.currentproblem.words[i].correct) {
+    this._currentproblem = this._problems.pop();
+    for (var i = 0; i < this._currentproblem.words.length; i++) {
+        if (this._currentproblem.words[i].correct) {
             if (gWorld.debug) {
-                console.log("next problem is "+ gWorld.currentproblem.words[i].english);
+                console.log("next problem is "+ this._currentproblem.words[i].english);
             }
             if (gQuestion) {
-                gQuestion.innerHTML = gWorld.currentproblem.words[i].english;
+                gQuestion.innerHTML = this._currentproblem.words[i].english;
             }
             if (gPinyin) {
-                gPinyin.innerHTML = gWorld.currentproblem.words[i].pinyin;
+                gPinyin.innerHTML = this._currentproblem.words[i].pinyin;
             }
             if (gAudio) {
-                //gWorld.correctcharacter = gWorld.currentproblem.words[i].character;
+                //gWorld.correctcharacter = this._currentproblem.words[i].character;
                 this.playAudio();
             }
         }
@@ -345,37 +339,38 @@ game.State_Arena.prototype.nextCharacter = function() {
     }
     this.spawnMonsters();
 
-    window.setTimeout(this.showCharacters, 2000);
+    var that = this;
+    window.setTimeout(function(){that.showCharacters()}, 2000);
 
-    for (var i = 0; i < gWorld.currentproblem.words.length; i++) {
-        gWorld.currentcharacters[i] = new game.Character(gWorld.characterpositions[i],
+    for (var i = 0; i < this._currentproblem.words.length; i++) {
+        this._currentcharacters[i] = new game.Character(gWorld.characterpositions[i],
                                                     i,
-                                                    gWorld.currentproblem.words[i].correct,
-                                                    gWorld.currentproblem.words[i].character,
-                                                    gWorld.currentproblem.words[i].pinyin,
-                                                    gWorld.currentproblem.words[i].english);
+                                                    this._currentproblem.words[i].correct,
+                                                    this._currentproblem.words[i].character,
+                                                    this._currentproblem.words[i].pinyin,
+                                                    this._currentproblem.words[i].english);
     }
 };
 game.State_Arena.prototype.showCharacters = function() {
     if (gWorld.state.getState() == gWorld.state.states.ARENAEND) {
         return; // Player has died.
     }
-    /*for (var i = 0; i < gWorld.currentproblem.words.length; i++) {
-        gWorld.currentcharacters[i] = new game.Character(gWorld.characterpositions[i],
+    /*for (var i = 0; i < this._currentproblem.words.length; i++) {
+        this._currentcharacters[i] = new game.Character(gWorld.characterpositions[i],
                                                     i,
-                                                    gWorld.currentproblem.words[i].correct,
-                                                    gWorld.currentproblem.words[i].character,
-                                                    gWorld.currentproblem.words[i].pinyin,
-                                                    gWorld.currentproblem.words[i].english);
+                                                    this._currentproblem.words[i].correct,
+                                                    this._currentproblem.words[i].character,
+                                                    this._currentproblem.words[i].pinyin,
+                                                    this._currentproblem.words[i].english);
     }*/
-    for (var i = 0; i < gWorld.currentproblem.words.length; i++) {
-        gSlots[i].innerHTML = gWorld.currentproblem.words[i].character;
+    for (var i = 0; i < this._currentproblem.words.length; i++) {
+        gSlots[i].innerHTML = this._currentproblem.words[i].character;
     }
 
     // the divs in gSlots will change size based on the number of characters to be displayed.
     // Adjust the object's pos and size so that collision detection works.
-    for (var i in gWorld.currentcharacters) {
-        char = gWorld.currentcharacters[i];
+    for (var i in this._currentcharacters) {
+        char = this._currentcharacters[i];
         char.visible = true;
 
         var offsets = gSlots[i].getBoundingClientRect();
@@ -387,10 +382,10 @@ game.State_Arena.prototype.showCharacters = function() {
     }
 };
 game.State_Arena.prototype.createAura = function() {
-    gWorld.decorations.push(new game.Aura(this.player, 'white', 1, 0.1));
+    this.decorations.push(new game.Aura(this.player, 'white', 1, 0.1));
 };
 game.State_Arena.prototype.playAudio = function() {
-    var correct = gWorld.currentproblem.getCorrectWord();
+    var correct = this._currentproblem.getCorrectWord();
 
     var s = correct.getToRead();
     s = s.replace(/(\d+)/g, "$1 "); // put spaces between the syllables

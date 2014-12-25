@@ -65,11 +65,15 @@ function drawBox(context, x, y, width, height, color) {
     context.strokeStyle = color;
     context.stroke();
 }
-function drawText(context, text, font, style, x, y, opacity) {
+function drawText(context, text, font, style, x, y, opacity, align) {
     if (opacity) {
         gContext.globalAlpha = opacity;
     }
     context.textAlign = 'center';
+    if (align) {
+        context.textAlign = align;
+    }
+    context.textBaseline = "top";
     context.font = font;
     context.fillStyle = style;
     context.fillText(text, x, y);

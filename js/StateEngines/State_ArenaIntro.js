@@ -39,7 +39,6 @@ game.State_ArenaIntro.prototype.onKeyDown = function(event) {
     // "e"
     if (event.keyCode == 69) {
         var state = gWorld.state.setState(gWorld.state.states.ARENA);
-        console.log('supplying '+this.level);
         state.setLevel(this.level);
         state.wordindex = this.wordindex;
         state.wordcount = this.wordcount;

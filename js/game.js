@@ -16,12 +16,6 @@ window.onload = function() {
     gRight = $("left_col");
     gTable = $("thetable");
 
-    tl = $("tl");
-    tr = $("tr");
-    bl = $("bl");
-    br = $("br");
-    gSlots = [tl, bl, tr, br];
-
     gCanvas = dc("canvas");
     gCanvas.width = 512;
     gCanvas.height = 480;
@@ -46,7 +40,7 @@ window.onload = function() {
         gLeft.appendChild(gQuestion);
 	}
 
-	gDivs = [tl, bl, tr, br, gQuestion, gPinyin, gAudio];
+	gDivs = [gQuestion, gPinyin, gAudio];
 
     gWorld = {
         debug: false,
@@ -60,22 +54,12 @@ window.onload = function() {
         solvedproblems: Array(),
         currentproblem: null,
 
-        currentcharacters: Array(), // four instancs of game.Character for display
-        characterpositions: Array([40, 40], //tl
-                                  [40, 410], //bl
-                                  [410, 80], //tr
-                                  [410, 400]), //br
         displaychars: false,
 
         loopCount: 0,
-        score: 0,
-        bestscore: 0,
         streak: 0,
         newbest: false,
         message: null,
-
-        wordsdiv: $('wordcount'),
-        //scorediv: $('score'),
 
         textcolor: 'White',
         textsize: '18pt Arial',
@@ -226,18 +210,6 @@ function loadWords() {
 	    }
 	    gWorld.problems[i] = shuffleArray(gWorld.problems[i]);
     }
-}
-
-function newGame() {
-    /*gWorld.score = 0;
-    gWorld.streak = 0;
-    gWorld.newbest = false;
-    if (gWorld.currentproblem) {
-        //throw the current problem back into the mix
-        gWorld.problems.push(gWorld.currentproblem);
-        gWorld.currentproblem = null;
-    }
-    gWorld.state.setState(gWorld.state.states.ARENA);*/
 }
 
 function updateGame(dt) {

@@ -30,11 +30,12 @@ game.Thing.prototype.update = function(dt) {
     //lockToScreen(this, false);
 };
 game.Thing.prototype.draw = function(drawpos, imageName) {
-    /*if (this.showlife) {
-        var maxwidth = 40;
-        var width = (this.health/this.maxhealth) * maxwidth;
-        drawRect(gContext, drawpos[0] + (this.size - maxwidth)/2, drawpos[1]+this.size, width, 4, 'red');
-    }*/
+    var pos = this.pos;
+    if (this.getCollisionPos) {
+        pos = this.getCollisionPos();
+    }
+    drawBox(gContext, pos[0], pos[1], this.footprint[0], this.footprint[1], 'red');
+
     var img = gWorld.images.getImage(imageName);
     if (img) {
         gContext.drawImage(img, drawpos[0], drawpos[1]);
@@ -53,10 +54,19 @@ game.Thing.prototype.draw = function(drawpos, imageName) {
     }
 };*/
 game.Thing.prototype.collideThing = function(other) {
-    if (this.pos[0] + this.size[0] < other.pos[0]
-        || this.pos[0] > other.pos[0] + other.footprint[0]
-        || this.pos[1] > other.pos[1] + other.size[1]
-        || this.pos[1] + this.size[1] < other.pos[1] + other.size[1] - other.footprint[1]) {
+    var thispos = this.pos;
+    if (this.getCollisionPos) {
+        thispos = this.getCollisionPos();
+    }
+    var otherpos = other.pos;
+    if (other.getCollisionPos) {
+        otherpos = other.getCollisionPos();
+    }
+
+    if (thispos[0] + this.size[0] < otherpos[0]
+        || thispos[0] > otherpos[0] + other.footprint[0]
+        || thispos[1] > otherpos[1] + other.size[1]
+        || thispos[1] + this.size[1] < otherpos[1] + other.size[1] - other.footprint[1]) {
         
         return false;
     } else {

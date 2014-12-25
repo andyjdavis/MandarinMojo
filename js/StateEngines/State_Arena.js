@@ -13,6 +13,13 @@ game.State_Arena = function() {
     this._currentproblem = null;
     this._lastCorrect = false;
     this._currentcharacters = null;
+    this._score = 0;
+
+    this._characterpositions = Array([20, 40], //tl
+                                     [20, 410], //bl
+                                     [492, 40], //tr
+                                     [492, 410]); //br
+    this._characteralignments = Array('left', 'left', 'right', 'right');
 }
 game.State_Arena.prototype = new game.Thing();
 game.State_Arena.prototype.constructor = game.State_Arena;
@@ -34,6 +41,12 @@ game.State_Arena.prototype.draw = function() {
     if (img) {
         gContext.drawImage(img, 0, 0);
     }
+
+    for (var i in this._currentcharacters) {
+        char = this._currentcharacters[i];
+        char.draw();
+    }
+
     if (gWorld.message) {
         gWorld.message.draw();
     }
@@ -48,8 +61,10 @@ game.State_Arena.prototype.draw = function() {
         this.decorations[i].draw();
     }
 
-    //drawText(gContext, s, gWorld.textsize, gWorld.textcolor, 10, 20);
-    drawText(gContext, this.wordcount, gWorld.textsize, gWorld.textcolor, 480, 20);
+    var s = "Arena: " + gWorld.solvedproblems.length + "/" + this.wordcount;
+    drawText(gContext, s, gWorld.textsize, gWorld.textcolor, 5, 0, 1.0, 'left');
+
+    //drawText(gContext, "asdf", gWorld.textsize, gWorld.textcolor, 480, 0);
 };
 game.State_Arena.prototype.update = function(dt) {
     /*for (var i = this.enemies.length - 1;i >= 0;i--) {
@@ -71,7 +86,6 @@ game.State_Arena.prototype.setLevel = function(level) {
     this._level = level;
     this._problems = gWorld.problems[this._level - 1].slice(0); //copy the array
     this.nextCharacter();
-    this.updateScoreDisplay();
 };
 
 game.State_Arena.prototype.checkCollisions = function() {
@@ -140,7 +154,7 @@ game.State_Arena.prototype.gotoend = function() {
     state.level = this._level;
     state.wordcount = this.wordcount;
 
-    state.got = gWorld.score;
+    state.got = this._score;
 };
 game.State_Arena.prototype.explodestuff = function() {
     //explode monsters
@@ -193,30 +207,30 @@ game.State_Arena.prototype.shootProjectile = function() {
     this.projectiles.push(projectile);
 };
 game.State_Arena.prototype.charactercorrect = function() {
-    gWorld.score++;
+    this._score++;
     gWorld.streak++;
-    if (gWorld.score > gWorld.bestscore) {
-        gWorld.bestscore = gWorld.score;
+    if (this._score > gWorld.bestscore) {
+        gWorld.bestscore = this._score;
         gWorld.newbest = true;
     }
 
     var n = null;
     if (gWorld.streak == 5) {
         n = 5;
-        //gWorld.score += 2;
+        //this._score += 2;
     } else if (gWorld.streak == 10) {
         n = 10;
-        //gWorld.score += 5;
+        //this._score += 5;
     } else if (gWorld.streak == 20) {
         n = 20;
-        //gWorld.score += 10;
+        //this._score += 10;
     }
     else if (gWorld.streak == 50) {
         n = 50;
-        //gWorld.score += 20;
+        //this._score += 20;
     } else if (gWorld.streak % 100 == 0) {
         n = gWorld.streak;
-        //gWorld.score += gWorld.streak/2 ;
+        //this._score += gWorld.streak/2 ;
     }
     if (n) {
         gWorld.message = new game.Message(n + ' in a row');
@@ -231,7 +245,6 @@ game.State_Arena.prototype.charactercorrect = function() {
     this.createAura();
     gWorld.solvedproblems.push(this._currentproblem);
     this.nextCharacter();
-    this.updateScoreDisplay();
 };
 game.State_Arena.prototype.characterwrong = function() {
     gWorld.sounds.play("fail");
@@ -242,15 +255,6 @@ game.State_Arena.prototype.characterwrong = function() {
     gWorld.streak = 0;
     this.gotoend();
 };
-game.State_Arena.prototype.updateScoreDisplay = function() {
-    var s = gWorld.solvedproblems.length + "/" + (this._problems.length + gWorld.solvedproblems.length + 1);
-    gWorld.wordsdiv.innerHTML = "words: " + s;
-
-    // if not practicing update score
-    if (gWorld.mode != 1) {
-        //gWorld.scorediv.innerHTML = "score: " + gWorld.score;
-    }
-}
 game.State_Arena.prototype.updateTable = function() {
     if (this._currentproblem) {
         var tableRef = gTable.getElementsByTagName('tbody')[0];
@@ -343,42 +347,23 @@ game.State_Arena.prototype.nextCharacter = function() {
     window.setTimeout(function(){that.showCharacters()}, 2000);
 
     for (var i = 0; i < this._currentproblem.words.length; i++) {
-        this._currentcharacters[i] = new game.Character(gWorld.characterpositions[i],
-                                                    i,
-                                                    this._currentproblem.words[i].correct,
-                                                    this._currentproblem.words[i].character,
-                                                    this._currentproblem.words[i].pinyin,
-                                                    this._currentproblem.words[i].english);
+        this._currentcharacters[i] = new game.Character(this._characterpositions[i],
+                                                        this._characteralignments[i],
+                                                        i,
+                                                        this._currentproblem.words[i].correct,
+                                                        this._currentproblem.words[i].character,
+                                                        this._currentproblem.words[i].pinyin,
+                                                        this._currentproblem.words[i].english);
     }
 };
 game.State_Arena.prototype.showCharacters = function() {
     if (gWorld.state.getState() == gWorld.state.states.ARENAEND) {
         return; // Player has died.
     }
-    /*for (var i = 0; i < this._currentproblem.words.length; i++) {
-        this._currentcharacters[i] = new game.Character(gWorld.characterpositions[i],
-                                                    i,
-                                                    this._currentproblem.words[i].correct,
-                                                    this._currentproblem.words[i].character,
-                                                    this._currentproblem.words[i].pinyin,
-                                                    this._currentproblem.words[i].english);
-    }*/
-    for (var i = 0; i < this._currentproblem.words.length; i++) {
-        gSlots[i].innerHTML = this._currentproblem.words[i].character;
-    }
 
-    // the divs in gSlots will change size based on the number of characters to be displayed.
-    // Adjust the object's pos and size so that collision detection works.
     for (var i in this._currentcharacters) {
         char = this._currentcharacters[i];
         char.visible = true;
-
-        var offsets = gSlots[i].getBoundingClientRect();
-        var top = offsets.top;
-        var left = offsets.left;
-        char.pos = [offsets.left, offsets.top];
-        char.size = [offsets.width, offsets.height];
-        char.correctFootprint();
     }
 };
 game.State_Arena.prototype.createAura = function() {

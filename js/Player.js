@@ -5,16 +5,11 @@ window.game = window.game || { };
 game.Player = function(pos) {
     game.Thing.call(this, pos, [32, 48]);
 
-    // Make the player's footprint bigger to make the top character appearing
-    // over the top of the player less noticable.
-    this.footprint = [this.size[0], this.size[1]/2];
-
     this.maxvel = 200;
     this.frame = 0;
     this.maxframe = 10;
     this.walking = false;
     this.goingleft = false;
-    //this.div = createDiv("left_col", "images/player/p1_spritesheet.png", "32px", "32px", 'playerdiv');
     
     // these came from images/player/p1_spritesheet.txt
     this.standingsourcelocations = [67, 196];
@@ -78,6 +73,7 @@ game.Player.prototype.draw = function(cameraposition) {
         var sourceY = this.standingsourcelocations[1];
         gContext.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, drawX, drawY, this.size[0], this.size[1]);
     }
+    //game.Thing.prototype.draw.call(this);
 }
 game.Player.prototype.setvisibility = function(visibility) {
     //this.div.style.visibility = visibility;

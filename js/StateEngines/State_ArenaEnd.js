@@ -24,11 +24,20 @@ game.State_ArenaEnd.prototype.draw = function() {
 
     //drawText(gContext, "Chinese Character Challenge", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 100);
     drawText(gContext, "You got "+this.got+"/"+this.wordcount, gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 150);
-    if (this.got == this.needed) {
-        drawText(gContext, "Arena complete!", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 270);
+
+    var perc = this.got / this.wordcount;
+    var s = '';
+    if (perc == 1.0) {
+        s = "Arena complete!";
+    } else if (perc < 0.5) {
+        s = 'You have much to learn';
+    } else if (perc < 0.8) {
+        s = 'The student has not yet become the master';
     } else {
-        drawText(gContext, "Arena failed", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 270);
+        s = 'Victory is near at hand';
     }
+    drawText(gContext, s, gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 270);
+
     drawText(gContext, "Press e to exit the arena", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 390);
     for (var i in this.decorations) {
         this.decorations[i].draw();

@@ -3,9 +3,7 @@
 window.game = window.game || { };
 
 game.State_Arena = function() {
-    this.player = new game.Player([64, 85]);
-
-    this._level = -1;
+    this._level = -1; // set by setLevel().
     this.wordindex = -1;
     this.wordcount = -1;
 
@@ -20,19 +18,16 @@ game.State_Arena = function() {
                                      [492, 40], //tr
                                      [492, 410]); //br
     this._characteralignments = Array('left', 'left', 'right', 'right');
+
+    this._enemies = Array();
+    this._projectiles = Array();
+    this._decorations = Array();
+
+    this.player = new game.Player([64, 85]);
 }
 game.State_Arena.prototype = new game.Thing();
 game.State_Arena.prototype.constructor = game.State_Arena;
 
-game.State_Arena.prototype.start = function() {
-    //this.player.pos = [gCanvas.width/2, gCanvas.height/2];
-    //for (var i in this.enemies) {
-    //    this.enemies[i].die();
-    //}
-    this.enemies = Array();
-    this.projectiles = Array();
-    this.decorations = Array();
-};
 game.State_Arena.prototype.end = function() {
 };
 
@@ -50,32 +45,26 @@ game.State_Arena.prototype.draw = function() {
     if (gWorld.message) {
         gWorld.message.draw();
     }
-    for (var i in this.projectiles) {
-        this.projectiles[i].draw();
+    for (var i in this._projectiles) {
+        this._projectiles[i].draw();
     }
-    for (var i in this.enemies) {
-        this.enemies[i].draw();
+    for (var i in this._enemies) {
+        this._enemies[i].draw();
     }
     this.player.draw();
-    for (var i in this.decorations) {
-        this.decorations[i].draw();
+    for (var i in this._decorations) {
+        this._decorations[i].draw();
     }
 
-    var s = "Arena: " + gWorld.solvedproblems.length + "/" + this.wordcount;
+    var s = "Arena: " + this._score + "/" + this.wordcount;
     drawText(gContext, s, gWorld.textsize, gWorld.textcolor, 5, 0, 1.0, 'left');
 
     //drawText(gContext, "asdf", gWorld.textsize, gWorld.textcolor, 480, 0);
 };
 game.State_Arena.prototype.update = function(dt) {
-    /*for (var i = this.enemies.length - 1;i >= 0;i--) {
-        if (this.enemies[i].update(dt, this.player) == false) {
-            this.enemies.splice(i, 1);
-            this.spawnMonsters();
-        }
-    }*/
-    updateObjects(this.enemies, dt, this.player);
-    updateObjects(this.projectiles, dt);
-    updateObjects(this.decorations, dt);
+    updateObjects(this._enemies, dt, this.player);
+    updateObjects(this._projectiles, dt);
+    updateObjects(this._decorations, dt);
 
     this.player.update(dt);
     this.checkCollisions();
@@ -91,33 +80,30 @@ game.State_Arena.prototype.setLevel = function(level) {
 game.State_Arena.prototype.checkCollisions = function() {
     var enemy;
     var projectile;
-    for (var j = this.enemies.length - 1; j >= 0;j--) {
-        enemy = this.enemies[j];
+    for (var j = this._enemies.length - 1; j >= 0;j--) {
+        enemy = this._enemies[j];
 
         if (enemy.collideThing(this.player)) {
             if (enemy.isDead()) {
                 continue;
             }
             enemy.die();
-            this.enemies.splice(j, 1);
-            this.decorations.push(new game.Explosion(enemy.pos));
+            this._enemies.splice(j, 1);
+            this._decorations.push(new game.Explosion(enemy.pos));
 
             this.explodestuff();
             this.clearDivs();
-            // if not practicing, game over
-            if (gWorld.mode != 1) {
-                this.gotoend();
-            }
+            this.gotoend();
             this.characterwrong();
             return;
         }
-        for (var p in this.projectiles) {
-            projectile = this.projectiles[p];
+        for (var p in this._projectiles) {
+            projectile = this._projectiles[p];
             if (enemy.collideThing(projectile)) {
                 enemy.hit();
-                //this.enemies.splice(j, 1);
-                this.projectiles.splice(p, 1);
-                this.decorations.push(new game.Explosion(enemy.pos));
+                //this._enemies.splice(j, 1);
+                this._projectiles.splice(p, 1);
+                this._decorations.push(new game.Explosion(enemy.pos));
                 this.spawnMonsters();
                 if (gWorld.debug) {
                     console.log('enemy hit');
@@ -150,7 +136,7 @@ game.State_Arena.prototype.checkCollisions = function() {
 };
 game.State_Arena.prototype.gotoend = function() {
     var state = gWorld.state.setState(gWorld.state.states.ARENAEND);
-    state.decorations = this.decorations;
+    state.decorations = this._decorations;
     state.level = this._level;
     state.wordcount = this.wordcount;
 
@@ -158,14 +144,14 @@ game.State_Arena.prototype.gotoend = function() {
 };
 game.State_Arena.prototype.explodestuff = function() {
     //explode monsters
-    for (var j in this.enemies) {
-        //this.decorations.push(new game.Explosion(this.enemies[j].pos));
+    for (var j in this._enemies) {
+        //this._decorations.push(new game.Explosion(this._enemies[j].pos));
     }
 
     //explode the characters
     for (var j in this._currentcharacters) {
         if (!this._currentcharacters[j].iscorrect) {
-            this.decorations.push(new game.Explosion(this._currentcharacters[j].pos));
+            this._decorations.push(new game.Explosion(this._currentcharacters[j].pos));
         }
     }
 };
@@ -177,7 +163,7 @@ game.State_Arena.prototype.clearDivs = function() {
     }
 };
 game.State_Arena.prototype.shootProjectile = function() {
-    if (this.enemies.length <= 0) {
+    if (this._enemies.length <= 0) {
         return;
     }
 
@@ -185,16 +171,16 @@ game.State_Arena.prototype.shootProjectile = function() {
     var enemy = null;
     var leastdistance = null;
     var distance = null;
-    for (var i in this.enemies) {
-        distance = Math.abs(calcDistance(calcVector(this.player.pos, this.enemies[i].pos)));
+    for (var i in this._enemies) {
+        distance = Math.abs(calcDistance(calcVector(this.player.pos, this._enemies[i].pos)));
         if (enemy == null || distance < leastdistance) {
-            enemy = this.enemies[i];
+            enemy = this._enemies[i];
             leastdistance = distance;
             continue;
         }
     }
 
-    //var enemy = this.enemies[this.enemies.length - 1];
+    //var enemy = this._enemies[this._enemies.length - 1];
     target = [enemy.pos[0] + enemy.size[0]/2, enemy.pos[1] + enemy.size[1]/2];
 
     var playerX = this.player.pos[0] + this.player.size[0]/2;
@@ -204,33 +190,26 @@ game.State_Arena.prototype.shootProjectile = function() {
     var pos = [this.player.pos[0], this.player.pos[1]];
 
     var projectile = new game.Projectile(pos, [vector[0] * 200, vector[1] * 200]);
-    this.projectiles.push(projectile);
+    this._projectiles.push(projectile);
 };
 game.State_Arena.prototype.charactercorrect = function() {
     this._score++;
-    gWorld.streak++;
     if (this._score > gWorld.bestscore) {
         gWorld.bestscore = this._score;
-        gWorld.newbest = true;
     }
 
     var n = null;
-    if (gWorld.streak == 5) {
+    if (this._score == 5) {
         n = 5;
-        //this._score += 2;
-    } else if (gWorld.streak == 10) {
+    } else if (this._score == 10) {
         n = 10;
-        //this._score += 5;
-    } else if (gWorld.streak == 20) {
+    } else if (this._score == 20) {
         n = 20;
-        //this._score += 10;
     }
-    else if (gWorld.streak == 50) {
+    else if (this._score == 50) {
         n = 50;
-        //this._score += 20;
-    } else if (gWorld.streak % 100 == 0) {
-        n = gWorld.streak;
-        //this._score += gWorld.streak/2 ;
+    } else if (this._score % 100 == 0) {
+        n = this._score;
     }
     if (n) {
         gWorld.message = new game.Message(n + ' in a row');
@@ -243,16 +222,14 @@ game.State_Arena.prototype.charactercorrect = function() {
         gWorld.sounds.play("success");
     //}
     this.createAura();
-    gWorld.solvedproblems.push(this._currentproblem);
     this.nextCharacter();
 };
 game.State_Arena.prototype.characterwrong = function() {
     gWorld.sounds.play("fail");
     this._lastcorrect = false;
 
-    this.decorations.push(new game.Explosion(this.player.pos));
+    this._decorations.push(new game.Explosion(this.player.pos));
     this.updateTable();
-    gWorld.streak = 0;
     this.gotoend();
 };
 game.State_Arena.prototype.updateTable = function() {
@@ -294,14 +271,14 @@ game.State_Arena.prototype.updateTable = function() {
 };
 game.State_Arena.prototype.spawnMonsters = function() {
     var totalcount = this.wordcount;
-    var percentsolved = gWorld.solvedproblems.length / totalcount;
+    var percentsolved = this._score / totalcount;
     var n = Math.ceil(percentsolved * 10);
 
     var door, pos, m;
     if (gWorld.debug) {
-        console.log("There are "+this.enemies.length+" monsters but there should be "+n);
+        console.log("There are "+this._enemies.length+" monsters but there should be "+n);
     }
-    while (this.enemies.length < n) {
+    while (this._enemies.length < n) {
         door = Math.floor(Math.random() * 4) + 1;
 
         if (door == 1) {
@@ -314,12 +291,11 @@ game.State_Arena.prototype.spawnMonsters = function() {
             pos = [gCanvas.width/2, gCanvas.height];
         }
         m = new game.Monster(pos);
-        this.enemies.push(m);
+        this._enemies.push(m);
     }
 };
 game.State_Arena.prototype.nextCharacter = function() {
 
-    //gWorld.keyState = []; // reset button down state
     this._currentcharacters = Array();
 
     this._currentproblem = this._problems.pop();
@@ -335,7 +311,6 @@ game.State_Arena.prototype.nextCharacter = function() {
                 gPinyin.innerHTML = this._currentproblem.words[i].pinyin;
             }
             if (gAudio) {
-                //gWorld.correctcharacter = this._currentproblem.words[i].character;
                 this.playAudio();
             }
         }
@@ -367,7 +342,7 @@ game.State_Arena.prototype.showCharacters = function() {
     }
 };
 game.State_Arena.prototype.createAura = function() {
-    this.decorations.push(new game.Aura(this.player, 'white', 1, 0.1));
+    this._decorations.push(new game.Aura(this.player, 'white', 1, 0.1));
 };
 game.State_Arena.prototype.playAudio = function() {
     var correct = this._currentproblem.getCorrectWord();

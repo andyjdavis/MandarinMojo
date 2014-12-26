@@ -50,17 +50,12 @@ window.onload = function() {
         images: null,
         sounds: null,
 
-        problems: Array(), //randomly ordered array of problem instances
-        solvedproblems: Array(),
-        currentproblem: null,
-
-        displaychars: false,
+        problems: Array(), // Randomly ordered array of problem instances grouped by level.
+        mapplayer: null, // save the player obj
 
         loopCount: 0,
-        streak: 0,
-        newbest: false,
-        message: null,
 
+        message: null,
         textcolor: 'White',
         textsize: '18pt Arial',
 

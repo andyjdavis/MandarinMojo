@@ -4,17 +4,12 @@ window.game = window.game || { };
 
 game.State_Map = function() {
     this.cameraposition = [0, 0];
-    this.player = new game.Player([gCanvas.width/2, gCanvas.height/2]);
 
     this.cameraright = false;
     this.cameraleft = false;
     this.cameraup = false;
     this.cameradown = false;
-}
-game.State_Map.prototype = new game.Thing();
-game.State_Map.prototype.constructor = game.State_Map;
 
-game.State_Map.prototype.start = function() {
     var xmlhttp = new XMLHttpRequest();
     var url = "maps/32test.json";
 
@@ -26,8 +21,19 @@ game.State_Map.prototype.start = function() {
     }
     xmlhttp.open("GET", url, true);
     xmlhttp.send();
-};
+
+    if (gWorld.mapplayer) {
+        this.player = gWorld.mapplayer;
+    } else {
+        this.player = new game.Player([gCanvas.width/2, gCanvas.height/2]);
+        gWorld.mapplayer = this.player;
+    }
+}
+game.State_Map.prototype = new game.Thing();
+game.State_Map.prototype.constructor = game.State_Map;
+
 game.State_Map.prototype.end = function() {
+    //gWorld.mapplayer = this.player;
 };
 
 game.State_Map.prototype.draw = function() {
@@ -44,8 +50,12 @@ game.State_Map.prototype.draw = function() {
     }
 };
 game.State_Map.prototype.update = function(dt) {
+    var lastpos = this.player.pos.slice(0);
     this.player.update(dt);
-    this.checkCollisions();
+    if (this.checkCollisions()) {
+        gWorld.mapplayer.pos = lastpos;
+        return;
+    }
 
     if (this.player.pos[0] - this.cameraposition[0] > (gCanvas.width * 0.8)) {
         this.cameraright = true;
@@ -96,11 +106,12 @@ game.State_Map.prototype.checkCollisions = function() {
                 state.level = objectlayer.objects[i].properties.level;
                 state.wordindex = objectlayer.objects[i].properties.wordindex;
                 state.wordcount = objectlayer.objects[i].properties.wordcount;
+                return true;
             }
         }
     }
 
-    return true;
+    return false;
 };
 game.State_Map.prototype.checkCollision = function(obj) {
     if (this.player.pos[0] + this.player.size[0] < obj.x

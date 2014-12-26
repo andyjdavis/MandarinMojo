@@ -39,7 +39,6 @@ game.StateManager.prototype.setState = function(s) {
         default:
             console.log('unknown state:'+s);
     }
-    this.stateengine.start();
     return this.stateengine; // Return the state engine so caller can set properties on it.
 };
 game.StateManager.prototype.getState = function(s) {

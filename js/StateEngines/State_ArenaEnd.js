@@ -11,8 +11,6 @@ game.State_ArenaEnd = function() {
 game.State_ArenaEnd.prototype = new game.Thing();
 game.State_ArenaEnd.prototype.constructor = game.State_ArenaEnd;
 
-game.State_ArenaEnd.prototype.start = function() {
-};
 game.State_ArenaEnd.prototype.end = function() {
 };
 

@@ -10,8 +10,6 @@ game.State_ArenaIntro = function() {
 game.State_ArenaIntro.prototype = new game.Thing();
 game.State_ArenaIntro.prototype.constructor = game.State_ArenaIntro;
 
-game.State_ArenaIntro.prototype.start = function() {
-};
 game.State_ArenaIntro.prototype.end = function() {
 };
 

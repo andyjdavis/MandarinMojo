@@ -7,8 +7,6 @@ game.State_Loading = function() {
 game.State_Loading.prototype = new game.Thing();
 game.State_Loading.prototype.constructor = game.State_Loading;
 
-game.State_Loading.prototype.start = function() {
-};
 game.State_Loading.prototype.end = function() {
 };
 

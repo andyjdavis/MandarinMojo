@@ -74,6 +74,7 @@ game.State_Arena.prototype.update = function(dt) {
 game.State_Arena.prototype.setLevel = function(level) {
     this._level = level;
     this._problems = gWorld.problems[this._level - 1].slice(0); //copy the array
+    this._problems = shuffleArray(this._problems);
     this.nextCharacter();
 };
 

@@ -27,7 +27,7 @@
   <object name="arena 1" type="arena" x="417" y="320" width="35" height="35">
    <properties>
     <property name="level" value="1"/>
-    <property name="wordcount" value="50"/>
+    <property name="wordcount" value="150"/>
     <property name="wordindex" value="0"/>
    </properties>
   </object>

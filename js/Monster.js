@@ -59,9 +59,6 @@ game.Monster.prototype = new game.Thing();
 game.Monster.prototype.constructor = game.Monster;
  
 game.Monster.prototype.draw = function() {
-    //game.Thing.prototype.draw.call(this, this.pos, 'monster');
-    //this.div.style.left = this.pos[0]+"px";
-    //this.div.style.top = this.pos[1]+"px";
     var img = gWorld.images.getImage('monster');
     if (!img) {
         return;
@@ -101,6 +98,8 @@ game.Monster.prototype.draw = function() {
     if (this.vel[0] > 0) {
         gContext.restore();
     }
+
+    game.Thing.prototype.draw.call(this); // Draw bounding box.
 };
 game.Monster.prototype.update = function(dt, player) {
     if (this.isDead() && Date.now() > this.timeDied + 2000) {

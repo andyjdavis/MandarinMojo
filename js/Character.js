@@ -23,16 +23,17 @@ game.Character.prototype.draw = function() {
     if (this.visible) {
         drawText(gContext, this.character, gWorld.textsize, 'yellow', this.pos[0], this.pos[1], 1.0, this.alignment);
     }
-    //character position
-    drawRect(gContext, this.pos[0], this.pos[1], 2, 2);
-    
-    game.Thing.prototype.draw.call(this);
+    if (gWorld.debug) {
+        // Character position.
+        drawRect(gContext, this.getCollisionPos()[0], this.getCollisionPos()[1], 2, 2);
+        game.Thing.prototype.draw.call(this); // Draw bounding box.
+    }
 
 };
 game.Character.prototype.update = function(dt) {
 };
 game.Character.prototype._fixSize = function() {
-    this.footprint = [this.character.length * 22, 28];
+    this.size = this.footprint = [this.character.length * 24, 28];
 }
 game.Character.prototype.getCollisionPos = function() {
     if (this.alignment == 'right') {

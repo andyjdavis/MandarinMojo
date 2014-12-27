@@ -277,7 +277,7 @@ game.State_Arena.prototype.spawnMonsters = function() {
 
     var door, pos, m;
     if (gWorld.debug) {
-        console.log("There are "+this._enemies.length+" monsters but there should be "+n);
+        //console.log("There are "+this._enemies.length+" monsters, there should be "+n);
     }
     while (this._enemies.length < n) {
         door = Math.floor(Math.random() * 4) + 1;
@@ -291,6 +291,9 @@ game.State_Arena.prototype.spawnMonsters = function() {
         } else if (door == 4) {
             pos = [gCanvas.width/2, gCanvas.height];
         }
+        if (gWorld.debug) {
+            console.log("spawning a new monster");
+        }
         m = new game.Monster(pos);
         this._enemies.push(m);
     }
@@ -299,7 +302,14 @@ game.State_Arena.prototype.nextCharacter = function() {
 
     this._currentcharacters = Array();
 
-    this._currentproblem = this._problems.pop();
+    this._currentproblem = null;
+    while (!this._currentproblem) {
+        this._currentproblem = this._problems.pop();
+        if (this._currentproblem.words[0].character.length <3) {
+            this._currentproblem = null;
+        }
+    }
+    //this._currentproblem = this._problems.pop();
     for (var i = 0; i < this._currentproblem.words.length; i++) {
         if (this._currentproblem.words[i].correct) {
             if (gWorld.debug) {

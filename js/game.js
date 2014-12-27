@@ -43,7 +43,7 @@ window.onload = function() {
 	gDivs = [gQuestion, gPinyin, gAudio];
 
     gWorld = {
-        debug: false,
+        debug: true,
         mode: getParameterByName('mode'), // 0 == challenge, 1 == practice
         keyState: Array(),
         state: new game.StateManager(), // Defaults to state LOADING.
@@ -204,6 +204,8 @@ function loadWords() {
 	        gWorld.problems[i].push(new game.Problem(shuffleArray(wordarray)));
 	    }
 	    gWorld.problems[i] = shuffleArray(gWorld.problems[i]);
+	    console.log("loaded "+i);
+	    console.log(gWorld.problems[i].length);
     }
 }
 

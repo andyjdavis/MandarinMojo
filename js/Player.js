@@ -73,7 +73,7 @@ game.Player.prototype.draw = function(cameraposition) {
         var sourceY = this.standingsourcelocations[1];
         gContext.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, drawX, drawY, this.size[0], this.size[1]);
     }
-    //game.Thing.prototype.draw.call(this);
+    game.Thing.prototype.draw.call(this); // Draw bounding box.
 }
 game.Player.prototype.setvisibility = function(visibility) {
     //this.div.style.visibility = visibility;

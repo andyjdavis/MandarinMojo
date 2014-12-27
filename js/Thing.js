@@ -30,15 +30,23 @@ game.Thing.prototype.update = function(dt) {
     //lockToScreen(this, false);
 };
 game.Thing.prototype.draw = function(drawpos, imageName) {
-    var pos = this.pos;
-    if (this.getCollisionPos) {
-        pos = this.getCollisionPos();
+    if (gWorld.debug) {
+        // Draw bounding box.
+        var pos = this.pos;
+        if (this.getCollisionPos) {
+            pos = this.getCollisionPos();
+        }
+        drawBox(gContext,
+                pos[0] + this.size[0] - this.footprint[0],
+                pos[1] + this.size[1] - this.footprint[1],
+                this.footprint[0], this.footprint[1], 'yellow', 0.6);
     }
-    drawBox(gContext, pos[0], pos[1], this.footprint[0], this.footprint[1], 'red');
 
-    var img = gWorld.images.getImage(imageName);
-    if (img) {
-        gContext.drawImage(img, drawpos[0], drawpos[1]);
+    if (imageName) {
+        var img = gWorld.images.getImage(imageName);
+        if (img) {
+            gContext.drawImage(img, drawpos[0], drawpos[1]);
+        }
     }
 };
 /*game.Thing.prototype.getCenter = function() {
@@ -63,7 +71,7 @@ game.Thing.prototype.collideThing = function(other) {
         otherpos = other.getCollisionPos();
     }
 
-    if (thispos[0] + this.size[0] < otherpos[0]
+    if (thispos[0] + this.footprint[0] < otherpos[0]
         || thispos[0] > otherpos[0] + other.footprint[0]
         || thispos[1] > otherpos[1] + other.size[1]
         || thispos[1] + this.size[1] < otherpos[1] + other.size[1] - other.footprint[1]) {

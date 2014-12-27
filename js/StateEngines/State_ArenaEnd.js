@@ -36,6 +36,7 @@ game.State_ArenaEnd.prototype.draw = function() {
     }
     drawText(gContext, s, gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 270);
 
+    drawText(gContext, "Press r to retry", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 360);
     drawText(gContext, "Press e to exit the arena", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 390);
     for (var i in this.decorations) {
         this.decorations[i].draw();
@@ -44,9 +45,16 @@ game.State_ArenaEnd.prototype.draw = function() {
 game.State_ArenaEnd.prototype.update = function(dt) {
 };
 game.State_ArenaEnd.prototype.onKeyDown = function(event) {
-    // "e"
+    // "e" to exit
     if (event.keyCode == 69) {
         gWorld.state.setState(gWorld.state.states.MAP);
+    }
+    // "r" to retry
+    if (event.keyCode == 82) {
+        var state = gWorld.state.setState(gWorld.state.states.ARENA);
+        state.setLevel(this.level);
+        state.wordindex = this.wordindex;
+        state.wordcount = this.wordcount;
     }
 }
 

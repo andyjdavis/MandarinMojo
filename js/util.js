@@ -58,12 +58,18 @@ function shuffleArray(array) {
 function drawRect(context, x, y, width, height) {
     context.fillRect(x, y, width, height);
 }
-function drawBox(context, x, y, width, height, color) {
+function drawBox(context, x, y, width, height, color, opacity) {
+    if (opacity) {
+        gContext.globalAlpha = opacity;
+    }
     context.beginPath();
     context.rect(x, y, width, height);
     context.lineWidth = 1;
     context.strokeStyle = color;
     context.stroke();
+    if (opacity) {
+        gContext.globalAlpha = 1.0;
+    }
 }
 function drawText(context, text, font, style, x, y, opacity, align) {
     if (opacity) {

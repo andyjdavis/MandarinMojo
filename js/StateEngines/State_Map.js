@@ -103,7 +103,7 @@ game.State_Map.prototype.checkCollisions = function() {
             if (this.checkCollision(objectlayer.objects[i])) {
                 // Enter the arena.
                 var state = gWorld.state.setState(gWorld.state.states.ARENAINTRO);
-                state.level = 6;//objectlayer.objects[i].properties.level;
+                state.level = objectlayer.objects[i].properties.level;
                 state.wordindex = objectlayer.objects[i].properties.wordindex;
                 state.wordcount = objectlayer.objects[i].properties.wordcount;
                 return true;

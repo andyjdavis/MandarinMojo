@@ -82,16 +82,13 @@ window.onload = function() {
 
 function onKeyDown(event) {
     //console.log(event.keyCode);
-    var stateengine = gWorld.state.stateengine;
+    var stateengine = gWorld.state.getStateEngine();
     if (typeof stateengine.onKeyDown === 'function') {
         stateengine.onKeyDown(event);
     }
-    /*if (state == gWorld.state.states.ARENAINTRO || state == gWorld.state.states.ARENAEND) {
-        if (event.keyCode == 69) {
-            // e
-            //newGame();
-        }
-    } else if (state == gWorld.state.states.ARENA || state == gWorld.state.states.PAUSED) {
+
+    // The following should really be done in the relevant state engines.
+    if (state == gWorld.state.states.ARENA || state == gWorld.state.states.PAUSED) {
         if (event.keyCode == 80) {
             // p
             pause();
@@ -100,7 +97,7 @@ function onKeyDown(event) {
             // m
             mute();
         }
-    }*/
+    }
     gWorld.keyState[event.keyCode] = true;
 }
 function onKeyUp(event) {
@@ -111,11 +108,9 @@ function onMouseClick(event) {
 function pause() {
     var state = gWorld.state.getState();
     if (state == gWorld.state.states.ARENA) {
-        gWorld.state.setState(gWorld.state.states.PAUSED);
-        $("paused").style.visibility = 'visible';
+        gWorld.state.pushState(gWorld.state.states.PAUSED);
     } else if (state == gWorld.state.states.PAUSED) {
-        gWorld.state.setState(gWorld.state.states.ARENA);
-        $("paused").style.visibility = 'hidden';
+        gWorld.state.popState();
     }
     //ignore p if in any other state
 }
@@ -210,8 +205,9 @@ function loadWords() {
 }
 
 function updateGame(dt) {
-    if (gWorld.state.stateengine) {
-        gWorld.state.stateengine.update(dt);
+    var stateengine = gWorld.state.getStateEngine();
+    if (stateengine) {
+        stateengine.update(dt);
     }
     if (gWorld.message) {
         if (gWorld.message.update(dt) == false) {
@@ -223,10 +219,11 @@ function updateGame(dt) {
 function drawGame() {
     gContext.clearRect(0, 0, gCanvas.width, gCanvas.height);
 
-    var state = gWorld.state.getState();
+    /*var state = gWorld.state.getState();
     if (state != gWorld.state.states.PAUSED) {
         gWorld.state.stateengine.draw();
-    }
+    }*/
+    gWorld.state.getStateEngine().draw();
 }
 
 var mainloop = function() {

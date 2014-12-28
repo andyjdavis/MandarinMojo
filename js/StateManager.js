@@ -11,38 +11,65 @@ game.StateManager = function() {
         PAUSED: 4,
         MAP: 5,
     };
+    this._statestack = [];
+    this._enginestack = [];
+
     this.setState(this.states.LOADING);
 };
 
 game.StateManager.prototype.setState = function(s) {
-    this.state = s;
-
-    if (this.stateengine) {
-        this.stateengine.end();
+    if (this._enginestack.length > 0) {
+        this._enginestack[this._enginestack.length - 1].end();
     }
-    switch(this.state) {
+
+    // Start new stacks.
+    this._statestack = [s];
+    this._enginestack = [this._getStateEngineForState()];
+
+    return this.getStateEngine(); // Return the state engine so caller can set properties on it.
+};
+game.StateManager.prototype._getStateEngineForState = function() {
+    var engine = null;
+
+    var state = this.getState();
+    switch(state) {
         case this.states.LOADING:
-            this.stateengine = new game.State_Loading();
+            engine = new game.State_Loading();
             break;
         case this.states.ARENAINTRO:
-            this.stateengine = new game.State_ArenaIntro();
+            engine = new game.State_ArenaIntro();
             break;
         case this.states.ARENA:
-            this.stateengine = new game.State_Arena();
+            engine = new game.State_Arena();
             break;
         case this.states.ARENAEND:
-            this.stateengine = new game.State_ArenaEnd();
+            engine = new game.State_ArenaEnd();
+            break;
+        case this.states.PAUSED:
+            engine = new game.State_Paused();
             break;
         case this.states.MAP:
-            this.stateengine = new game.State_Map();
+            engine = new game.State_Map();
             break;
         default:
             console.log('unknown state:'+s);
     }
-    return this.stateengine; // Return the state engine so caller can set properties on it.
+    return engine;
 };
-game.StateManager.prototype.getState = function(s) {
-    return this.state;
+game.StateManager.prototype.getState = function() {
+    return this._statestack[this._statestack.length - 1];
 };
-
+game.StateManager.prototype.getStateEngine = function() {
+    var i = this._enginestack.length - 1;
+    return this._enginestack[i];
+};
+game.StateManager.prototype.pushState = function(s) {
+    this._statestack.push(s);
+    this._enginestack.push(this._getStateEngineForState());
+};
+game.StateManager.prototype.popState = function() {
+    this.getStateEngine().end();
+    this._statestack.pop();
+    this._enginestack.pop();
+};
 //}());

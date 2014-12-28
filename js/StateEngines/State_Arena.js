@@ -136,12 +136,11 @@ game.State_Arena.prototype.checkCollisions = function() {
     }
 };
 game.State_Arena.prototype.gotoend = function() {
-    var state = gWorld.state.setState(gWorld.state.states.ARENAEND);
-    state.decorations = this._decorations;
-    state.level = this._level;
-    state.wordcount = this.wordcount;
-
-    state.got = this._score;
+    var stateengine = gWorld.state.setState(gWorld.state.states.ARENAEND);
+    stateengine.decorations = this._decorations;
+    stateengine.level = this._level;
+    stateengine.wordcount = this.wordcount;
+    stateengine.got = this._score;
 };
 game.State_Arena.prototype.explodestuff = function() {
     //explode monsters

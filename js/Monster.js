@@ -53,7 +53,6 @@ game.Monster = function(pos) {
     }
 
     game.Thing.call(this, pos, [32, 32]);
-    //this.div = createDiv("left_col", "images/monster.png", "30px", "32px");
 }
 game.Monster.prototype = new game.Thing();
 game.Monster.prototype.constructor = game.Monster;

@@ -19,7 +19,13 @@ The failure sounds is from http://soundbible.com/992-Right-Cross.html
 
 The graphics are from http://open.commonly.cc  www.kenney.nl
 
-
+WORD COUNTS
+HSK 1 150
+HSK 2 151 (THIS SHOULD ONLY BE 150!!)
+HSK 3 300
+HSK 4 600
+HSK 5 1300
+HSK 6 2500
 
 
 TODO

@@ -56,10 +56,10 @@ game.State_Arena.prototype.draw = function() {
         this._decorations[i].draw();
     }
 
-    var s = "Arena: " + this._score + "/" + this.wordcount;
-    drawText(gContext, s, gWorld.textsize, gWorld.textcolor, 5, 0, 1.0, 'left');
+    drawText(gContext, "HSK "+this._level, gWorld.textsize, gWorld.textcolor, 40, 0);
 
-    //drawText(gContext, "asdf", gWorld.textsize, gWorld.textcolor, 480, 0);
+    var s = this._score + "/" + this.wordcount;
+    drawText(gContext, s, gWorld.textsize, gWorld.textcolor, 430, 0, 1.0, 'left');
 };
 game.State_Arena.prototype.update = function(dt) {
     updateObjects(this._enemies, dt, this.player);

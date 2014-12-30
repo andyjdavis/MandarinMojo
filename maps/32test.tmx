@@ -5,17 +5,17 @@
  </tileset>
  <layer name="background" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJzzYWBg8EHD+nTE6HaP2j+w9tPTbnR3kKrHAAmPRPv1B4H9Axn/1LafGAxSmzpA/h8MYTRq/8i1fxSP4lE8ikfxKB7FwwMDAEKlwVg=
+   eJztkrsNACAIBdkIB2EN91/B2BkqSFRQXnEdcPyEiETBF9Fu+GP9N926D29OW6jo5wT+yPvv9luYsd1R1xprmT/DjuCP95/4v5fmr+6Puj8AAIB/GMuqwto=
   </data>
  </layer>
  <layer name="backgrounddecoration" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFowABAgbATl8o7TcAdg8F4DnQDqATsBtoBxAB5tLQbHzp3xeP3CgYBaNgFIyCUTAKRsEoGAXEAgDOKQKr
+   eJxjYBgFowABAgbATl8o7TcAdg8F4DnQDqATsBtoBxAB5pKhZw6R6vCl/9E8MjjAQKdRWqY/YsBIT38jOf7XMozG/ygYBaNgFAwXAADt5gfM
   </data>
  </layer>
  <layer name="impassable" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJzt0SEOACAMBMFa+v8Hg8HVNCEImEnW1JxoBAA/y9Uoyov7nbv9s6rf7wCAt0yfqgC9
+   eJzt0UEKwCAMRNFs9Qb1CN7/gG3BgSDpwpK6KP/BYHRhIpo9O0aaq6O9uTXbfW8fUV+tNtVfmt+vmXTWN8wQzeJnAIA36pUSpG7sv3JO/1zR3ysAAOBfTrUkBJQ=
   </data>
  </layer>
  <layer name="foreground" width="32" height="32">
@@ -24,10 +24,45 @@
   </data>
  </layer>
  <objectgroup name="Object Layer" width="32" height="32">
-  <object name="arena 1" type="arena" x="417" y="320" width="35" height="35">
+  <object name="arena 3" type="arena" x="417" y="607" width="35" height="35">
+   <properties>
+    <property name="level" value="3"/>
+    <property name="wordcount" value="300"/>
+    <property name="wordindex" value="0"/>
+   </properties>
+  </object>
+  <object name="arena 1" type="arena" x="415" y="321" width="35" height="35">
    <properties>
     <property name="level" value="1"/>
     <property name="wordcount" value="150"/>
+    <property name="wordindex" value="0"/>
+   </properties>
+  </object>
+  <object name="arena 2" type="arena" x="417" y="477" width="35" height="35">
+   <properties>
+    <property name="level" value="2"/>
+    <property name="wordcount" value="150"/>
+    <property name="wordindex" value="0"/>
+   </properties>
+  </object>
+  <object name="arena 4" type="arena" x="766" y="322" width="35" height="35">
+   <properties>
+    <property name="level" value="4"/>
+    <property name="wordcount" value="600"/>
+    <property name="wordindex" value="0"/>
+   </properties>
+  </object>
+  <object name="arena 5" type="arena" x="767" y="479" width="35" height="35">
+   <properties>
+    <property name="level" value="5"/>
+    <property name="wordcount" value="1300"/>
+    <property name="wordindex" value="0"/>
+   </properties>
+  </object>
+  <object name="arena 6" type="arena" x="767" y="609" width="35" height="35">
+   <properties>
+    <property name="level" value="6"/>
+    <property name="wordcount" value="2500"/>
     <property name="wordindex" value="0"/>
    </properties>
   </object>

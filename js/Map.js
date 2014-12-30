@@ -26,19 +26,25 @@ game.Map.prototype._drawTile = function(x, y, drawWidth, drawHeight, layerName, 
     }
 
     var layerFound = false;
+    var tileData = null;
     for (var i in this.jsonobj.layers) {
         layer = this.jsonobj.layers[i];
         if (layer.name != layerName) {
             continue;
         }
         layerFound = true;
-        imageindex = layer.data[x + this.jsonobj.width * y] - 1;
+
+        tileData = this._getTileData(layer, x, y);
+        if (tileData == 0) {
+            // Empty tile.
+            break;
+        }
+        imageindex = tileData - 1;
 
         sourceWidth = this.jsonobj.tilesets[0].imagewidth / this.jsonobj.tilesets[0].tilewidth;
         sourceX = (imageindex % sourceWidth) * this.jsonobj.tilewidth;
         sourceY = parseInt(imageindex / sourceWidth) * this.jsonobj.tileheight;
 
-        //gWorld.context.drawImage(img,
         gContext.drawImage(img,
                                  sourceX,
                                  sourceY,
@@ -60,7 +66,7 @@ game.Map.prototype.drawBackgroundTile = function(x, y, drawWidth, drawHeight, ca
 };
 
 game.Map.prototype.drawImpassableTile = function(x, y, drawWidth, drawHeight, cameraposition) {
-    //this._drawTile(x, y, drawWidth, drawHeight, this.impassablelayer);
+    this._drawTile(x, y, drawWidth, drawHeight, this.impassablelayer, cameraposition);
 }
 
 game.Map.prototype.drawForegroundTile = function(x, y, drawWidth, drawHeight, cameraposition) {
@@ -71,17 +77,25 @@ game.Map.prototype.getMapDimensions = function() {
     return [this.jsonobj.width, this.jsonobj.height];
 }
 
-game.Map.prototype.tilePassable = function(x, y) {
+game.Map.prototype.tilePassable = function(coords) {
+    var layer = this._getLayer(this.impassablelayer);
+    tileData = this._getTileData(layer, coords[0], coords[1]);
+    return tileData == 0;
 };
 game.Map.prototype.getObjectLayer = function() {
+    return this._getLayer(this.objectlayer);
+};
+game.Map.prototype._getLayer = function(layername) {
     for (var i in this.jsonobj.layers) {
         layer = this.jsonobj.layers[i];
-        if (layer.name == this.objectlayer) {
+        if (layer.name == layername) {
             return layer;
         }
     }
     return null;
+};
+game.Map.prototype._getTileData = function(layer, x, y) {
+    return layer.data[x + this.jsonobj.width * y];
 }
-//gImages = new game.ImageManager();
 
 //}());

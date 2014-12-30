@@ -41,9 +41,9 @@ game.State_Map.prototype.draw = function() {
         mapsize = gWorld.map.getMapDimensions();
         for (var x = 0; x < mapsize[0]; x++) {
             for (var y = 0; y < mapsize[1]; y++) {
-                gWorld.map.drawBackgroundTile(x, y, 32, 32, this.cameraposition);
-                gWorld.map.drawImpassableTile(x, y, 32, 32, this.cameraposition);
-                gWorld.map.drawForegroundTile(x, y, 32, 32, this.cameraposition);
+                gWorld.map.drawBackgroundTile(x, y, gWorld.tileDisplayWidth, gWorld.tileDisplayWidth, this.cameraposition);
+                gWorld.map.drawImpassableTile(x, y, gWorld.tileDisplayWidth, gWorld.tileDisplayWidth, this.cameraposition);
+                gWorld.map.drawForegroundTile(x, y, gWorld.tileDisplayWidth, gWorld.tileDisplayWidth, this.cameraposition);
             }
         }
         this.player.draw(this.cameraposition);
@@ -100,7 +100,7 @@ game.State_Map.prototype.checkCollisions = function() {
     var objectlayer = gWorld.map.getObjectLayer();
     for (var i in objectlayer.objects) {
         if (objectlayer.objects[i].type == 'arena') {
-            if (this.checkCollision(objectlayer.objects[i])) {
+            if (this.checkCollisionWithPlayer(objectlayer.objects[i])) {
                 // Enter the arena.
                 var state = gWorld.state.setState(gWorld.state.states.ARENAINTRO);
                 state.level = objectlayer.objects[i].properties.level;
@@ -111,9 +111,19 @@ game.State_Map.prototype.checkCollisions = function() {
         }
     }
 
+    pos1 = this._getMapCoords(this.player.pos);
+    pos2 = this._getMapCoords([this.player.pos[0] + this.player.size[0], this.player.pos[1] + this.player.size[1]]);
+    if (!gWorld.map.tilePassable(pos1) || !gWorld.map.tilePassable(pos2)) {
+        return true;
+    }
+
     return false;
 };
-game.State_Map.prototype.checkCollision = function(obj) {
+game.State_Map.prototype._getMapCoords = function(pos) {
+    return [Math.floor(pos[0] / gWorld.tileDisplayWidth),
+            Math.floor(pos[1] / gWorld.tileDisplayWidth)];
+};
+game.State_Map.prototype.checkCollisionWithPlayer = function(obj) {
     if (this.player.pos[0] + this.player.size[0] < obj.x
         || this.player.pos[0] > obj.x + obj.width
         || this.player.pos[1] + this.player.size[1] < obj.y

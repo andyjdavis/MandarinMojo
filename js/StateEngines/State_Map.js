@@ -11,7 +11,7 @@ game.State_Map = function() {
     this.cameradown = false;
 
     var xmlhttp = new XMLHttpRequest();
-    var url = "maps/32test.json";
+    var url = "maps/mandarinmojo.json";
 
     xmlhttp.onreadystatechange = function() {
         if (xmlhttp.readyState == 4 && xmlhttp.status == 200) {

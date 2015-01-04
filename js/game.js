@@ -45,7 +45,6 @@ window.onload = function() {
     gWorld = {
         debug: true,
         tileDisplayWidth: 32,
-        mode: getParameterByName('mode'), // 0 == challenge, 1 == practice
         keyState: Array(),
         state: new game.StateManager(), // Defaults to state LOADING.
         images: null,

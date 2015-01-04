@@ -38,14 +38,16 @@ game.State_Map.prototype.end = function() {
 
 game.State_Map.prototype.draw = function() {
     if (gWorld.map) {
+        gWorld.map.startDraw(this.cameraposition);
         mapsize = gWorld.map.getMapDimensions();
         for (var x = 0; x < mapsize[0]; x++) {
             for (var y = 0; y < mapsize[1]; y++) {
-                gWorld.map.drawBackgroundTile(x, y, gWorld.tileDisplayWidth, gWorld.tileDisplayWidth, this.cameraposition);
-                gWorld.map.drawImpassableTile(x, y, gWorld.tileDisplayWidth, gWorld.tileDisplayWidth, this.cameraposition);
-                gWorld.map.drawForegroundTile(x, y, gWorld.tileDisplayWidth, gWorld.tileDisplayWidth, this.cameraposition);
+                gWorld.map.drawBackgroundTile(x, y, gWorld.tileDisplayWidth, gWorld.tileDisplayWidth);
+                gWorld.map.drawImpassableTile(x, y, gWorld.tileDisplayWidth, gWorld.tileDisplayWidth);
+                gWorld.map.drawForegroundTile(x, y, gWorld.tileDisplayWidth, gWorld.tileDisplayWidth);
             }
         }
+        gWorld.map.drawLabels();
         this.player.draw(this.cameraposition);
     }
 };

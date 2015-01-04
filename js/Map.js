@@ -13,7 +13,12 @@ game.Map = function(jsonobj) {
     this.background1layer = "background";
 };
 
-game.Map.prototype._drawTile = function(x, y, drawWidth, drawHeight, layerName, cameraposition) {
+game.Map.prototype.startDraw = function(cameraposition) {
+    this.cameraposition = cameraposition;
+    this.labels = [];
+}
+
+game.Map.prototype._drawTile = function(x, y, drawWidth, drawHeight, layerName) {
     var layer = null,
     imageindex = null,
     sourceWidth = null,
@@ -50,8 +55,8 @@ game.Map.prototype._drawTile = function(x, y, drawWidth, drawHeight, layerName, 
                                  sourceY,
                                  this.jsonobj.tilewidth,
                                  this.jsonobj.tileheight,
-                                 (x * drawWidth) - cameraposition[0],
-                                 (y * drawHeight) - cameraposition[1],
+                                 (x * drawWidth) - this.cameraposition[0],
+                                 (y * drawHeight) - this.cameraposition[1],
                                  drawWidth,
                                  drawHeight);
     }
@@ -60,17 +65,28 @@ game.Map.prototype._drawTile = function(x, y, drawWidth, drawHeight, layerName, 
     }
 }
 
-game.Map.prototype.drawBackgroundTile = function(x, y, drawWidth, drawHeight, cameraposition) {
-    this._drawTile(x, y, drawWidth, drawHeight, this.background1layer, cameraposition);
-    this._drawTile(x, y, drawWidth, drawHeight, this.background2layer, cameraposition);
+game.Map.prototype.drawBackgroundTile = function(x, y, drawWidth, drawHeight) {
+    this._drawTile(x, y, drawWidth, drawHeight, this.background1layer);
+    this._drawTile(x, y, drawWidth, drawHeight, this.background2layer);
 };
 
-game.Map.prototype.drawImpassableTile = function(x, y, drawWidth, drawHeight, cameraposition) {
-    this._drawTile(x, y, drawWidth, drawHeight, this.impassablelayer, cameraposition);
+game.Map.prototype.drawImpassableTile = function(x, y, drawWidth, drawHeight) {
+    this._drawTile(x, y, drawWidth, drawHeight, this.impassablelayer);
 }
 
-game.Map.prototype.drawForegroundTile = function(x, y, drawWidth, drawHeight, cameraposition) {
-    this._drawTile(x, y, drawWidth, drawHeight, this.forebackground1layer, cameraposition);
+game.Map.prototype.drawForegroundTile = function(x, y, drawWidth, drawHeight) {
+    this._drawTile(x, y, drawWidth, drawHeight, this.forebackground1layer);
+}
+
+game.Map.prototype.drawLabels = function() {
+    this.labels[0] = {
+        text: 'asdfddd',
+        pos: [10, 20]
+    }
+    for (var i in this.labels) {
+        label = this.labels[i];
+        drawText(gContext, label.text, gWorld.textsize, gWorld.textcolor, label.pos[0], label.pos[1]);
+    }
 }
 
 game.Map.prototype.getMapDimensions = function() {

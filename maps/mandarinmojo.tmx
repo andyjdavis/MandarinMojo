@@ -26,6 +26,7 @@
  <objectgroup name="Object Layer" width="32" height="32">
   <object name="arena 3" type="arena" x="417" y="607" width="35" height="35">
    <properties>
+    <property name="label" value="HSK 3"/>
     <property name="level" value="3"/>
     <property name="wordcount" value="300"/>
     <property name="wordindex" value="0"/>
@@ -33,6 +34,7 @@
   </object>
   <object name="arena 1" type="arena" x="415" y="321" width="35" height="35">
    <properties>
+    <property name="label" value="HSK 1"/>
     <property name="level" value="1"/>
     <property name="wordcount" value="150"/>
     <property name="wordindex" value="0"/>
@@ -40,6 +42,7 @@
   </object>
   <object name="arena 2" type="arena" x="417" y="477" width="35" height="35">
    <properties>
+    <property name="label" value="HSK 2"/>
     <property name="level" value="2"/>
     <property name="wordcount" value="150"/>
     <property name="wordindex" value="0"/>
@@ -47,6 +50,7 @@
   </object>
   <object name="arena 4" type="arena" x="766" y="322" width="35" height="35">
    <properties>
+    <property name="label" value="HSK 4"/>
     <property name="level" value="4"/>
     <property name="wordcount" value="600"/>
     <property name="wordindex" value="0"/>
@@ -54,6 +58,7 @@
   </object>
   <object name="arena 5" type="arena" x="767" y="479" width="35" height="35">
    <properties>
+    <property name="label" value="HSK 5"/>
     <property name="level" value="5"/>
     <property name="wordcount" value="1300"/>
     <property name="wordindex" value="0"/>
@@ -61,6 +66,7 @@
   </object>
   <object name="arena 6" type="arena" x="767" y="609" width="35" height="35">
    <properties>
+    <property name="label" value="HSK 6"/>
     <property name="level" value="6"/>
     <property name="wordcount" value="2500"/>
     <property name="wordindex" value="0"/>

@@ -30,6 +30,21 @@ HSK 6 2500
 
 TODO
 
+1) user can enter arenas. Arenas are marked complete.
+
+2) store words sorted for the user by difficulty (wrong answers, time to pick correct).
+
+3) New arena "problem words".
+THESE TWO MAY SWITCH
+4) User can view list of words sorted by difficulty. Problem words at top.
+
+5) Pay to remember state. Ads.
+
+6) Get email address. Pick reminder schedule.
+
+
+
+
 World map. area between arenas.
 http://opengameart.org/content/tiny-16-basic
 near bottom of comments is 32px version.

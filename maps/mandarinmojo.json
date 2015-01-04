@@ -53,6 +53,7 @@
                  "name":"arena 3",
                  "properties":
                     {
+                     "label":"HSK 3",
                      "level":"3",
                      "wordcount":"300",
                      "wordindex":"0"
@@ -68,6 +69,7 @@
                  "name":"arena 1",
                  "properties":
                     {
+                     "label":"HSK 1",
                      "level":"1",
                      "wordcount":"150",
                      "wordindex":"0"
@@ -83,6 +85,7 @@
                  "name":"arena 2",
                  "properties":
                     {
+                     "label":"HSK 2",
                      "level":"2",
                      "wordcount":"150",
                      "wordindex":"0"
@@ -98,6 +101,7 @@
                  "name":"arena 4",
                  "properties":
                     {
+                     "label":"HSK 4",
                      "level":"4",
                      "wordcount":"600",
                      "wordindex":"0"
@@ -113,6 +117,7 @@
                  "name":"arena 5",
                  "properties":
                     {
+                     "label":"HSK 5",
                      "level":"5",
                      "wordcount":"1300",
                      "wordindex":"0"
@@ -128,6 +133,7 @@
                  "name":"arena 6",
                  "properties":
                     {
+                     "label":"HSK 6",
                      "level":"6",
                      "wordcount":"2500",
                      "wordindex":"0"

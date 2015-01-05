@@ -16,6 +16,17 @@ game.Map = function(jsonobj) {
 game.Map.prototype.startDraw = function(cameraposition) {
     this.cameraposition = cameraposition;
     this.labels = [];
+
+    var objectlayer = this.getObjectLayer();
+    for (var i in objectlayer.objects) {
+        if (objectlayer.objects[i].properties.label) {
+            this.labels.push({
+                text: objectlayer.objects[i].properties.label,
+                pos: [objectlayer.objects[i].x +  + objectlayer.objects[i].width/2,
+                      objectlayer.objects[i].y + objectlayer.objects[i].height + 2]});
+
+        }
+    }
 }
 
 game.Map.prototype._drawTile = function(x, y, drawWidth, drawHeight, layerName) {
@@ -79,13 +90,14 @@ game.Map.prototype.drawForegroundTile = function(x, y, drawWidth, drawHeight) {
 }
 
 game.Map.prototype.drawLabels = function() {
-    this.labels[0] = {
-        text: 'asdfddd',
-        pos: [10, 20]
-    }
     for (var i in this.labels) {
         label = this.labels[i];
-        drawText(gContext, label.text, gWorld.textsize, gWorld.textcolor, label.pos[0], label.pos[1]);
+        drawText(gContext,
+                 label.text,
+                 gWorld.textsize,
+                 gWorld.textcolor,
+                 label.pos[0] - this.cameraposition[0],
+                 label.pos[1] - this.cameraposition[1]);
     }
 }
 

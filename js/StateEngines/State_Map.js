@@ -25,7 +25,7 @@ game.State_Map = function() {
     if (gWorld.mapplayer) {
         this.player = gWorld.mapplayer;
     } else {
-        this.player = new game.Player([gCanvas.width/2, gCanvas.height/2]);
+        this.player = new game.Player([50, 50]);
         gWorld.mapplayer = this.player;
     }
 }

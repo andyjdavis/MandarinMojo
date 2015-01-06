@@ -7,10 +7,10 @@ game.State_ArenaIntro = function() {
     this.wordindex = 0;
     this.wordcount = 0;
 
-    gCanvas.width = 512;
-    gCanvas.height = 480;
+    gCanvas.width = gWorld.arenaWidth;
+    gCanvas.height = gWorld.arenaHeight;
 
-    gLeft.setAttribute('width', '512px');
+    gLeft.setAttribute('width', gWorld.arenaWidth+'px');
 }
 game.State_ArenaIntro.prototype = new game.Thing();
 game.State_ArenaIntro.prototype.constructor = game.State_ArenaIntro;

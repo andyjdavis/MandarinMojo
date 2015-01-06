@@ -49,7 +49,7 @@
          "name":"Object Layer",
          "objects":[
                 {
-                 "height":48,
+                 "height":34,
                  "name":"arena 3",
                  "properties":
                     {
@@ -60,12 +60,12 @@
                     },
                  "type":"arena",
                  "visible":true,
-                 "width":51,
-                 "x":312,
-                 "y":696
+                 "width":50,
+                 "x":311,
+                 "y":704
                 }, 
                 {
-                 "height":46,
+                 "height":29,
                  "name":"arena 1",
                  "properties":
                     {
@@ -77,11 +77,11 @@
                  "type":"arena",
                  "visible":true,
                  "width":50,
-                 "x":55,
-                 "y":441
+                 "x":56,
+                 "y":450
                 }, 
                 {
-                 "height":43,
+                 "height":29,
                  "name":"arena 2",
                  "properties":
                     {
@@ -92,12 +92,12 @@
                     },
                  "type":"arena",
                  "visible":true,
-                 "width":51,
+                 "width":52,
                  "x":375,
-                 "y":380
+                 "y":384
                 }, 
                 {
-                 "height":43,
+                 "height":33,
                  "name":"arena 4",
                  "properties":
                     {
@@ -110,10 +110,10 @@
                  "visible":true,
                  "width":50,
                  "x":631,
-                 "y":636
+                 "y":641
                 }, 
                 {
-                 "height":51,
+                 "height":33,
                  "name":"arena 5",
                  "properties":
                     {
@@ -124,12 +124,12 @@
                     },
                  "type":"arena",
                  "visible":true,
-                 "width":52,
+                 "width":50,
                  "x":567,
-                 "y":953
+                 "y":958
                 }, 
                 {
-                 "height":47,
+                 "height":30,
                  "name":"arena 6",
                  "properties":
                     {
@@ -141,8 +141,8 @@
                  "type":"arena",
                  "visible":true,
                  "width":48,
-                 "x":888,
-                 "y":892
+                 "x":889,
+                 "y":896
                 }],
          "opacity":1,
          "type":"objectgroup",

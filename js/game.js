@@ -44,11 +44,17 @@ window.onload = function() {
 
     gWorld = {
         debug: true,
-        tileDisplayWidth: 32,
+
         keyState: Array(),
         state: new game.StateManager(), // Defaults to state LOADING.
         images: null,
         sounds: null,
+
+        tileDisplayWidth: 32,
+        mapWidth: 800,
+        mapHeight: 600,
+        arenaWidth: 512,
+        arenaHeight: 480,
 
         problems: Array(), // Randomly ordered array of problem instances grouped by level.
         mapplayer: null, // save the player obj

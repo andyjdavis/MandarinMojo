@@ -13,8 +13,9 @@ game.Map = function(jsonobj) {
     this.background1layer = "background";
 };
 
-game.Map.prototype.startDraw = function(cameraposition) {
+game.Map.prototype.startDraw = function(cameraposition, bottomRight) {
     this.cameraposition = cameraposition;
+    this.bottomRight = bottomRight;
     this.labels = [];
 
     var objectlayer = this.getObjectLayer();
@@ -23,7 +24,7 @@ game.Map.prototype.startDraw = function(cameraposition) {
             this.labels.push({
                 text: objectlayer.objects[i].properties.label,
                 pos: [objectlayer.objects[i].x +  + objectlayer.objects[i].width/2,
-                      objectlayer.objects[i].y + objectlayer.objects[i].height + 2]});
+                      objectlayer.objects[i].y + objectlayer.objects[i].height]});
 
         }
     }
@@ -35,6 +36,16 @@ game.Map.prototype._drawTile = function(x, y, drawWidth, drawHeight, layerName) 
     sourceWidth = null,
     sourceX = null,
     sourceY = null;
+
+    // Calc the draw position and check it is on screen.
+    var drawX = (x * drawWidth) - this.cameraposition[0];
+    var drawY = (y * drawHeight) - this.cameraposition[1];
+    if (drawX < 0 - drawWidth || drawY < 0 - drawHeight) {
+        return;
+    }
+    if (drawX > this.bottomRight[0] || drawY > this.bottomRight[0]) {
+        return;
+    }
 
     var img = gWorld.images.getImage('tiles');
     if (!img) {
@@ -66,8 +77,8 @@ game.Map.prototype._drawTile = function(x, y, drawWidth, drawHeight, layerName) 
                                  sourceY,
                                  this.jsonobj.tilewidth,
                                  this.jsonobj.tileheight,
-                                 (x * drawWidth) - this.cameraposition[0],
-                                 (y * drawHeight) - this.cameraposition[1],
+                                 drawX,
+                                 drawY,
                                  drawWidth,
                                  drawHeight);
     }

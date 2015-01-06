@@ -29,10 +29,10 @@ game.State_Map = function() {
         gWorld.mapplayer = this.player;
     }
 
-    gCanvas.width = 800;
-    gCanvas.height = 600;
+    gCanvas.width = gWorld.mapWidth;
+    gCanvas.height = gWorld.mapHeight;
 
-    gLeft.setAttribute('width', '800px');
+    gLeft.setAttribute('width', gWorld.mapWidth+'px');
 }
 game.State_Map.prototype = new game.Thing();
 game.State_Map.prototype.constructor = game.State_Map;
@@ -43,7 +43,7 @@ game.State_Map.prototype.end = function() {
 
 game.State_Map.prototype.draw = function() {
     if (gWorld.map) {
-        gWorld.map.startDraw(this.cameraposition);
+        gWorld.map.startDraw(this.cameraposition, this._getBottomRight());
         mapsize = gWorld.map.getMapDimensions();
         for (var x = 0; x < mapsize[0]; x++) {
             for (var y = 0; y < mapsize[1]; y++) {
@@ -56,6 +56,9 @@ game.State_Map.prototype.draw = function() {
         this.player.draw(this.cameraposition);
     }
 };
+game.State_Map.prototype._getBottomRight = function() {
+    return [this.cameraposition[0] + gWorld.mapWidth, this.cameraposition[1] + gWorld.mapHeight];
+}
 game.State_Map.prototype.update = function(dt) {
     var lastpos = this.player.pos.slice(0);
     this.player.update(dt);
@@ -75,17 +78,37 @@ game.State_Map.prototype.update = function(dt) {
         this.cameraup = true;
     }
 
-    var speed = 6;
+    var speed = 300;
+    var delta = speed * dt;
+
+    // Do not scroll past the bottom and right edge of the map.
+    if (this.cameraright || this.cameradown) {
+        var bottomRight = this._getBottomRight();
+        var mapBottomRight = [gWorld.map.jsonobj.tilewidth * gWorld.tileDisplayWidth,
+                              gWorld.map.jsonobj.tileheight * gWorld.tileDisplayWidth];
+
+        if (this.cameraright) {
+            if (bottomRight[0] + delta > mapBottomRight[0]) {
+                this.cameraright = false;
+            }
+        }
+        if (this.cameradown) {
+            if (bottomRight[1] + delta > mapBottomRight[1]) {
+                this.cameradown = false;
+            }
+        }
+    }
+
     if (this.cameraright) {
-        this.cameraposition[0] += speed;
+        this.cameraposition[0] += delta;
     } else if (this.cameraleft) {
-        this.cameraposition[0] -= speed;
+        this.cameraposition[0] -= delta;
         this.cameraposition[0] = this.cameraposition[0] < 0 ? 0 : this.cameraposition[0];
     }
     if (this.cameradown) {
-        this.cameraposition[1] += speed;
+        this.cameraposition[1] += delta;
     } else if (this.cameraup) {
-        this.cameraposition[1] -= speed;
+        this.cameraposition[1] -= delta;
         this.cameraposition[1] = this.cameraposition[1] < 0 ? 0 : this.cameraposition[1];
     }
 

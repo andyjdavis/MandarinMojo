@@ -24,7 +24,7 @@
   </data>
  </layer>
  <objectgroup name="Object Layer" width="32" height="32">
-  <object name="arena 3" type="arena" x="312" y="696" width="51" height="48">
+  <object name="arena 3" type="arena" x="311" y="704" width="50" height="34">
    <properties>
     <property name="label" value="HSK 3"/>
     <property name="level" value="3"/>
@@ -32,7 +32,7 @@
     <property name="wordindex" value="0"/>
    </properties>
   </object>
-  <object name="arena 1" type="arena" x="55" y="441" width="50" height="46">
+  <object name="arena 1" type="arena" x="56" y="450" width="50" height="29">
    <properties>
     <property name="label" value="HSK 1"/>
     <property name="level" value="1"/>
@@ -40,7 +40,7 @@
     <property name="wordindex" value="0"/>
    </properties>
   </object>
-  <object name="arena 2" type="arena" x="375" y="380" width="51" height="43">
+  <object name="arena 2" type="arena" x="375" y="384" width="52" height="29">
    <properties>
     <property name="label" value="HSK 2"/>
     <property name="level" value="2"/>
@@ -48,7 +48,7 @@
     <property name="wordindex" value="0"/>
    </properties>
   </object>
-  <object name="arena 4" type="arena" x="631" y="636" width="50" height="43">
+  <object name="arena 4" type="arena" x="631" y="641" width="50" height="33">
    <properties>
     <property name="label" value="HSK 4"/>
     <property name="level" value="4"/>
@@ -56,7 +56,7 @@
     <property name="wordindex" value="0"/>
    </properties>
   </object>
-  <object name="arena 5" type="arena" x="567" y="953" width="52" height="51">
+  <object name="arena 5" type="arena" x="567" y="958" width="50" height="33">
    <properties>
     <property name="label" value="HSK 5"/>
     <property name="level" value="5"/>
@@ -64,7 +64,7 @@
     <property name="wordindex" value="0"/>
    </properties>
   </object>
-  <object name="arena 6" type="arena" x="888" y="892" width="48" height="47">
+  <object name="arena 6" type="arena" x="889" y="896" width="48" height="30">
    <properties>
     <property name="label" value="HSK 6"/>
     <property name="level" value="6"/>

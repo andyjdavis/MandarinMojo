@@ -28,6 +28,11 @@ game.State_Map = function() {
         this.player = new game.Player([50, 50]);
         gWorld.mapplayer = this.player;
     }
+
+    gCanvas.width = 800;
+    gCanvas.height = 600;
+
+    gLeft.setAttribute('width', '800px');
 }
 game.State_Map.prototype = new game.Thing();
 game.State_Map.prototype.constructor = game.State_Map;

@@ -17,8 +17,8 @@ window.onload = function() {
     gTable = $("thetable");
 
     gCanvas = dc("canvas");
-    gCanvas.width = 512;
-    gCanvas.height = 480;
+    gCanvas.width = 800;
+    gCanvas.height = 600;
     gLeft.appendChild(gCanvas);
 
     gContext = gCanvas.getContext("2d");

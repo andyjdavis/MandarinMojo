@@ -7,18 +7,12 @@ game.Message = function(message) {
     this.age = 0;
     this.maxage = 2;
     this.message = message;
-    //this.div = createDiv("left_col", "images/Message.png", "32px", "32px");
-    
-    //Messages dont move
-    //this.div.style.left = this.pos[0]+"px";
-    //this.div.style.top = this.pos[1]+"px";
 }
 game.Message.prototype = new game.Thing();
 game.Message.prototype.constructor = game.Message;
 
 game.Message.prototype.draw = function() {
-    //drawText(gContext, "Bonus!", '44pt Arial', 'yellow', 170, 200, 0.1);
-    drawText(gContext, this.message, '48pt Arial', 'yellow', gCanvas.width/2, 270, 0.2);
+    drawText(gContext, this.message, '48pt Arial', 'yellow', gCanvas.width/2, gCanvas.height/2, 0.2);
 };
 game.Message.prototype.update = function(dt) {
     //game.Thing.prototype.update.call(this, dt);

@@ -302,13 +302,15 @@ game.State_Arena.prototype.nextCharacter = function() {
     this._currentcharacters = Array();
 
     this._currentproblem = null;
+    /*
+    Debug - favor long words.
     while (!this._currentproblem) {
         this._currentproblem = this._problems.pop();
         if (this._currentproblem.words[0].character.length <3) {
             this._currentproblem = null;
         }
-    }
-    //this._currentproblem = this._problems.pop();
+    }*/
+    this._currentproblem = this._problems.pop();
     for (var i = 0; i < this._currentproblem.words.length; i++) {
         if (this._currentproblem.words[i].correct) {
             if (gWorld.debug) {

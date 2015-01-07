@@ -30,8 +30,6 @@ HSK 6 2500
 
 TODO
 
--arena crashing after a few problems
-
 1) user can enter arenas. Arenas are marked complete.
 
 2) store words sorted for the user by difficulty (wrong answers, time to pick correct).

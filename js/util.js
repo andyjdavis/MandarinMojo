@@ -55,8 +55,17 @@ function shuffleArray(array) {
     }
     return array;
 }
-function drawRect(context, x, y, width, height) {
+function drawRect(context, x, y, width, height, color, opacity) {
+    if (opacity) {
+        gContext.globalAlpha = opacity;
+    }
+    if (color) {
+        context.fillStyle = color;
+    }
     context.fillRect(x, y, width, height);
+    if (opacity) {
+        gContext.globalAlpha = 1.0;
+    }
 }
 function drawBox(context, x, y, width, height, color, opacity) {
     if (opacity) {

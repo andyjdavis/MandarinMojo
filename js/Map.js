@@ -12,8 +12,20 @@ game.Map = function(jsonobj) {
     this.background2layer = "backgrounddecoration";
     this.background1layer = "background";
 };
+game.Map.prototype.draw = function(cameraposition, bottomRight) {
+    this._startDraw(cameraposition, bottomRight);
+    mapsize = this.getMapDimensions();
+    for (var x = 0; x < mapsize[0]; x++) {
+        for (var y = 0; y < mapsize[1]; y++) {
+            this.drawBackgroundTile(x, y, gWorld.tileDisplayWidth, gWorld.tileDisplayWidth);
+            this.drawImpassableTile(x, y, gWorld.tileDisplayWidth, gWorld.tileDisplayWidth);
+            this.drawForegroundTile(x, y, gWorld.tileDisplayWidth, gWorld.tileDisplayWidth);
+        }
+    }
+    this.drawLabels();
+}
 
-game.Map.prototype.startDraw = function(cameraposition, bottomRight) {
+game.Map.prototype._startDraw = function(cameraposition, bottomRight) {
     this.cameraposition = cameraposition;
     this.bottomRight = bottomRight;
     this.labels = [];

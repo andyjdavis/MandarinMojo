@@ -10,6 +10,7 @@ game.StateManager = function() {
         ARENAEND: 3,
         PAUSED: 4,
         MAP: 5,
+        OVERLAY: 6,
     };
     this._statestack = [];
     this._enginestack = [];
@@ -50,6 +51,9 @@ game.StateManager.prototype._getStateEngineForState = function() {
             break;
         case this.states.MAP:
             engine = new game.State_Map();
+            break;
+        case this.states.OVERLAY:
+            engine = new game.State_Overlay();
             break;
         default:
             console.log('unknown state:'+s);

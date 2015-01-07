@@ -49,6 +49,7 @@ window.onload = function() {
         state: new game.StateManager(), // Defaults to state LOADING.
         images: null,
         sounds: null,
+        highscores: [0,0,0,0,0,0],
 
         tileDisplayWidth: 32,
         mapWidth: 800,
@@ -104,6 +105,12 @@ function onKeyDown(event) {
             mute();
         }
     }
+    if (state == gWorld.state.states.MAP || state == gWorld.state.states.OVERLAY) {
+        if (event.keyCode == 72) {
+            // h
+            overlay();
+        }
+    }
     gWorld.keyState[event.keyCode] = true;
 }
 function onKeyUp(event) {
@@ -127,6 +134,15 @@ function mute() {
     } else {
         gWorld.message = new game.Message('muted');
     }
+}
+function overlay() {
+    var state = gWorld.state.getState();
+    if (state == gWorld.state.states.MAP) {
+        gWorld.state.pushState(gWorld.state.states.OVERLAY);
+    } else if (state == gWorld.state.states.OVERLAY) {
+        gWorld.state.popState();
+    }
+    //ignore h if in any other state
 }
 
 function loadWords() {

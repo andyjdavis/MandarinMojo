@@ -195,7 +195,6 @@ game.State_Arena.prototype.shootProjectile = function() {
 game.State_Arena.prototype.charactercorrect = function() {
     this._score++;
     if (this._score > gWorld.highscores[this._level - 1]) {
-        //gWorld.bestscore = this._score;
         gWorld.highscores[this._level - 1] = this._score;
     }
 

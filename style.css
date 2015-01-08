@@ -21,7 +21,7 @@
 }
 
 body {color:#E6EFE5;font:18pt Verdana, Geneva, sans-serif;background: url("images/bg.png")  repeat;padding:0;margin:0;}
-p {text-align:center;height:28px;width:100%;}
+p {text-align:center;height:28px;width:100%;margin:0;}
 canvas {border:1px solid DarkGreen;}
 
 #left_col {

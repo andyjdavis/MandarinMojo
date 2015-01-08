@@ -3,6 +3,8 @@
 window.game = window.game || { };
 
 game.State_Overlay = function() {
+    this.cameraPosition = null;
+    this.bottomRight = null;
 }
 game.State_Overlay.prototype = new game.Thing();
 game.State_Overlay.prototype.constructor = game.State_Overlay;
@@ -11,6 +13,10 @@ game.State_Overlay.prototype.end = function() {
 };
 
 game.State_Overlay.prototype.draw = function() {
+    if (gWorld.map) {
+        gWorld.map.draw(this.cameraPosition, this.bottomRight);
+    }
+
     drawRect(gContext, 50, 50, gCanvas.width - 100, gCanvas.height - 100, 'green', 0.6);
 
     var y = 150;

@@ -30,6 +30,8 @@ HSK 6 2500
 
 TODO
 
+tell the player they can press h for high scores
+
 1) user can enter arenas. Arenas are marked complete.
 
 2) store words sorted for the user by difficulty (wrong answers, time to pick correct).

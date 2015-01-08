@@ -138,7 +138,14 @@ function mute() {
 function overlay() {
     var state = gWorld.state.getState();
     if (state == gWorld.state.states.MAP) {
-        gWorld.state.pushState(gWorld.state.states.OVERLAY);
+        var stateEngine = gWorld.state.getStateEngine();
+        var cameraPosition = stateEngine.cameraposition;
+        var bottomRight = stateEngine._getBottomRight();
+
+        stateEngine = gWorld.state.pushState(gWorld.state.states.OVERLAY);
+        stateEngine.cameraPosition = cameraPosition;
+        stateEngine.bottomRight = bottomRight;
+        
     } else if (state == gWorld.state.states.OVERLAY) {
         gWorld.state.popState();
     }

@@ -70,6 +70,8 @@ game.StateManager.prototype.getStateEngine = function() {
 game.StateManager.prototype.pushState = function(s) {
     this._statestack.push(s);
     this._enginestack.push(this._getStateEngineForState());
+
+    return this.getStateEngine(); // Return the state engine so caller can set properties on it.
 };
 game.StateManager.prototype.popState = function() {
     this.getStateEngine().end();

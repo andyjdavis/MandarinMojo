@@ -303,7 +303,7 @@ game.State_Arena.prototype.nextCharacter = function() {
 
     this._currentproblem = null;
     /*
-    Debug - favor long words.
+    console.log('FAVORING LONG WORDS');
     while (!this._currentproblem) {
         this._currentproblem = this._problems.pop();
         if (this._currentproblem.words[0].character.length <3) {
@@ -311,6 +311,18 @@ game.State_Arena.prototype.nextCharacter = function() {
         }
     }*/
     this._currentproblem = this._problems.pop();
+    /*var forcecharacter = '月';
+    console.log('FORCING '+forcecharacter);
+    while (true) {
+        if ((this._currentproblem.words[0].character == forcecharacter && this._currentproblem.words[0].correct)
+           || (this._currentproblem.words[1].character == forcecharacter && this._currentproblem.words[1].correct)
+           || (this._currentproblem.words[2].character == forcecharacter && this._currentproblem.words[2].correct)
+           || (this._currentproblem.words[3].character == forcecharacter && this._currentproblem.words[3].correct)) {
+
+            break;
+        }
+        this._currentproblem = this._problems.pop();
+    }*/
     for (var i = 0; i < this._currentproblem.words.length; i++) {
         if (this._currentproblem.words[i].correct) {
             if (gWorld.debug) {

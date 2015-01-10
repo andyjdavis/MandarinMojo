@@ -215,8 +215,8 @@ function loadWords() {
 
 	        while (wordarray.length < 4) {
 	            wrongword = wordobjects[i][getRandomInt(0, totalwordcount - 1)];
-	            if (attempts > 10 || (wrongword.character.length == correctwordcharcount
-                        	          && wrongword.character != wordobjects[i][j].character)) {
+	            if (wrongword.character != wordobjects[i][j].character
+	                && (attempts > 10 || wrongword.character.length == correctwordcharcount)) {
 
                     wrongword = new game.Word(wrongword.character, wrongword.pinyin, wrongword.getToRead(), wrongword.english, false);
                     wordarray.push(wrongword);

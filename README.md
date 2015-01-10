@@ -76,5 +76,3 @@ i think all of 说不定 didn't play audio but maybe 说 played
 学问的问 wen in xuéwen
 
 Player disappears when standing still in Safari 8.0
-
-struck me out for going to 月 for moon/month

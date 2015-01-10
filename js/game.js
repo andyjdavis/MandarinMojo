@@ -228,8 +228,11 @@ function loadWords() {
 	        gWorld.problems[i].push(new game.Problem(shuffleArray(wordarray)));
 	    }
 	    gWorld.problems[i] = shuffleArray(gWorld.problems[i]);
-	    console.log("loaded "+i);
-	    console.log(gWorld.problems[i].length);
+
+	    if (gWorld.debug) {
+	        console.log("loaded file "+i);
+	        console.log("contains how many phrases? " + gWorld.problems[i].length);
+	    }
     }
 }
 
@@ -247,11 +250,6 @@ function updateGame(dt) {
     
 function drawGame() {
     gContext.clearRect(0, 0, gCanvas.width, gCanvas.height);
-
-    /*var state = gWorld.state.getState();
-    if (state != gWorld.state.states.PAUSED) {
-        gWorld.state.stateengine.draw();
-    }*/
     gWorld.state.getStateEngine().draw();
 }
 

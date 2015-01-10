@@ -8,14 +8,14 @@ game.SoundManager = function() {
     this.numSoundsLoaded = 0;
     this.sounds = Array();
     this.enabled = true;
-    
+
     try {
         //this._context = new webkitAudioContext();
-        
-        this.sounds['success'] = new Audio("success.ogg");
+
+        //this.sounds['success'] = new Audio("success.ogg");
         this.sounds['fail'] = new Audio("thump.ogg");
         //this.sounds['attack'] = new Audio("resources/attack.ogg");
-        
+
         for (var key in this.sounds) {
             //this.sounds[key].preload = "auto";
             this.sounds[key].addEventListener('loadeddata', onSoundLoad);
@@ -44,14 +44,14 @@ game.SoundManager.prototype.play = function(name, loop) {
                 }, false);
             }
             if (this.sounds[name].duration > 0 && !this.sounds[name].paused) {
-                //already playing
+                console.log('sound already playing');
             } else {
                 this.sounds[name].currentTime = 0;
                 this.sounds[name].play();
             }
         }
     } catch(e) {
-        console.log(e);
+        console.log('sound manager exception:'+e);
     }
 }
 game.SoundManager.prototype.stop = function(name) {

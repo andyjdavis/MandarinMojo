@@ -43,7 +43,7 @@ window.onload = function() {
 	gDivs = [gQuestion, gPinyin, gAudio];
 
     gWorld = {
-        debug: true,
+        debug: false,
 
         keyState: Array(),
         state: new game.StateManager(), // Defaults to state LOADING.

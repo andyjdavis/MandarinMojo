@@ -3,7 +3,7 @@
 window.game = window.game || { };
 
 game.State_Map = function() {
-    this.cameraposition = [0, 0];
+    this.cameraposition = [130, 0];
 
     this.cameraright = false;
     this.cameraleft = false;
@@ -25,7 +25,7 @@ game.State_Map = function() {
     if (gWorld.mapplayer) {
         this.player = gWorld.mapplayer;
     } else {
-        this.player = new game.Player([50, 50]);
+        this.player = new game.Player([520, 50]);
         gWorld.mapplayer = this.player;
     }
 
@@ -33,6 +33,8 @@ game.State_Map = function() {
     gCanvas.height = gWorld.mapHeight;
 
     gLeft.setAttribute('width', gWorld.mapWidth+'px');
+
+    //gWorld.message = new game.Message('Press h for your highscores');
 }
 game.State_Map.prototype = new game.Thing();
 game.State_Map.prototype.constructor = game.State_Map;
@@ -44,6 +46,9 @@ game.State_Map.prototype.end = function() {
 game.State_Map.prototype.draw = function() {
     if (gWorld.map) {
         gWorld.map.draw(this.cameraposition, this._getBottomRight());
+    }
+    if (gWorld.message) {
+        gWorld.message.draw();
     }
     this.player.draw(this.cameraposition);
 };

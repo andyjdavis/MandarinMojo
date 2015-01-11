@@ -5,17 +5,17 @@
  </tileset>
  <layer name="background" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJy9VdsRAyEItBPo4FKI/deTL2cMw+ounvlgcrlD9qFCb631EM9hWPLOQV7EfgMf4WX8dvgG9CjaV/xu6Wd9WWGvPDw9DzF2ujMunylOOSu+D4wMn+VhIa+T66KfCB95juoj/ayfqz3e1fCAr9w3lM/UmHmd3DuVr6Kf9Z/1HdXL+hDTl3xTV/Uq3ouZnyc1nKjJcLMkL84JVrN69tCMmb1A/hvxrPLLdN2cSys/x7sOvt+IzJ+qfk+eK/0C6ff2e36qHu3WVfvDW2eD8effmAp+VvN0bij4lZliDfcmBp/FiXnq/9P9t/CrrlP1Iz2sX5X9V2LFY3yLXjH9oTqnmX2JOTsvVa8ZT274/fbauH9f11q9cg==
+   eJy1VsENwzAI9Cb2BlmkG/TdKbJ8VamWLHTAHXYeqGoMHHfgkKu1don2Cux33kHMAM+Qn+er4Gc5LK5Xxzyz5xF+lEvhWOnBaVylD5Efq4lai9r3UzYxIv5ZHd3xY+qfsRF+9W6t9v77R/Oe2cyj9Jadlwr/qhYqfmWeUO1RjRk+it3l7OGzebO+ePcC+bD6M7X1pA8on4evzh7aMYwW0d7Ndpqig1fj6flHuB73fhDf0+cDeKo2ljzD5K/qhPRn7o2Sm7Gn9Gfregqf1ULBRzl3vovU+Wd3io3x3k0MfxbH+rH/T/W/m1/Wqvw9Pvb5DXAq319303hFfZtn6w5mZo7R18Nl+mJ9Ig7KbCqaVG0nvspj6vUFzILGQw==
   </data>
  </layer>
  <layer name="backgrounddecoration" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFowABAgbATl8o7TcAdo+CUTBYgN1AO4AAmAvE0TQyey0D7vxPj/KBVv4aBaOAWmAolA+pNDJ7tHwYBaMAPxgtHwYO0MpftAYAvZkJ5A==
+   eJxjYBgFQw344xAPoKMbfNH4fnS0exQwMNii8e1oZM8cCvXPpYorMMFo+hsFo2DkgtHyDxWMln+jYBTQD4yWP4h+CKjfMVr+DE0AAA22CMc=
   </data>
  </layer>
  <layer name="impassable" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJztz0EKACAIRFGvUUfw/geMoAER3VWr/0C0FjmZ9capGebqbKHftt/1U9qrbml+Kf9fmXTnHzJUWWIGAAAAAAA6CyV6A9g=
+   eJztwQENAAAAwqD3T20PBxQAAADwbhAAAAE=
   </data>
  </layer>
  <layer name="foreground" width="32" height="32">
@@ -24,7 +24,7 @@
   </data>
  </layer>
  <objectgroup name="Object Layer" width="32" height="32">
-  <object name="arena 3" type="arena" x="311" y="704" width="50" height="34">
+  <object name="arena 3" type="arena" x="215" y="576" width="50" height="34">
    <properties>
     <property name="label" value="HSK 3"/>
     <property name="level" value="3"/>
@@ -32,7 +32,7 @@
     <property name="wordindex" value="0"/>
    </properties>
   </object>
-  <object name="arena 1" type="arena" x="56" y="450" width="50" height="29">
+  <object name="arena 1" type="arena" x="216" y="260" width="50" height="29">
    <properties>
     <property name="label" value="HSK 1"/>
     <property name="level" value="1"/>
@@ -40,7 +40,7 @@
     <property name="wordindex" value="0"/>
    </properties>
   </object>
-  <object name="arena 2" type="arena" x="375" y="384" width="52" height="29">
+  <object name="arena 2" type="arena" x="791" y="259" width="52" height="29">
    <properties>
     <property name="label" value="HSK 2"/>
     <property name="level" value="2"/>
@@ -48,7 +48,7 @@
     <property name="wordindex" value="0"/>
    </properties>
   </object>
-  <object name="arena 4" type="arena" x="631" y="641" width="50" height="33">
+  <object name="arena 4" type="arena" x="792" y="575" width="50" height="33">
    <properties>
     <property name="label" value="HSK 4"/>
     <property name="level" value="4"/>
@@ -56,7 +56,7 @@
     <property name="wordindex" value="0"/>
    </properties>
   </object>
-  <object name="arena 5" type="arena" x="567" y="958" width="50" height="33">
+  <object name="arena 5" type="arena" x="215" y="864" width="50" height="33">
    <properties>
     <property name="label" value="HSK 5"/>
     <property name="level" value="5"/>
@@ -64,7 +64,7 @@
     <property name="wordindex" value="0"/>
    </properties>
   </object>
-  <object name="arena 6" type="arena" x="889" y="896" width="48" height="30">
+  <object name="arena 6" type="arena" x="794" y="865" width="48" height="30">
    <properties>
     <property name="label" value="HSK 6"/>
     <property name="level" value="6"/>

@@ -51,6 +51,7 @@ World map. area between arenas.
 http://opengameart.org/content/tiny-16-basic
 near bottom of comments is 32px version.
 
+a border around page
 
 Missing audio:
 绿 lv4

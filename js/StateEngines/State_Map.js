@@ -33,8 +33,6 @@ game.State_Map = function() {
     gCanvas.height = gWorld.mapHeight;
 
     gLeft.setAttribute('width', gWorld.mapWidth+'px');
-
-    //gWorld.message = new game.Message('Press h for your highscores');
 }
 game.State_Map.prototype = new game.Thing();
 game.State_Map.prototype.constructor = game.State_Map;
@@ -132,6 +130,10 @@ game.State_Map.prototype.checkCollisions = function() {
                 state.level = objectlayer.objects[i].properties.level;
                 state.wordindex = objectlayer.objects[i].properties.wordindex;
                 state.wordcount = objectlayer.objects[i].properties.wordcount;
+
+                if (state.level > 0) {
+                    gWorld.playerinfo.addLevel(state.level);
+                }
                 return true;
             }
         }

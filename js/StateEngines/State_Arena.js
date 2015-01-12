@@ -56,9 +56,15 @@ game.State_Arena.prototype.draw = function() {
         this._decorations[i].draw();
     }
 
-    drawText(gContext, "HSK "+this._level, gWorld.textsize, gWorld.textcolor, 40, 0);
+    var s = null;
+    if (this._level > 0) {
+        s = "HSK "+this._level;
+    } else {
+        s = "Review";
+    }
+    drawText(gContext, s, gWorld.textsize, gWorld.textcolor, 40, 0);
 
-    var s = this._score + "/" + this.wordcount;
+    s = this._score + "/" + this.wordcount;
     drawText(gContext, s, gWorld.textsize, gWorld.textcolor, 430, 0, 1.0, 'left');
 };
 game.State_Arena.prototype.update = function(dt) {
@@ -73,8 +79,14 @@ game.State_Arena.prototype.update = function(dt) {
 };
 game.State_Arena.prototype.setLevel = function(level) {
     this._level = level;
-    this._problems = gWorld.problems[this._level - 1].slice(0); //copy the array
-    this._problems = shuffleArray(this._problems);
+    if (level > 0) {
+        this._problems = gWorld.problems[this._level - 1].slice(0); //copy the array
+        this._problems = shuffleArray(this._problems);
+    } else {
+        // Use player list.
+        this._problems = gWorld.playerinfo.problems.slice(0); //copy the array
+        this.wordcount = this._problems.length;
+    }
     this.nextCharacter();
 };
 
@@ -194,8 +206,8 @@ game.State_Arena.prototype.shootProjectile = function() {
 };
 game.State_Arena.prototype.charactercorrect = function() {
     this._score++;
-    if (this._score > gWorld.highscores[this._level - 1]) {
-        gWorld.highscores[this._level - 1] = this._score;
+    if (this._score > gWorld.playerinfo.highscores[this._level - 1]) {
+        gWorld.playerinfo.highscores[this._level - 1] = this._score;
     }
 
     var n = null;
@@ -227,6 +239,10 @@ game.State_Arena.prototype.charactercorrect = function() {
 game.State_Arena.prototype.characterwrong = function() {
     gWorld.sounds.play("fail");
     this._lastcorrect = false;
+    
+    if (this._level == 0) {
+        gWorld.playerinfo.wordWrong();
+    }
 
     this._decorations.push(new game.Explosion(this.player.pos));
     this.updateTable();
@@ -270,6 +286,10 @@ game.State_Arena.prototype.updateTable = function() {
     }
 };
 game.State_Arena.prototype.spawnMonsters = function() {
+    if (this._level == 0) {
+        // No monsters in the review arena.
+        return;
+    }
     var totalcount = this.wordcount;
     var percentsolved = this._score / totalcount;
     var n = Math.ceil(percentsolved * 10);

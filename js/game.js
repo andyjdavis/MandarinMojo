@@ -49,7 +49,8 @@ window.onload = function() {
         state: new game.StateManager(), // Defaults to state LOADING.
         images: null,
         sounds: null,
-        highscores: [0,0,0,0,0,0],
+
+        playerinfo: new game.PlayerInfoManager(),
 
         tileDisplayWidth: 32,
         mapWidth: 800,

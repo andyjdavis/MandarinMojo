@@ -19,6 +19,10 @@ The failure sounds is from http://soundbible.com/992-Right-Cross.html
 
 The graphics are from http://open.commonly.cc  www.kenney.nl
 
+World map. area between arenas.
+http://opengameart.org/content/tiny-16-basic
+near bottom of comments is 32px version.
+
 WORD COUNTS
 HSK 1 150
 HSK 2 151 (THIS SHOULD ONLY BE 150!!)
@@ -47,9 +51,7 @@ THESE TWO MAY SWITCH
 
 
 
-World map. area between arenas.
-http://opengameart.org/content/tiny-16-basic
-near bottom of comments is 32px version.
+remove state.wordcount
 
 a border around page
 

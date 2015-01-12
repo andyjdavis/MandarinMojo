@@ -21,9 +21,9 @@ game.State_Overlay.prototype.draw = function() {
 
     var y = 150;
     drawText(gContext, "High Scores", gWorld.textsize, 'white', gCanvas.width/2, y);
-    for (var i in gWorld.highscores) {
+    for (var i in gWorld.playerinfo.highscores) {
         y += 40;
-        drawText(gContext, "HSK "+(1.0 * i + 1)+"   "+gWorld.highscores[i], gWorld.textsize, 'white', gCanvas.width/2, y);
+        drawText(gContext, "HSK "+(1.0 * i + 1)+"   "+gWorld.playerinfo.highscores[i], gWorld.textsize, 'white', gCanvas.width/2, y);
     }
 };
 game.State_Overlay.prototype.update = function(dt) {

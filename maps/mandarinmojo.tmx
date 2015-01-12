@@ -10,7 +10,7 @@
  </layer>
  <layer name="backgrounddecoration" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFQw344xAPoKMbfNH4fnS0exQwMNii8e1oZM8cCvXPpYorMMFo+hsFo2DkgtHyDxWMln+jYBTQD4yWP4h+CKjfMVr+DE0AAA22CMc=
+   eJxjYBgFQw344xAPoKMbfNH4fnS0exQwMNii8e1oZM8cAvKmBOTnUsshaGA0/Y2CUTBywWAp/wiB0fJvFIyC4QdGyx9EPwTU7xgtf4YmAAB8lAj8
   </data>
  </layer>
  <layer name="impassable" width="32" height="32">
@@ -69,6 +69,14 @@
     <property name="label" value="HSK 6"/>
     <property name="level" value="6"/>
     <property name="wordcount" value="2500"/>
+    <property name="wordindex" value="0"/>
+   </properties>
+  </object>
+  <object name="arena 0" type="arena" x="504" y="258" width="50" height="29">
+   <properties>
+    <property name="label" value="Review"/>
+    <property name="level" value="0"/>
+    <property name="wordcount" value="0"/>
     <property name="wordindex" value="0"/>
    </properties>
   </object>

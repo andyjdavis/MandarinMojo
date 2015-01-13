@@ -10,7 +10,7 @@
  </layer>
  <layer name="backgrounddecoration" width="32" height="32">
   <data encoding="base64" compression="zlib">
-   eJxjYBgFQw344xAPoKMbfNH4fnS0exQwMNii8e1oZM8cAvKmBOTnUsshaGA0/Y2CUTBywWAp/wiB0fJvFIyC4QdGyx9EPwTU7xgtf4YmAAB8lAj8
+   eJxjYBgFQw344xAPoKMbfNH4fnS0exQwMNii8e1oZM8cAvLdBOTnUsshaGA0/Y2CUTBywWAp/wiB0fJvFIyC4QdGyx9EPwTU7xgtf4YmAABvUAlS
   </data>
  </layer>
  <layer name="impassable" width="32" height="32">

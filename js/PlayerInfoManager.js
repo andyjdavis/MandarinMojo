@@ -15,7 +15,9 @@ game.PlayerInfoManager.prototype.addLevel = function(level) {
         }
     }
     this.levels.push(level);
+
     this.problems = this.problems.concat(gWorld.problems[level - 1]);
+    this.problems = shuffleArray(this.problems); // Mix in the new level.
 };
 game.PlayerInfoManager.prototype.problemWrong = function() {
     var wrong = this.problems.pop();

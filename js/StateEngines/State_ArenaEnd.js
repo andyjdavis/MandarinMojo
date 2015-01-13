@@ -52,9 +52,9 @@ game.State_ArenaEnd.prototype.onKeyDown = function(event) {
     // "r" to retry
     if (event.keyCode == 82) {
         var state = gWorld.state.setState(gWorld.state.states.ARENA);
-        state.setLevel(this.level);
         state.wordindex = this.wordindex;
         state.wordcount = this.wordcount;
+        state.setLevel(this.level);
     }
 }
 

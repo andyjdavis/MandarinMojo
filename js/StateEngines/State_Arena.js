@@ -209,6 +209,9 @@ game.State_Arena.prototype.charactercorrect = function() {
     if (this._score > gWorld.playerinfo.highscores[this._level - 1]) {
         gWorld.playerinfo.highscores[this._level - 1] = this._score;
     }
+    if (this._level == 0) {
+        gWorld.playerinfo.problemCorrect();
+    }
 
     var n = null;
     if (this._score == 5) {
@@ -241,7 +244,7 @@ game.State_Arena.prototype.characterwrong = function() {
     this._lastcorrect = false;
     
     if (this._level == 0) {
-        gWorld.playerinfo.wordWrong();
+        gWorld.playerinfo.problemWrong();
     }
 
     this._decorations.push(new game.Explosion(this.player.pos));

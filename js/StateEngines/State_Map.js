@@ -58,6 +58,9 @@ game.State_Map.prototype._getMapBottomRight = function() {
             gWorld.map.jsonobj.tileheight * gWorld.tileDisplayWidth];
 }
 game.State_Map.prototype.update = function(dt) {
+    if (!gWorld.map || !gWorld.map.jsonobj) {
+        return;
+    }
     var lastpos = this.player.pos.slice(0);
 
     var bounds = [[0,0],this._getMapBottomRight()];

@@ -337,9 +337,8 @@ game.State_Arena.prototype.nextCharacter = function() {
     }*/
     this._currentproblem = this._problems.pop();
 
-    /*
     if (gWorld.debug) {
-        var forcecharacter = '研究';
+        /*var forcecharacter = '水果';
         console.log('FORCING '+forcecharacter);
         while (true) {
             if ((this._currentproblem.words[0].character == forcecharacter && this._currentproblem.words[0].correct)
@@ -350,8 +349,8 @@ game.State_Arena.prototype.nextCharacter = function() {
                 break;
             }
             this._currentproblem = this._problems.pop();
-        }
-    }*/
+        }*/
+    }
 
     for (var i = 0; i < this._currentproblem.words.length; i++) {
         if (this._currentproblem.words[i].correct) {
@@ -400,15 +399,7 @@ game.State_Arena.prototype.createAura = function() {
 };
 game.State_Arena.prototype.playAudio = function() {
     var correct = this._currentproblem.getCorrectWord();
-
-    var s = correct.getToRead();
-    s = s.replace(/(\d+)/g, "$1 "); // put spaces between the syllables
-    s = s.toLowerCase();
-
-    // replace some sounds that don't have audio files
-    // this makes ba4ba5 not work.
-    s = s.replace("5", "4");
-
+    var s = correct.getToRead(true);
     gWorld.tts.setInput(s);
     if (gWorld.debug) {
         console.log("setting tts input to " + s);

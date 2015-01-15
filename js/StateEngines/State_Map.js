@@ -53,9 +53,15 @@ game.State_Map.prototype.draw = function() {
 game.State_Map.prototype._getBottomRight = function() {
     return [this.cameraposition[0] + gWorld.mapWidth, this.cameraposition[1] + gWorld.mapHeight];
 }
+game.State_Map.prototype._getMapBottomRight = function() {
+    return [gWorld.map.jsonobj.tilewidth * gWorld.tileDisplayWidth,
+            gWorld.map.jsonobj.tileheight * gWorld.tileDisplayWidth];
+}
 game.State_Map.prototype.update = function(dt) {
     var lastpos = this.player.pos.slice(0);
-    this.player.update(dt);
+
+    var bounds = [[0,0],this._getMapBottomRight()];
+    this.player.update(dt, bounds);
     if (this.checkCollisions()) {
         gWorld.mapplayer.pos = lastpos;
         return;
@@ -78,8 +84,7 @@ game.State_Map.prototype.update = function(dt) {
     // Do not scroll past the bottom and right edge of the map.
     if (this.cameraright || this.cameradown) {
         var bottomRight = this._getBottomRight();
-        var mapBottomRight = [gWorld.map.jsonobj.tilewidth * gWorld.tileDisplayWidth,
-                              gWorld.map.jsonobj.tileheight * gWorld.tileDisplayWidth];
+        var mapBottomRight = this._getMapBottomRight();
 
         if (this.cameraright) {
             if (bottomRight[0] + delta > mapBottomRight[0]) {

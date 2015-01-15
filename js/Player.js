@@ -79,9 +79,13 @@ game.Player.prototype.setvisibility = function(visibility) {
     //this.div.style.visibility = visibility;
 }
 
-game.Player.prototype.update = function(dt) {
+game.Player.prototype.update = function(dt, bounds) {
     this.walking = false;
     this.goingleft = false;
+    var lastpos = null;
+    if (bounds) {
+        lastpos = this.pos.slice(0);
+    }
 
     if (gWorld.keyState[87] || gWorld.keyState[38]) { //up
         //this.vel[1] = -this.maxvel;
@@ -108,18 +112,20 @@ game.Player.prototype.update = function(dt) {
     //    this.shoot();
     //}
 
-    /*if (this.pos[0] < 30) {
-        this.pos[0] = 30;
+    if (bounds) {
+        if (this.pos[0] < bounds[0][0]) {
+            this.pos[0] = lastpos[0];
+        }
+        if (this.pos[0] + this.size[0] > bounds[0][0] + bounds[1][0]) {
+            this.pos[0] = bounds[0][0] + bounds[1][0] - this.size[0];
+        }
+        if (this.pos[1] < bounds[0][1]) {
+            this.pos[1] = lastpos[1];
+        }
+        if (this.pos[1] + this.size[1] > bounds[0][1] + bounds[1][1]) {
+            this.pos[1] = bounds[0][1] + bounds[1][1] - this.size[1];
+        }
     }
-    if (this.pos[1] < 30) {
-        this.pos[1] = 30;
-    }
-    if (this.pos[0] + this.size[0] > gCanvas.width - 30) {
-        this.pos[0] = gCanvas.width - 30 - this.size[0];
-    }
-    if (this.pos[1] + this.size[1] > gCanvas.height - 30) {
-        this.pos[1] = gCanvas.height - 30 - this.size[1];
-    }*/
     //game.Thing.prototype.update.call(this, dt);
 }
 

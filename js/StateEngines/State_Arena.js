@@ -72,7 +72,8 @@ game.State_Arena.prototype.update = function(dt) {
     updateObjects(this._projectiles, dt);
     updateObjects(this._decorations, dt);
 
-    this.player.update(dt);
+    var bounds = [[0,0],[gWorld.arenaWidth, gWorld.arenaHeight]];
+    this.player.update(dt, bounds);
     this.checkCollisions();
 
     this.spawnMonsters();

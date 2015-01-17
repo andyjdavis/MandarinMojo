@@ -18,6 +18,8 @@ game.Word.prototype.getToRead = function(changeTones) {
     if (!changeTones) {
         return s;
     }
+    //http://en.wikipedia.org/wiki/Standard_Chinese_phonology#Tones
+    // http://en.wikipedia.org/wiki/Tone_sandhi#Mandarin_Chinese
     if (gWorld.debug) {
         console.log('original string to read=='+s);
     }
@@ -27,12 +29,24 @@ game.Word.prototype.getToRead = function(changeTones) {
 
     var arr = s.split(" ");
     for (var i = 0; i < arr.length - 1;i++) {
-        if (i <= arr.length - 2 && arr[i].slice(-1) == "3" && arr[i+1].slice(-1) == "3") {
-            if (gWorld.debug) {
-                console.log('found consecutive 3rd tones');
+        if (i <= arr.length - 2) {
+            // still got at least 2 characters to go.
+            if (arr[i].slice(-1) == "3" && arr[i+1].slice(-1) == "3") {
+                // Two 3rd tones. Change the 1st 3rd tones to a 2nd tone.
+                if (gWorld.debug) {
+                    console.log('found consecutive 3rd tones');
+                }
+                arr[i] = (arr[i].slice(0,-1) + '2');
+            } else if (arr[i].slice(-1) == "4" && arr[i+1].slice(-1) == "4" && this.character.indexOf("不") > -1) {
+                // 不 is 4th except when followed by another 4th when it changes to 2nd.
+                // Making an educated guess.
+                /* This is apparently already done in the lang files.
+                if (gWorld.debug) {
+                    console.log('found consecutive 4th tones');
+                }
+                arr[i] = (arr[i].slice(0,-1) + '2');*/
             }
-            // Change the 1st of the 2 3rd tones to a 2nd tone.
-            arr[i] = (arr[i].slice(0,-1) + '2');
+            // Rules for 一 yī are in the lang files.
         }
     }
     s = arr.join(" ");

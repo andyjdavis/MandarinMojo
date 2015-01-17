@@ -339,7 +339,11 @@ game.State_Arena.prototype.nextCharacter = function() {
     this._currentproblem = this._problems.pop();
 
     if (gWorld.debug) {
-        /*var forcecharacter = '水果';
+        // http://en.wikipedia.org/wiki/Standard_Chinese_phonology#Tones
+        // two 3rds 水果  33 becomes 23
+        // a fifth 爸爸
+        // 不 is 4th except when followed by another 4th when it changes to 2nd.
+        /*var forcecharacter = '爸爸';
         console.log('FORCING '+forcecharacter);
         while (true) {
             if ((this._currentproblem.words[0].character == forcecharacter && this._currentproblem.words[0].correct)

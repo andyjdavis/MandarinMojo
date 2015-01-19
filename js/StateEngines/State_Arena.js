@@ -343,7 +343,7 @@ game.State_Arena.prototype.nextCharacter = function() {
         // two 3rds 水果  33 becomes 23
         // a fifth 爸爸
         // 不 is 4th except when followed by another 4th when it changes to 2nd.
-        /*var forcecharacter = '爸爸';
+        /*var forcecharacter = '水果';
         console.log('FORCING '+forcecharacter);
         while (true) {
             if ((this._currentproblem.words[0].character == forcecharacter && this._currentproblem.words[0].correct)
@@ -404,14 +404,25 @@ game.State_Arena.prototype.createAura = function() {
 };
 game.State_Arena.prototype.playAudio = function() {
     var correct = this._currentproblem.getCorrectWord();
-    var s = correct.getToRead(true);
-    gWorld.tts.setInput(s);
-    if (gWorld.debug) {
-        console.log("setting tts input to " + s);
-    }
-    gAudio.innerHTML = gWorld.tts.getHtml();
+    if (gWorld.localTTS) {
+        var s = correct.getToRead(true);
+        gWorld.tts.setInput(s);
+        if (gWorld.debug) {
+            console.log("setting tts input to " + s);
+        }
+        gAudio.innerHTML = gWorld.tts.getHtml();
+        window.setTimeout(gWorld.tts.speak, 1000);
+    } else {
+        var text = correct.character;
 
-    window.setTimeout(gWorld.tts.speak, 1000);
+        var section, frame;
+
+        section   = document.getElementsByTagName( "head" )[ 0 ];
+        frame     = document.createElement( "iframe" );
+        frame.src = 'http://translate.google.com/translate_tts?ie=utf-8&tl=zh-CN&q='+text;
+
+        section.appendChild( frame );
+    }
 };
 
 //}());

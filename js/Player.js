@@ -87,23 +87,27 @@ game.Player.prototype.update = function(dt, bounds) {
         lastpos = this.pos.slice(0);
     }
 
-    if (gWorld.keyState[87] || gWorld.keyState[38]) { //up
+    //gWorld.keyState[87] ||
+    if (gWorld.keyState[38]) { //up
         //this.vel[1] = -this.maxvel;
         this.pos[1] = Math.round(this.pos[1] - this.maxvel * dt);
         this.walking = true;
     }
-    if (gWorld.keyState[83] || gWorld.keyState[40]) { //down
+    //gWorld.keyState[83] || 
+    if (gWorld.keyState[40]) { //down
         //this.vel[1] = this.maxvel;
         this.pos[1] = Math.round(this.pos[1] + this.maxvel * dt);
         this.walking = true;
     }
-    if (gWorld.keyState[65] || gWorld.keyState[37]) { //left
+    //gWorld.keyState[65] || 
+    if (gWorld.keyState[37]) { //left
         //this.vel[0] = -this.maxvel;
         this.pos[0] = Math.round(this.pos[0] - this.maxvel * dt);
         this.walking = true;
         this.goingleft = true;
     }
-    if (gWorld.keyState[68] || gWorld.keyState[39]) { //right
+    //gWorld.keyState[68] || 
+    if (gWorld.keyState[39]) { //right
         //this.vel[0] = this.maxvel;
         this.pos[0] = Math.round(this.pos[0] + this.maxvel * dt);
         this.walking = true;

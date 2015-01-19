@@ -43,7 +43,7 @@ window.onload = function() {
 	gDivs = [gQuestion, gPinyin, gAudio];
 
     gWorld = {
-        debug: false,
+        debug: true,
 
         keyState: Array(),
         state: new game.StateManager(), // Defaults to state LOADING.
@@ -71,6 +71,7 @@ window.onload = function() {
         now: 0,
         dt: 0,
 
+        localTTS: false,
         hp: new HanyuPinyin(),
         tts: new ChineseTextToSpeech()
     };
@@ -89,7 +90,7 @@ window.onload = function() {
 }
 
 function onKeyDown(event) {
-    //console.log(event.keyCode);
+    console.log(event.keyCode);
     var stateengine = gWorld.state.getStateEngine();
     if (typeof stateengine.onKeyDown === 'function') {
         stateengine.onKeyDown(event);
@@ -104,6 +105,15 @@ function onKeyDown(event) {
         if (event.keyCode == 77) {
             // m
             mute();
+        }
+        if (event.keyCode == 83) {
+            // s
+            gWorld.localTTS = !gWorld.localTTS;
+            var s = 'remote speech';
+            if (gWorld.localTTS) {
+                s = 'local speech';
+            }
+            gWorld.message = new game.Message(s);
         }
     }
     if (state == gWorld.state.states.MAP || state == gWorld.state.states.OVERLAY) {

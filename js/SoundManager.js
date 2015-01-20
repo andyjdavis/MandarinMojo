@@ -43,12 +43,12 @@ game.SoundManager.prototype.play = function(name, loop) {
                     this.play();
                 }, false);
             }
-            if (this.sounds[name].duration > 0 && !this.sounds[name].paused) {
-                console.log('sound already playing');
-            } else {
+            //if (this.sounds[name].duration > 0 && !this.sounds[name].paused) {
+            //    console.log('sound already playing');
+            //} else {
                 this.sounds[name].currentTime = 0;
                 this.sounds[name].play();
-            }
+            //}
         }
     } catch(e) {
         console.log('sound manager exception:'+e);

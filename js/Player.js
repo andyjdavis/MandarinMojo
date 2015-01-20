@@ -2,14 +2,19 @@
 
 window.game = window.game || { };
 
-game.Player = function(pos) {
+game.Player = function(pos, drawhealth) {
     game.Thing.call(this, pos, [32, 48]);
+    this.drawhealth = drawhealth;
 
     this.maxvel = 200;
     this.frame = 0;
     this.maxframe = 10;
     this.walking = false;
     this.goingleft = false;
+
+    this.health = 4;
+    this.maxhealth = 4;
+    this.lasthittime = null;
     
     // these came from images/player/p1_spritesheet.txt
     this.standingsourcelocations = [67, 196];
@@ -74,9 +79,31 @@ game.Player.prototype.draw = function(cameraposition) {
         gContext.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, drawX, drawY, this.size[0], this.size[1]);
     }
     game.Thing.prototype.draw.call(this); // Draw bounding box.
+
+    if (this.drawhealth) {
+        var width = (this.health/this.maxhealth) * this.size[0];
+        var opacity = 0.0;
+        if (this.lasthittime) {
+            var timepassed = new Date().getTime() - this.lasthittime;
+            if (timepassed < 5000) {
+                opacity = 1.0 - (timepassed/5000);
+            }
+        }
+        if (opacity > 0) {
+            drawRect(gContext, drawX, drawY + this.size[1], width, 4, 'green', opacity);
+        }
+    }
 }
 game.Player.prototype.setvisibility = function(visibility) {
     //this.div.style.visibility = visibility;
+}
+game.Player.prototype.hurt = function() {
+    this.health--;
+    this.lasthittime = new Date().getTime();
+    gWorld.sounds.play("fail");
+}
+game.Player.prototype.resetHealth = function() {
+    this.health = this.maxhealth;
 }
 
 game.Player.prototype.update = function(dt, bounds) {

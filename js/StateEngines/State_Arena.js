@@ -23,7 +23,7 @@ game.State_Arena = function() {
     this._projectiles = Array();
     this._decorations = Array();
 
-    this.player = new game.Player([64, 85]);
+    this.player = new game.Player([64, 85], true);
 }
 game.State_Arena.prototype = new game.Thing();
 game.State_Arena.prototype.constructor = game.State_Arena;
@@ -105,10 +105,13 @@ game.State_Arena.prototype.checkCollisions = function() {
             this._enemies.splice(j, 1);
             this._decorations.push(new game.Explosion(enemy.pos));
 
-            this.explodestuff();
-            this.clearDivs();
-            this.gotoend();
-            this.characterwrong();
+            this.player.hurt();
+            if (this.player.health <= 0) {
+                this.explodestuff();
+                this.clearDivs();
+                this.gotoend();
+                this.characterwrong();
+            }
             return;
         }
         for (var p in this._projectiles) {
@@ -241,7 +244,6 @@ game.State_Arena.prototype.charactercorrect = function() {
     this.nextCharacter();
 };
 game.State_Arena.prototype.characterwrong = function() {
-    gWorld.sounds.play("fail");
     this._lastcorrect = false;
     
     if (this._level == 0) {
@@ -250,7 +252,13 @@ game.State_Arena.prototype.characterwrong = function() {
 
     this._decorations.push(new game.Explosion(this.player.pos));
     this.updateTable();
-    this.gotoend();
+
+    this.player.hurt();
+    if (this.player.health <= 0) {
+        this.gotoend();
+    } else {
+        this.nextCharacter();
+    }
 };
 game.State_Arena.prototype.updateTable = function() {
     if (this._currentproblem) {
@@ -377,7 +385,7 @@ game.State_Arena.prototype.nextCharacter = function() {
     this.spawnMonsters();
 
     var that = this;
-    window.setTimeout(function(){that.showCharacters()}, 1000);
+    window.setTimeout(function(){that.showCharacters()}, 2000);
 
     for (var i = 0; i < this._currentproblem.words.length; i++) {
         this._currentcharacters[i] = new game.Character(this._characterpositions[i],
@@ -411,13 +419,19 @@ game.State_Arena.prototype.playAudio = function() {
             console.log("setting tts input to " + s);
         }
         gAudio.innerHTML = gWorld.tts.getHtml();
-        window.setTimeout(gWorld.tts.speak, 500);
+        window.setTimeout(gWorld.tts.speak, 1000);
     } else {
-        var text = correct.character;
-
-        var frame = $('speechiframe');
-        frame.src = 'http://translate.google.com/translate_tts?ie=utf-8&tl=zh-CN&q='+text;
+        var that = this;
+        setTimeout(function () {
+            that.playGoogleAudio();
+        }, 1000);
     }
 };
+game.State_Arena.prototype.playGoogleAudio = function() {
+    var correct = this._currentproblem.getCorrectWord();
+    var text = correct.character;
+    var frame = $('speechiframe');
+    frame.src = 'http://translate.google.com/translate_tts?ie=utf-8&tl=zh-CN&q='+text;
+}
 
 //}());

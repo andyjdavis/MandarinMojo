@@ -90,7 +90,7 @@ window.onload = function() {
 }
 
 function onKeyDown(event) {
-    console.log(event.keyCode);
+    //console.log(event.keyCode);
     var stateengine = gWorld.state.getStateEngine();
     if (typeof stateengine.onKeyDown === 'function') {
         stateengine.onKeyDown(event);
@@ -109,9 +109,9 @@ function onKeyDown(event) {
         if (event.keyCode == 83) {
             // s
             gWorld.localTTS = !gWorld.localTTS;
-            var s = 'remote speech';
+            var s = 'Speaker A';
             if (gWorld.localTTS) {
-                s = 'local speech';
+                s = 'Speaker B';
             }
             gWorld.message = new game.Message(s);
         }

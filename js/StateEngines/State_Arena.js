@@ -377,7 +377,7 @@ game.State_Arena.prototype.nextCharacter = function() {
     this.spawnMonsters();
 
     var that = this;
-    window.setTimeout(function(){that.showCharacters()}, 2000);
+    window.setTimeout(function(){that.showCharacters()}, 1000);
 
     for (var i = 0; i < this._currentproblem.words.length; i++) {
         this._currentcharacters[i] = new game.Character(this._characterpositions[i],
@@ -411,17 +411,12 @@ game.State_Arena.prototype.playAudio = function() {
             console.log("setting tts input to " + s);
         }
         gAudio.innerHTML = gWorld.tts.getHtml();
-        window.setTimeout(gWorld.tts.speak, 1000);
+        window.setTimeout(gWorld.tts.speak, 500);
     } else {
         var text = correct.character;
 
-        var section, frame;
-
-        section   = document.getElementsByTagName( "head" )[ 0 ];
-        frame     = document.createElement( "iframe" );
+        var frame = $('speechiframe');
         frame.src = 'http://translate.google.com/translate_tts?ie=utf-8&tl=zh-CN&q='+text;
-
-        section.appendChild( frame );
     }
 };
 

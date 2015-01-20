@@ -41,8 +41,8 @@ game.State_ArenaIntro.prototype.draw = function() {
 
         //drawText(gContext, "Press m to mute sound effects", gWorld.textsize, gWorld.textcolor, x, 240);
         drawText(gContext, "p to pause", gWorld.textsize, gWorld.textcolor, x, 310);
-        drawText(gContext, "e to begin", gWorld.textsize, "white", x, 340);
-        drawText(gContext, "s to change speech generation", gWorld.textsize, "white", x, 370);
+        drawText(gContext, "s if there is a problem with speech", gWorld.textsize, "white", x, 340);
+        drawText(gContext, "e to begin", gWorld.textsize, "white", x, 370);
     }
 };
 game.State_ArenaIntro.prototype.update = function(dt) {

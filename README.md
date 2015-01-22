@@ -51,7 +51,8 @@ THESE TWO MAY SWITCH
 
 
 
-remove state.wordcount
+nǚ'ér
+daughter
 
 a border around page
 

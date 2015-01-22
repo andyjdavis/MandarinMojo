@@ -20,7 +20,6 @@ game.State_ArenaEnd.prototype.draw = function() {
         gContext.drawImage(img, 0, 0);
     }
 
-    //drawText(gContext, "Chinese Character Challenge", gWorld.textsize, gWorld.textcolor, gCanvas.width/5, 100);
     drawText(gContext, "You got "+this.got+"/"+this.wordcount, gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 150);
 
     var perc = this.got / this.wordcount;

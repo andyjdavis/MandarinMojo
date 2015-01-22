@@ -8,9 +8,10 @@ game.StateManager = function() {
         ARENAINTRO: 1,
         ARENA: 2,
         ARENAEND: 3,
-        PAUSED: 4,
-        MAP: 5,
-        OVERLAY: 6,
+        ARENAPASSED: 4,
+        PAUSED: 5,
+        MAP: 6,
+        OVERLAY: 7,
     };
     this._statestack = [];
     this._enginestack = [];
@@ -45,6 +46,9 @@ game.StateManager.prototype._getStateEngineForState = function() {
             break;
         case this.states.ARENAEND:
             engine = new game.State_ArenaEnd();
+            break;
+        case this.states.ARENAPASSED:
+            engine = new game.State_ArenaPassed();
             break;
         case this.states.PAUSED:
             engine = new game.State_Paused();

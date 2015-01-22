@@ -330,6 +330,12 @@ game.State_Arena.prototype.spawnMonsters = function() {
     }
 };
 game.State_Arena.prototype.nextCharacter = function() {
+    if (this._problems.length < 1) {
+        var stateengine = gWorld.state.setState(gWorld.state.states.ARENAPASSED);
+        stateengine.decorations = this._decorations;
+        stateengine.level = this._level;
+        return;
+    }
 
     this._currentcharacters = Array();
 
@@ -345,6 +351,9 @@ game.State_Arena.prototype.nextCharacter = function() {
         }
     }*/
     this._currentproblem = this._problems.pop();
+    if (gWorld.debug) {
+        console.log("Retrieving next problem. "+this._problems.length+" problems remain after this one.");
+    }
 
     if (gWorld.debug) {
         // http://en.wikipedia.org/wiki/Standard_Chinese_phonology#Tones

@@ -19,6 +19,8 @@ The failure sounds is from http://soundbible.com/992-Right-Cross.html
 
 The graphics are from http://open.commonly.cc  www.kenney.nl
 
+The music http://incompetech.com/music/royalty-free/index.html?isrc=USUAN1100691
+
 World map. area between arenas.
 http://opengameart.org/content/tiny-16-basic
 near bottom of comments is 32px version.

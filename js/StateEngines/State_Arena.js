@@ -65,7 +65,8 @@ game.State_Arena.prototype.draw = function() {
     drawText(gContext, s, gWorld.textsize, gWorld.textcolor, 40, 0);
 
     s = this._score + "/" + this.wordcount;
-    drawText(gContext, s, gWorld.textsize, gWorld.textcolor, 430, 0, 1.0, 'left');
+    var x = gCanvas.width - (13 * s.length);
+    drawText(gContext, s, gWorld.textsize, gWorld.textcolor, x, 0, 1.0, 'left');
 };
 game.State_Arena.prototype.update = function(dt) {
     updateObjects(this._enemies, dt, this.player);

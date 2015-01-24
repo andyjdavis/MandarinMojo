@@ -45,7 +45,7 @@ game.Player.prototype.draw = function(cameraposition) {
     }
 
     var sourceWidth = 72;
-    var sourceHeight = 97;
+    var sourceHeight = 92;//97;
 
     var drawX = this.pos[0] - cameraposition[0];
     var drawY = this.pos[1] - cameraposition[1];

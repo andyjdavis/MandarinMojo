@@ -22,7 +22,7 @@ game.SoundManager = function() {
             this.sounds[key].volume = 0.2;
         }
     } catch(e) {
-        alert("Web Audio not supported");
+        alert("I am sorry but sound does not appear to be working properly in your browser. You can still play but probably won't hear anything. I recommend either Google Chrome or Firefox browsers to fix this.");
     }
 }
 game.SoundManager.prototype.togglemute = function() {

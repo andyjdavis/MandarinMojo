@@ -22,7 +22,7 @@ game.SoundManager = function() {
             this.sounds[key].volume = 0.2;
         }
     } catch(e) {
-        alert("I am sorry but sound does not appear to be working properly in your browser. You can still play but probably won't hear anything. I recommend either Google Chrome or Firefox browsers to fix this.");
+        alert("This browser does support html5 audio. You can still play Mandarin Mojo but probably won't hear anything. I recommend either using either Google Chrome or Firefox.");
     }
 }
 game.SoundManager.prototype.togglemute = function() {

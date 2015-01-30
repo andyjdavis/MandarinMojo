@@ -15,8 +15,9 @@ game.ImageManager = function() {
         'monster': "images/enemies_spritesheet.png",
         'explosion': "images/explosion.png",
         'tiles': "maps/Tiny32-Complete-Spritesheet-Repack3.png",
+        'powerup': 'images/star.png'
     };
-    this.images = Array(6);
+    this.images = Array(7);
     for (var name in this.imagedict) {
         this.images[name] = new Image();
         this.images[name].onload = onImageLoad;

@@ -99,8 +99,15 @@ game.Player.prototype.setvisibility = function(visibility) {
 }
 game.Player.prototype.hurt = function() {
     this.health--;
-    this.lasthittime = new Date().getTime();
+    this.showHealth();
     gWorld.sounds.play("fail");
+}
+game.Player.prototype.healed = function() {
+    this.health++;
+    this.showHealth();
+}
+game.Player.prototype.showHealth = function() {
+    this.lasthittime = new Date().getTime();
 }
 game.Player.prototype.resetHealth = function() {
     this.health = this.maxhealth;

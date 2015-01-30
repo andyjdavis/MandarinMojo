@@ -21,6 +21,7 @@ game.State_Arena = function() {
 
     this._enemies = Array();
     this._projectiles = Array();
+    this._powerups = Array();
     this._decorations = Array();
 
     this.player = new game.Player([64, 85], true);
@@ -48,6 +49,9 @@ game.State_Arena.prototype.draw = function() {
     for (var i in this._projectiles) {
         this._projectiles[i].draw();
     }
+    for (var i in this._powerups) {
+        this._powerups[i].draw();
+    }
     for (var i in this._enemies) {
         this._enemies[i].draw();
     }
@@ -71,6 +75,7 @@ game.State_Arena.prototype.draw = function() {
 game.State_Arena.prototype.update = function(dt) {
     updateObjects(this._enemies, dt, this.player);
     updateObjects(this._projectiles, dt);
+    updateObjects(this._powerups, dt);
     updateObjects(this._decorations, dt);
 
     var bounds = [[0,0],[gWorld.arenaWidth, gWorld.arenaHeight]];
@@ -151,6 +156,18 @@ game.State_Arena.prototype.checkCollisions = function() {
             break;
         }
     }
+    var powerup;
+    for (var p in this._powerups) {
+        powerup = this._powerups[p];
+        if (powerup.collideThing(this.player)) {
+            this._powerups.splice(p, 1);
+            this.player.healed();
+            if (gWorld.debug) {
+                console.log('got power up');
+            }
+            break;
+        }
+    }
 };
 game.State_Arena.prototype.gotoend = function() {
     var stateengine = gWorld.state.setState(gWorld.state.states.ARENAEND);
@@ -209,6 +226,13 @@ game.State_Arena.prototype.shootProjectile = function() {
     var projectile = new game.Projectile(pos, [vector[0] * 200, vector[1] * 200]);
     this._projectiles.push(projectile);
 };
+game.State_Arena.prototype.spawnPowerup = function() {
+    if (Math.random() < 0.1) {
+        var pos = [getRandomInt(20, gCanvas.width-20), getRandomInt(20, gCanvas.height-20)];
+        var p = new game.Powerup(pos);
+        this._powerups.push(p);
+    }
+}
 game.State_Arena.prototype.charactercorrect = function() {
     this._score++;
     if (this._score > gWorld.playerinfo.highscores[this._level - 1]) {
@@ -336,6 +360,9 @@ game.State_Arena.prototype.nextCharacter = function() {
         stateengine.decorations = this._decorations;
         stateengine.level = this._level;
         return;
+    }
+    if (this.player.health < this.player.maxhealth) {
+        this.spawnPowerup();
     }
 
     this._currentcharacters = Array();

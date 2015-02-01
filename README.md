@@ -23,6 +23,8 @@ World map. area between arenas.
 http://opengameart.org/content/tiny-16-basic
 near bottom of comments is 32px version.
 
+
+
 WORD COUNTS
 HSK 1 150
 HSK 2 151 (THIS SHOULD ONLY BE 150!!)
@@ -34,19 +36,39 @@ HSK 6 2500
 
 TODO
 
-tell the player they can press h for high scores
+- enemies get quicker as you move up the levels?
 
-1) user can enter arenas. Arenas are marked complete.
+- if you press alphabetic keys from within the game, it carries out the desired function, but also opens the "quick search" function, which deselects the game screen
 
-2) store words sorted for the user by difficulty (wrong answers, time to pick correct).
+- audio not working for some.
 
-3) New arena "problem words".
-THESE TWO MAY SWITCH
-4) User can view list of words sorted by difficulty. Problem words at top.
+- bosses
 
-5) Pay to remember state. Ads.
+- a way to quit
 
-6) Get email address. Pick reminder schedule.
+- variety. powerups? faster, do more damage, take more hits? change theme? field to graveyard to mountains to castle to space ship?
+
+- import Anki deck
+
+- have sample sentences with a blank and find the word that fits in the blank.
+
+- graphics should have something to do with china
+
+- make point and click?
+
+- Tell the player they can press h for high scores
+
+- user can enter arenas. Arenas are marked complete.
+
+- improve review arena problem queue.
+store words sorted for the user by difficulty (wrong answers, time to pick correct).
+only words you got wrong in review?
+
+- User can view list of words sorted by difficulty. Problem words at top.
+
+- Pay to remember state. Ads.
+
+- Get email address. Pick reminder schedule.
 
 
 
@@ -75,5 +97,3 @@ Missing audio:
 i think all of 说不定 didn't play audio but maybe 说 played
 规矩的矩 jǔ in guījǔ
 学问的问 wen in xuéwen
-
-Player disappears when standing still in Safari 8.0

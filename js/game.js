@@ -210,14 +210,18 @@ function loadWords() {
 		//}
 	}
 
+    var correctwordcharcount = 0;
+    var wrongword = null;
+    var wordarray = null;
+    var totalwordcount = wordobjects[i].length;
+    var attempts = 0;
     for (var i in files) {
-        var correctwordcharcount = 0;
-        var wrongword = null;
-        var wordarray = null;
-        var totalwordcount = wordobjects[i].length;
-        var attempts = 0;
+        totalwordcount = wordobjects[i].length;
         gWorld.problems[i] = Array();
 
+        if (gWorld.debug) {
+            var lengthnotmatch = 0;
+        }
 	    for (var j in wordobjects[i]) {
 	        correctwordcharcount = wordobjects[i][j].character.length;
 	        wordarray = Array();
@@ -227,8 +231,12 @@ function loadWords() {
 	        while (wordarray.length < 4) {
 	            wrongword = wordobjects[i][getRandomInt(0, totalwordcount - 1)];
 	            if (wrongword.character != wordobjects[i][j].character
-	                && (attempts > 10 || wrongword.character.length == correctwordcharcount)) {
+	                && (attempts > 40 || wrongword.character.length == correctwordcharcount)) {
 
+                    if (gWorld.debug && attempts > 40) {
+                        lengthnotmatch++;
+                        //console.log("gave up trying to character count match "+wordobjects[i][j].character);
+                    }
                     wrongword = new game.Word(wrongword.character, wrongword.pinyin, wrongword.getToRead(), wrongword.english, false);
                     wordarray.push(wrongword);
                     attempts = 0;
@@ -243,6 +251,7 @@ function loadWords() {
 	    if (gWorld.debug) {
 	        console.log("loaded file "+i);
 	        console.log("contains how many phrases? " + gWorld.problems[i].length);
+	        console.log(lengthnotmatch+" incorrect answers could not be length matched");
 	    }
     }
 }

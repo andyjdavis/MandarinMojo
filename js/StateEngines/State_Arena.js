@@ -160,6 +160,7 @@ game.State_Arena.prototype.checkCollisions = function() {
     for (var p in this._powerups) {
         powerup = this._powerups[p];
         if (powerup.collideThing(this.player)) {
+            this.decorationHealth();
             this._powerups.splice(p, 1);
             this.player.healed();
             if (gWorld.debug) {
@@ -265,7 +266,7 @@ game.State_Arena.prototype.charactercorrect = function() {
     //if (!gAudio) {
         //gWorld.sounds.play("success");
     //}
-    this.createAura();
+    this.decorationCorrect();
     this.nextCharacter();
 };
 game.State_Arena.prototype.characterwrong = function() {
@@ -444,8 +445,11 @@ game.State_Arena.prototype.showCharacters = function() {
         char.visible = true;
     }
 };
-game.State_Arena.prototype.createAura = function() {
-    this._decorations.push(new game.Aura(this.player, 'white', 1, 0.1));
+game.State_Arena.prototype.decorationCorrect = function() {
+    this._decorations.push(new game.Aura_Round(this.player, 'white', 3, 0.4));
+};
+game.State_Arena.prototype.decorationHealth = function() {
+    this._decorations.push(new game.Aura(this.player, 'white', 3, 0.1));
 };
 game.State_Arena.prototype.playAudio = function() {
     var correct = this._currentproblem.getCorrectWord();

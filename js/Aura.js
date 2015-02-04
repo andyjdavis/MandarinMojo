@@ -5,9 +5,10 @@ window.game = window.game || { };
 game.Aura = function(centerobj, color, lifespan, opacity) {
     this.centerobj = centerobj;
     this.color = color;
-    this.lifespan = lifespan;
+    //this.lifespan = lifespan;
     this.opacity = opacity;
-    
+    this.opacitydrop = opacity/lifespan; //amount opacity drops per second
+
     this.widthRadians = 0.2 * Math.PI;
     this.angle = (1/3) * Math.PI;
     this.age = 0;
@@ -50,7 +51,9 @@ game.Aura.prototype.update = function(dt) {
 
     this.angle -= 2*dt;
     this.age += dt;
-    return this.age < this.lifespan;
+    this.opacity -= this.opacitydrop * dt;
+    //return this.age < this.lifespan;
+    return this.opacity > 0.0;
 };
 
 //}());

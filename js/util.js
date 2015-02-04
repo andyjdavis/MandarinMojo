@@ -80,6 +80,28 @@ function drawBox(context, x, y, width, height, color, opacity) {
         gContext.globalAlpha = 1.0;
     }
 }
+function drawCircle(context, x, y, radius, color, opacity) {
+    var oldOpacity = null;
+    if (opacity && gContext.globalAlpha != opacity) {
+        oldOpacity = gContext.globalAlpha;
+        gContext.globalAlpha = opacity;
+    }
+    var oldColor = null;
+    if (context.strokeStyle != color) {
+        oldColor = context.strokeStyle;
+        context.strokeStyle = color;
+    }
+    context.strokeStyle = color;
+    context.beginPath();
+    context.arc(x,y,radius,0,2*Math.PI);
+    context.stroke();
+    if (oldColor) {
+        context.strokeStyle = oldColor;
+    }
+    if (oldOpacity) {
+        gContext.globalAlpha = oldOpacity;
+    }
+}
 function drawText(context, text, font, style, x, y, opacity, align) {
     if (opacity) {
         gContext.globalAlpha = opacity;

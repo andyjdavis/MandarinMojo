@@ -50,6 +50,8 @@ TODO
 
 - import Anki deck
 
+- JS minify
+
 - have sample sentences with a blank and find the word that fits in the blank.
 
 - graphics should have something to do with china
@@ -58,7 +60,7 @@ TODO
 
 - Tell the player they can press h for high scores
 
-- user can enter arenas. Arenas are marked complete.
+- Arenas are marked complete.
 
 - improve review arena problem queue.
 store words sorted for the user by difficulty (wrong answers, time to pick correct).

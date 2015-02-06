@@ -62,14 +62,8 @@ game.Thing.prototype.draw = function(drawpos, imageName) {
     }
 };*/
 game.Thing.prototype.collideThing = function(other) {
-    var thispos = this.pos;
-    if (this.getCollisionPos) {
-        thispos = this.getCollisionPos();
-    }
-    var otherpos = other.pos;
-    if (other.getCollisionPos) {
-        otherpos = other.getCollisionPos();
-    }
+    var thispos = this._getOwnPos();
+    var otherpos = other._getOwnPos();
 
     if (thispos[0] + this.footprint[0] < otherpos[0]
         || thispos[0] > otherpos[0] + other.footprint[0]
@@ -80,6 +74,17 @@ game.Thing.prototype.collideThing = function(other) {
     } else {
         return true;
     }
+}
+game.Thing.prototype.getCenter = function() {
+    var pos = this._getOwnPos();
+    return [pos[0]+(this.footprint[0]/2), pos[1]+(this.footprint[1]/2)];
+}
+game.Thing.prototype._getOwnPos = function() {
+    var thispos = this.pos;
+    if (this.getCollisionPos) {
+        thispos = this.getCollisionPos();
+    }
+    return thispos;
 }
 /*game.Thing.prototype.circleCollide = function(otherThing) {
     var p1 = [this.pos[0] + this.size/2, this.pos[1] + this.size/2];

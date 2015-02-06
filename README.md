@@ -36,9 +36,9 @@ HSK 6 2500
 
 TODO
 
-- enemies get quicker as you move up the levels?
+- chrome sound doesn't work in chrome incognito window. Can use to test error detection.
 
-- if you press alphabetic keys from within the game, it carries out the desired function, but also opens the "quick search" function, which deselects the game screen
+- enemies get quicker as you move up the levels?
 
 - audio not working for some.
 

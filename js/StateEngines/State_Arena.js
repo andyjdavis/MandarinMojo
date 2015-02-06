@@ -149,7 +149,7 @@ game.State_Arena.prototype.checkCollisions = function() {
 
             if (char.iscorrect) {
                 this.shootProjectile();
-                this.charactercorrect();
+                this.charactercorrect(char.getCenter());
             } else {
                 this.characterwrong();
             }
@@ -186,7 +186,7 @@ game.State_Arena.prototype.explodestuff = function() {
     //explode the characters
     for (var j in this._currentcharacters) {
         if (!this._currentcharacters[j].iscorrect) {
-            this._decorations.push(new game.Explosion(this._currentcharacters[j].pos));
+            this._decorations.push(new game.Explosion(this._currentcharacters[j].getCollisionPos()));
         }
     }
 };
@@ -234,7 +234,7 @@ game.State_Arena.prototype.spawnPowerup = function() {
         this._powerups.push(p);
     }
 }
-game.State_Arena.prototype.charactercorrect = function() {
+game.State_Arena.prototype.charactercorrect = function(pos) {
     this._score++;
     if (this._score > gWorld.playerinfo.highscores[this._level - 1]) {
         gWorld.playerinfo.highscores[this._level - 1] = this._score;
@@ -266,7 +266,7 @@ game.State_Arena.prototype.charactercorrect = function() {
     //if (!gAudio) {
         //gWorld.sounds.play("success");
     //}
-    this.decorationCorrect();
+    this.decorationCorrect(pos);
     this.nextCharacter();
 };
 game.State_Arena.prototype.characterwrong = function() {
@@ -445,8 +445,8 @@ game.State_Arena.prototype.showCharacters = function() {
         char.visible = true;
     }
 };
-game.State_Arena.prototype.decorationCorrect = function() {
-    this._decorations.push(new game.Aura_Round(this.player, 'white', 3, 0.4));
+game.State_Arena.prototype.decorationCorrect = function(pos) {
+    this._decorations.push(new game.Aura_Round(pos, 'white', 3, 0.4));
 };
 game.State_Arena.prototype.decorationHealth = function() {
     this._decorations.push(new game.Aura(this.player, 'white', 3, 0.1));

@@ -2,9 +2,8 @@
 
 window.game = window.game || { };
 
-game.Aura_Round = function(centerobj, color, lifespan, opacity) {
-    this.pos = [centerobj.pos[0] + centerobj.size[0]/2,
-                centerobj.pos[1] + centerobj.size[1]/2];
+game.Aura_Round = function(pos, color, lifespan, opacity) {
+    this.pos = pos;
     this.color = color;
 
     //this.lifespan = lifespan;

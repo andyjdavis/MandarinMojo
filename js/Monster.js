@@ -2,10 +2,10 @@
 
 window.game = window.game || { };
 
-game.Monster = function(pos) {
+game.Monster = function(pos, type) {
+    this.type = type;
     this.frame = 0;
     this.maxframe = 1;
-    this.type = getRandomInt(0, 2);
 
     switch(this.type) {
         case 0:

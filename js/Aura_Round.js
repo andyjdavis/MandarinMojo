@@ -17,7 +17,6 @@ game.Aura_Round.prototype = new game.Thing();
 game.Aura_Round.prototype.constructor = game.Aura_Round;
 
 game.Aura_Round.prototype.draw = function() {
-    console.log('drawing');
     drawCircle(gContext, this.pos[0], this.pos[1], this.radius, this.color, this.opacity);
 };
 game.Aura_Round.prototype.update = function(dt) {

@@ -7,6 +7,9 @@ game.State_Arena = function() {
     this.wordindex = -1;
     this.wordcount = -1;
 
+    this._monstertype = null;
+    this._monsterswitch = 0;
+
     this._problems = null;
     this._currentproblem = null;
     this._lastCorrect = false;
@@ -348,11 +351,26 @@ game.State_Arena.prototype.spawnMonsters = function() {
         } else if (door == 4) {
             pos = [gCanvas.width/2, gCanvas.height];
         }
+
+        this._monsterswitch--;
+        if (this._monsterswitch <= 0) {
+            if (gWorld.debug) {
+                console.log("changing monster type");
+            }
+            var newType = this._monstertype;
+            while (newType == this._monstertype) {
+                newType = getRandomInt(0, 2);
+            }
+            this._monstertype = newType;
+
+            this._monsterswitch = 10;
+        }
+        m = new game.Monster(pos, this._monstertype);
+        this._enemies.push(m);
+
         if (gWorld.debug) {
             console.log("spawning a new monster");
         }
-        m = new game.Monster(pos);
-        this._enemies.push(m);
     }
 };
 game.State_Arena.prototype.nextCharacter = function() {

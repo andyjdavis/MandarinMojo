@@ -36,7 +36,12 @@ HSK 6 2500
 
 TODO
 
+- Fix opacity handling in util.js
+
 - chrome sound doesn't work in chrome incognito window. Can use to test error detection.
+
+- Failed to load resource: the server responded with a status of 404 (Not Found)
+http://translate.google.com/translate_tts?ie=utf-8&tl=zh-CN&q=%E8%8F%9C
 
 - enemies get quicker as you move up the levels?
 
@@ -60,7 +65,7 @@ TODO
 
 - Tell the player they can press h for high scores
 
-- Arenas are marked complete.
+- Mark arenas complete.
 
 - improve review arena problem queue.
 store words sorted for the user by difficulty (wrong answers, time to pick correct).

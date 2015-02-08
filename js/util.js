@@ -57,6 +57,7 @@ function shuffleArray(array) {
 }
 function drawRect(context, x, y, width, height, color, opacity) {
     if (opacity) {
+        gContext.save();
         gContext.globalAlpha = opacity;
     }
     if (color) {
@@ -64,11 +65,12 @@ function drawRect(context, x, y, width, height, color, opacity) {
     }
     context.fillRect(x, y, width, height);
     if (opacity) {
-        gContext.globalAlpha = 1.0;
+        gContext.restore();
     }
 }
 function drawBox(context, x, y, width, height, color, opacity) {
     if (opacity) {
+        gContext.save();
         gContext.globalAlpha = opacity;
     }
     context.beginPath();
@@ -77,7 +79,7 @@ function drawBox(context, x, y, width, height, color, opacity) {
     context.strokeStyle = color;
     context.stroke();
     if (opacity) {
-        gContext.globalAlpha = 1.0;
+        gContext.restore();
     }
 }
 function drawCircle(context, x, y, radius, color, opacity) {

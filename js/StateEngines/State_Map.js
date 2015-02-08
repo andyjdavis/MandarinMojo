@@ -10,6 +10,9 @@ game.State_Map = function() {
     this.cameraup = false;
     this.cameradown = false;
 
+    this.opacity = 0.0;
+    this.opacityincrease = 1/5;
+
     var xmlhttp = new XMLHttpRequest();
     var url = "maps/mandarinmojo.json";
 
@@ -43,7 +46,7 @@ game.State_Map.prototype.end = function() {
 
 game.State_Map.prototype.draw = function() {
     if (gWorld.map) {
-        gWorld.map.draw(this.cameraposition, this._getBottomRight());
+        gWorld.map.draw(this.cameraposition, this._getBottomRight(), this.opacity);
     }
     if (gWorld.message) {
         gWorld.message.draw();
@@ -61,6 +64,13 @@ game.State_Map.prototype.update = function(dt) {
     if (!gWorld.map || !gWorld.map.jsonobj) {
         return;
     }
+    if (this.opacity < 1.0) {
+        this.opacity += this.opacityincrease * dt;
+        if (this.opacity > 1.0) {
+            this.opacity = 1.0;
+        }
+    }
+
     var lastpos = this.player.pos.slice(0);
 
     var bounds = [[0,0],this._getMapBottomRight()];

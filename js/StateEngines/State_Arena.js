@@ -87,6 +87,12 @@ game.State_Arena.prototype.update = function(dt) {
 
     this.spawnMonsters();
 };
+game.State_Arena.prototype.onKeyDown = function(event) {
+    // "e" to exit
+    if (event.keyCode == 69) {
+        gWorld.state.setState(gWorld.state.states.MAP);
+    }
+}
 game.State_Arena.prototype.setLevel = function(level) {
     this._level = level;
     if (level > 0) {
@@ -231,6 +237,10 @@ game.State_Arena.prototype.shootProjectile = function() {
     this._projectiles.push(projectile);
 };
 game.State_Arena.prototype.spawnPowerup = function() {
+    if (this._level == 0) {
+        // No health in the review arena.
+        return;
+    }
     if (Math.random() < 0.1) {
         var pos = [getRandomInt(20, gCanvas.width-20), getRandomInt(20, gCanvas.height-20)];
         var p = new game.Powerup(pos);
@@ -282,7 +292,10 @@ game.State_Arena.prototype.characterwrong = function() {
     this._decorations.push(new game.Explosion(this.player.pos));
     this.updateTable();
 
-    this.player.hurt();
+    // No health in the review arena.
+    if (this._level > 0) {
+        this.player.hurt();
+    }
     if (this.player.health <= 0) {
         this.gotoend();
     } else {
@@ -374,19 +387,26 @@ game.State_Arena.prototype.spawnMonsters = function() {
     }
 };
 game.State_Arena.prototype.nextCharacter = function() {
+    this._currentcharacters = Array();
+    this._currentproblem = null;
+    var complete = false;
+
     if (this._problems.length < 1) {
+        complete = true;
+    }
+    this._currentproblem = this._problems.pop();
+    if (this._currentproblem.timedue
+        && this._currentproblem.timedue > new Date().getTime()) {
+
+        complete = true;
+    }
+    if (complete) {
         var stateengine = gWorld.state.setState(gWorld.state.states.ARENAPASSED);
         stateengine.decorations = this._decorations;
         stateengine.level = this._level;
         return;
     }
-    if (this.player.health < this.player.maxhealth) {
-        this.spawnPowerup();
-    }
 
-    this._currentcharacters = Array();
-
-    this._currentproblem = null;
     /*
     if (gWorld.debug) {
         console.log('FAVORING LONG WORDS');
@@ -397,7 +417,10 @@ game.State_Arena.prototype.nextCharacter = function() {
             }
         }
     }*/
-    this._currentproblem = this._problems.pop();
+    
+    if (this.player.health < this.player.maxhealth) {
+        this.spawnPowerup();
+    }
     if (gWorld.debug) {
         console.log("Retrieving next problem. "+this._problems.length+" problems remain after this one.");
     }

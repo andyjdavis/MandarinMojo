@@ -6,6 +6,8 @@ game.PlayerInfoManager = function() {
     this.highscores = [0,0,0,0,0,0];
     this.levels = [];
     this.problems = [];
+    // 0, 30s, 2m, 10m, 1h, 24h, 7d
+    this.delays = [0, 30000, 120000, 600000, 3600000, 86400000, 604800000];
 };
 
 game.PlayerInfoManager.prototype.addLevel = function(level) {
@@ -16,19 +18,47 @@ game.PlayerInfoManager.prototype.addLevel = function(level) {
     }
     this.levels.push(level);
 
-    this.problems = this.problems.concat(gWorld.problems[level - 1]);
-    this.problems = shuffleArray(this.problems); // Mix in the new level.
+    var delayindex = 1;
+    var t = new Date().getTime() + this.delays[delayindex]; // now+30 seconds;
+
+    var problem = null;
+    for (var i in gWorld.problems[level - 1]) {
+        problem = gWorld.problems[level - 1][i].clone();
+
+        problem.delayindex = delayindex;
+        problem.timedue = t;
+
+        this.problems.push(problem);
+    }
+
+    this.sortProblems();
 };
 game.PlayerInfoManager.prototype.problemWrong = function() {
-    var wrong = this.problems.pop();
-    // Scatter instances of the incorrectly answered problem.
-    this.problems.splice(this.problems.length - getRandomInt(2, 6), 0, wrong);
-    this.problems.splice(this.problems.length - getRandomInt(6, 15), 0, wrong);
-    this.problems.splice(this.problems.length - getRandomInt(15, 25), 0, wrong);
-    this.problems.splice(this.problems.length - getRandomInt(25, 100), 0, wrong);
-    this.problems.splice(this.problems.length - getRandomInt(25, 150), 0, wrong);
+    var problem = this.problems[0];
+    problem.delayindex = 0;
+    problem.timedue = new Date().getTime() + this.delays[0];
+    console.log("problem wrong so setting time delay to now + "+this.delays[0]);
+    this.sortProblems();
 }
 game.PlayerInfoManager.prototype.problemCorrect = function() {
-    var correct = this.problems.pop();
+    var problem = this.problems[0];
+    if (problem.delayindex < this.delays.length - 2) {
+        problem.delayindex++;
+    }
+    problem.timedue = new Date().getTime() + this.delays[problem.delayindex];
+    console.log("problem correct so setting time delay to now + "+this.delays[problem.delayindex]);
+
+    this.sortProblems();
+}
+game.PlayerInfoManager.prototype.sortProblems = function() {
+    this.problems.sort(function(a, b) {
+        if (a.timedue < b.timedue) {
+            return -1;
+        }
+        if (a.timedue > b.timedue) {
+            return 1;
+        }
+        return 0;
+    });
 }
 //}());

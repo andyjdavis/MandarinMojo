@@ -7,7 +7,6 @@ game.Word = function(character, pinyin, pinyintoread, english, correct) {
     this.english = english;
     this.correct = correct;
 }
-
 game.Word.prototype.getToRead = function(changeTones) {
     var s = null;
     if (this.pinyintoread) {
@@ -61,7 +60,9 @@ game.Word.prototype.getToRead = function(changeTones) {
 game.Problem = function(words) {
     this.words = words;//words.slice(0);
 }
-
+game.Problem.prototype.clone = function() {
+    return new game.Problem(this.words);
+}
 game.Problem.prototype.getCorrectWord = function() {
     for (var i in this.words) {
         if (this.words[i].correct) {

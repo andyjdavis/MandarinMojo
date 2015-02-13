@@ -18,7 +18,7 @@ game.State_ArenaPassed.prototype.draw = function() {
         gContext.drawImage(img, 0, 0);
     }
 
-    var s = "You have passed HSK "+this.level+"!!"
+    var s = "You have passed HSK "+this.level+"!!";
     if (this.level == 0) {
         s = 'Review complete';
     }

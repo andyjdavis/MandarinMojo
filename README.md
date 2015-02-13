@@ -49,8 +49,6 @@ http://translate.google.com/translate_tts?ie=utf-8&tl=zh-CN&q=%E8%8F%9C
 
 - bosses
 
-- a way to quit
-
 - variety. powerups? faster, do more damage, take more hits? change theme? field to graveyard to mountains to castle to space ship?
 
 - import Anki deck
@@ -71,11 +69,21 @@ http://translate.google.com/translate_tts?ie=utf-8&tl=zh-CN&q=%E8%8F%9C
 store words sorted for the user by difficulty (wrong answers, time to pick correct).
 only words you got wrong in review?
 
+- getting a problem wrong in NOT review should alter the review queue
+
 - User can view list of words sorted by difficulty. Problem words at top.
 
-- Pay to remember state. Ads.
+- Pro upgrade. Ads.
 
 - Get email address. Pick reminder schedule.
+
+
+player enters map
+goes into review arena. empty
+goes into HSK level
+all words added to review queue but with 10 minute
+
+wrong answer has 0, 1, 5, 60, 300 minutes
 
 
 

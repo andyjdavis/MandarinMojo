@@ -36,16 +36,28 @@ HSK 6 2500
 
 TODO
 
+- PlayerInfoManager should method to calc number of pending review questions. display in review arena? On map too?
+
+- improve review arena problem queue.
+store words sorted for the user by difficulty (wrong answers, time to pick correct).
+only words you got wrong in review?
+
+- getting a problem wrong in NOT review should alter the review queue
+
 - Fix opacity handling in util.js
 
-- chrome sound doesn't work in chrome incognito window. Can use to test error detection.
+- audio not working for some.
+
+- Sound doesn't work in chrome incognito window. Can use to test error detection.
 
 - Failed to load resource: the server responded with a status of 404 (Not Found)
 http://translate.google.com/translate_tts?ie=utf-8&tl=zh-CN&q=%E8%8F%9C
 
-- enemies get quicker as you move up the levels?
+- Tell the player they can press h for high scores
 
-- audio not working for some.
+- Mark arenas complete.
+
+- enemies get quicker as you move up the levels?
 
 - bosses
 
@@ -60,16 +72,6 @@ http://translate.google.com/translate_tts?ie=utf-8&tl=zh-CN&q=%E8%8F%9C
 - graphics should have something to do with china
 
 - make point and click?
-
-- Tell the player they can press h for high scores
-
-- Mark arenas complete.
-
-- improve review arena problem queue.
-store words sorted for the user by difficulty (wrong answers, time to pick correct).
-only words you got wrong in review?
-
-- getting a problem wrong in NOT review should alter the review queue
 
 - User can view list of words sorted by difficulty. Problem words at top.
 

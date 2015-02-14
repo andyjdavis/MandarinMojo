@@ -20,7 +20,7 @@ game.State_ArenaPassed.prototype.draw = function() {
 
     var s = "You have passed HSK "+this.level+"!!";
     if (this.level == 0) {
-        s = 'Review complete';
+        s = 'You are up date';
     }
     drawText(gContext, s, gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 150);
     drawText(gContext, "Press e to exit the arena", gWorld.textsize, gWorld.textcolor, gCanvas.width/2, 390);

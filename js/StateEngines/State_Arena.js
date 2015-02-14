@@ -101,7 +101,7 @@ game.State_Arena.prototype.setLevel = function(level) {
     } else {
         // Use player list.
         this._problems = gWorld.playerinfo.problems.slice(0); //copy the array
-        this.wordcount = this._problems.length;
+        this.wordcount = this.getProblemsToGoCount();
     }
     this.nextCharacter();
 };
@@ -386,26 +386,31 @@ game.State_Arena.prototype.spawnMonsters = function() {
         }
     }
 };
+game.State_Arena.prototype.getProblemsToGoCount = function() {
+    if (this._level > 0) {
+        return this._problems.length;
+    }
+    var count = 0;
+    for (var i = 0; i < this._problems.length; i++) {
+        if (this._problems[i].timedue < new Date().getTime()) {
+            count++;
+        } else {
+            break;
+        }
+    }
+    return count;
+}
 game.State_Arena.prototype.nextCharacter = function() {
     this._currentcharacters = Array();
     this._currentproblem = null;
-    var complete = false;
 
-    if (this._problems.length < 1) {
-        complete = true;
-    }
-    this._currentproblem = this._problems.pop();
-    if (this._currentproblem.timedue
-        && this._currentproblem.timedue > new Date().getTime()) {
-
-        complete = true;
-    }
-    if (complete) {
+    if (this.getProblemsToGoCount() < 1) {
         var stateengine = gWorld.state.setState(gWorld.state.states.ARENAPASSED);
         stateengine.decorations = this._decorations;
         stateengine.level = this._level;
         return;
     }
+    this._currentproblem = this._problems.pop();
 
     /*
     if (gWorld.debug) {

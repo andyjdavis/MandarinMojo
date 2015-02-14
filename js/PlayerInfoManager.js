@@ -18,8 +18,8 @@ game.PlayerInfoManager.prototype.addLevel = function(level) {
     }
     this.levels.push(level);
 
-    var delayindex = 1;
-    var t = new Date().getTime() + this.delays[delayindex]; // now+30 seconds;
+    var delayindex = 2;
+    var t = new Date().getTime() + this.delays[delayindex]; // now+2m seconds;
 
     var problem = null;
     for (var i in gWorld.problems[level - 1]) {

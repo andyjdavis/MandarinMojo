@@ -3,8 +3,6 @@
 window.game = window.game || { };
 
 game.State_Map = function() {
-    this.cameraposition = [130, 0];
-
     this.cameraright = false;
     this.cameraleft = false;
     this.cameraup = false;
@@ -30,6 +28,11 @@ game.State_Map = function() {
     } else {
         this.player = new game.Player([520, 50]);
         gWorld.mapplayer = this.player;
+    }
+    if (gWorld.mapcameraposition) {
+        this.cameraposition = gWorld.mapcameraposition;
+    } else {
+        this.cameraposition = [130, 0];
     }
 
     gCanvas.width = gWorld.mapWidth;
@@ -152,6 +155,7 @@ game.State_Map.prototype.checkCollisions = function() {
                 if (state.level > 0) {
                     gWorld.playerinfo.addLevel(state.level);
                 }
+                gWorld.mapcameraposition = this.cameraposition;
                 return true;
             }
         }

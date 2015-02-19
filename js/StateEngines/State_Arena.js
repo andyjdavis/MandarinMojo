@@ -252,9 +252,7 @@ game.State_Arena.prototype.charactercorrect = function(pos) {
     if (this._score > gWorld.playerinfo.highscores[this._level - 1]) {
         gWorld.playerinfo.highscores[this._level - 1] = this._score;
     }
-    if (this._level == 0) {
-        gWorld.playerinfo.problemCorrect();
-    }
+    gWorld.playerinfo.problemCorrect(this._currentproblem);
 
     var n = null;
     if (this._score == 5) {
@@ -284,10 +282,7 @@ game.State_Arena.prototype.charactercorrect = function(pos) {
 };
 game.State_Arena.prototype.characterwrong = function() {
     this._lastcorrect = false;
-    
-    if (this._level == 0) {
-        gWorld.playerinfo.problemWrong();
-    }
+    gWorld.playerinfo.problemWrong(this._currentproblem);
 
     this._decorations.push(new game.Explosion(this.player.pos));
     this.updateTable();
@@ -391,8 +386,12 @@ game.State_Arena.prototype.getProblemsToGoCount = function() {
         return this._problems.length;
     }
     var count = 0;
-    for (var i = 0; i < this._problems.length; i++) {
-        if (this._problems[i].timedue < new Date().getTime()) {
+    var now = new Date().getTime();
+    console.log("now "+now);
+    // Remember, the next problem due is at the end of the array.
+    for (var i = this._problems.length - 1; i > -1; i--) {
+        console.log("due "+this._problems[i].timedue);
+        if (this._problems[i].timedue < now) {
             count++;
         } else {
             break;
@@ -404,7 +403,11 @@ game.State_Arena.prototype.nextCharacter = function() {
     this._currentcharacters = Array();
     this._currentproblem = null;
 
-    if (this.getProblemsToGoCount() < 1) {
+    var togo = this.getProblemsToGoCount();
+    if (gWorld.debug) {
+        console.log('nextCharacter() '+togo+" characters to go");
+    }
+    if (togo < 1) {
         var stateengine = gWorld.state.setState(gWorld.state.states.ARENAPASSED);
         stateengine.decorations = this._decorations;
         stateengine.level = this._level;

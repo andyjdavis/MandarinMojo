@@ -246,6 +246,9 @@ function loadWords() {
 	        }
 	        gWorld.problems[i].push(new game.Problem(shuffleArray(wordarray)));
 	    }
+	    if (gWorld.debug) {
+	        //gWorld.problems[i].splice(0, gWorld.problems[i].length - 3);
+	    }
 	    gWorld.problems[i] = shuffleArray(gWorld.problems[i]);
 
 	    if (gWorld.debug) {

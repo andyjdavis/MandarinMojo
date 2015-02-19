@@ -42,7 +42,7 @@ game.State_ArenaIntro.prototype.draw = function() {
         //drawText(gContext, "Press m to mute sound effects", gWorld.textsize, gWorld.textcolor, x, 240);
         drawText(gContext, "p to pause", gWorld.textsize, gWorld.textcolor, x, 310);
         drawText(gContext, "s if there is a problem with speech", gWorld.textsize, "white", x, 340);
-        drawText(gContext, "e to begin (and e to return to the map)", gWorld.textsize, "white", x, 370);
+        drawText(gContext, "e to begin (and e to exit to the map)", gWorld.textsize, "white", x, 370);
     }
 };
 game.State_ArenaIntro.prototype.update = function(dt) {

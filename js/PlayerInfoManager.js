@@ -30,32 +30,73 @@ game.PlayerInfoManager.prototype.addLevel = function(level) {
 
         this.problems.push(problem);
     }
+    if (gWorld.debug) {
+        /*console.log('revew queue length:'+this.problems.length);
+        console.log(this.problems[0].getCorrectWord().character);
+        console.log(this.problems[1].getCorrectWord().character);
+        console.log(this.problems[2].getCorrectWord().character);
+
+        console.log('marking problem 2 correct');
+        this.problemCorrect(this.problems[2]);
+        this.sortProblems();
+        console.log(this.problems[0].getCorrectWord().character);
+        console.log(this.problems[1].getCorrectWord().character);
+        console.log(this.problems[2].getCorrectWord().character);
+
+        console.log('marking problem 1 wrong');
+        this.problemWrong(this.problems[1]);
+        this.sortProblems();
+        console.log(this.problems[0].getCorrectWord().character);
+        console.log(this.problems[1].getCorrectWord().character);
+        console.log(this.problems[2].getCorrectWord().character);
+
+        console.log('marking problem 2 correct');
+        this.problemCorrect(this.problems[2]);
+        this.sortProblems();
+        console.log(this.problems[0].getCorrectWord().character);
+        console.log(this.problems[1].getCorrectWord().character);
+        console.log(this.problems[2].getCorrectWord().character);*/
+    }
 
     this.sortProblems();
 };
-game.PlayerInfoManager.prototype.problemWrong = function() {
-    var problem = this.problems[0];
-    problem.delayindex = 0;
-    problem.timedue = new Date().getTime() + this.delays[0];
-    console.log("problem wrong so setting time delay to now + "+this.delays[0]);
-    this.sortProblems();
-}
-game.PlayerInfoManager.prototype.problemCorrect = function() {
-    var problem = this.problems[0];
-    if (problem.delayindex < this.delays.length - 2) {
-        problem.delayindex++;
-    }
-    problem.timedue = new Date().getTime() + this.delays[problem.delayindex];
-    console.log("problem correct so setting time delay to now + "+this.delays[problem.delayindex]);
+game.PlayerInfoManager.prototype.problemWrong = function(problem) {
+    var i = this._getProblemIndex(problem);
+
+    this.problems[i].delayindex = 0;
+    var delay = this.delays[0];
+    this.problems[i].timedue = new Date().getTime() + delay;
+    console.log("problem wrong so setting time delay to now + "+delay);
 
     this.sortProblems();
 }
+game.PlayerInfoManager.prototype.problemCorrect = function(problem) {
+    var i = this._getProblemIndex(problem);
+
+    if (this.problems[i].delayindex < this.delays.length - 2) {
+        this.problems[i].delayindex++;
+    }
+    var delay = this.delays[this.problems[i].delayindex];
+    this.problems[i].timedue = new Date().getTime() + delay;
+    console.log("problem correct so setting time delay to now + "+delay);
+
+    this.sortProblems();
+}
+game.PlayerInfoManager.prototype._getProblemIndex = function(p) {
+    var character = p.getCorrectWord().character;
+    for (var i in this.problems) {
+        if (this.problems[i].getCorrectWord().character == character) {
+            return i;
+        }
+    }
+}
 game.PlayerInfoManager.prototype.sortProblems = function() {
+    // Remember, highest time goes to the end so we can use pop()
     this.problems.sort(function(a, b) {
-        if (a.timedue < b.timedue) {
+        if (a.timedue > b.timedue) {
             return -1;
         }
-        if (a.timedue > b.timedue) {
+        if (a.timedue < b.timedue) {
             return 1;
         }
         return 0;

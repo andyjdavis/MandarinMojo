@@ -99,6 +99,7 @@ game.State_Arena.prototype.setLevel = function(level) {
         this._problems = gWorld.problems[this._level - 1].slice(0); //copy the array
         this._problems = shuffleArray(this._problems);
     } else {
+        // Done in nextCharacter()
         // Use player list.
         this._problems = gWorld.playerinfo.problems.slice(0); //copy the array
         this.wordcount = this.getProblemsToGoCount();
@@ -385,23 +386,15 @@ game.State_Arena.prototype.getProblemsToGoCount = function() {
     if (this._level > 0) {
         return this._problems.length;
     }
-    var count = 0;
-    var now = new Date().getTime();
-    console.log("now "+now);
-    // Remember, the next problem due is at the end of the array.
-    for (var i = this._problems.length - 1; i > -1; i--) {
-        console.log("due "+this._problems[i].timedue);
-        if (this._problems[i].timedue < now) {
-            count++;
-        } else {
-            break;
-        }
-    }
-    return count;
+    return gWorld.playerinfo.getProblemsToGoCount();
 }
 game.State_Arena.prototype.nextCharacter = function() {
     this._currentcharacters = Array();
     this._currentproblem = null;
+
+    if (this._level == 0) {
+        this._problems = gWorld.playerinfo.problems.slice(0); //re-copy the array
+    }
 
     var togo = this.getProblemsToGoCount();
     if (gWorld.debug) {

@@ -37,12 +37,17 @@ game.Map.prototype._startDraw = function(cameraposition, bottomRight) {
     this.cameraposition = cameraposition;
     this.bottomRight = bottomRight;
     this.labels = [];
+    var label = null;
 
     var objectlayer = this.getObjectLayer();
     for (var i in objectlayer.objects) {
         if (objectlayer.objects[i].properties.label) {
+            label = objectlayer.objects[i].properties.label;
+            if (label == "Review") {
+                label = gWorld.playerinfo.getProblemsToGoCount() + " to review";
+            }
             this.labels.push({
-                text: objectlayer.objects[i].properties.label,
+                text: label,
                 pos: [objectlayer.objects[i].x +  + objectlayer.objects[i].width/2,
                       objectlayer.objects[i].y + objectlayer.objects[i].height]});
 

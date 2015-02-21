@@ -19,7 +19,7 @@ game.PlayerInfoManager.prototype.addLevel = function(level) {
     this.levels.push(level);
 
     var delayindex = 2;
-    var t = new Date().getTime() + this.delays[delayindex]; // now+2m seconds;
+    var t = new Date().getTime() + this.delays[delayindex]; // now+2m
 
     var problem = null;
     for (var i in gWorld.problems[level - 1]) {
@@ -60,13 +60,29 @@ game.PlayerInfoManager.prototype.addLevel = function(level) {
 
     this.sortProblems();
 };
+game.PlayerInfoManager.prototype.getProblemsToGoCount = function() {
+    var count = 0;
+    var now = new Date().getTime();
+    // Remember, the next problem due is at the end of the array.
+    for (var i = this.problems.length - 1; i > -1; i--) {
+        if (this.problems[i].timedue < now) {
+            count++;
+        } else {
+            break;
+        }
+    }
+    return count;
+}
 game.PlayerInfoManager.prototype.problemWrong = function(problem) {
     var i = this._getProblemIndex(problem);
 
     this.problems[i].delayindex = 0;
+
     var delay = this.delays[0];
     this.problems[i].timedue = new Date().getTime() + delay;
-    console.log("problem wrong so setting time delay to now + "+delay);
+    if (gWorld.debug) {
+        console.log("problem wrong so setting time delay to now + "+delay);
+    }
 
     this.sortProblems();
 }
@@ -78,7 +94,9 @@ game.PlayerInfoManager.prototype.problemCorrect = function(problem) {
     }
     var delay = this.delays[this.problems[i].delayindex];
     this.problems[i].timedue = new Date().getTime() + delay;
-    console.log("problem correct so setting time delay to now + "+delay);
+    if (gWorld.debug) {
+        console.log("problem correct so setting time delay to now + "+delay);
+    }
 
     this.sortProblems();
 }

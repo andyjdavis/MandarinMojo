@@ -90,7 +90,8 @@ game.State_Arena.prototype.update = function(dt) {
 game.State_Arena.prototype.onKeyDown = function(event) {
     // "e" to exit
     if (event.keyCode == 69) {
-        gWorld.state.setState(gWorld.state.states.MAP);
+        this.player.health = 0;
+        this.characterwrong();
     }
 }
 game.State_Arena.prototype.setLevel = function(level) {
@@ -121,13 +122,7 @@ game.State_Arena.prototype.checkCollisions = function() {
             this._enemies.splice(j, 1);
             this._decorations.push(new game.Explosion(enemy.pos));
 
-            this.player.hurt();
-            if (this.player.health <= 0) {
-                this.explodestuff();
-                this.clearDivs();
-                this.gotoend();
-                this.characterwrong();
-            }
+            this.characterwrong();
             return;
         }
         for (var p in this._projectiles) {
@@ -181,6 +176,9 @@ game.State_Arena.prototype.checkCollisions = function() {
     }
 };
 game.State_Arena.prototype.gotoend = function() {
+    this.explodestuff();
+    this.clearDivs();
+
     var stateengine = gWorld.state.setState(gWorld.state.states.ARENAEND);
     stateengine.decorations = this._decorations;
     stateengine.level = this._level;

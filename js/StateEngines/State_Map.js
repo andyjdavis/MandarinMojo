@@ -9,7 +9,7 @@ game.State_Map = function() {
     this.cameradown = false;
 
     this.opacity = 0.0;
-    this.opacityincrease = 1/5;
+    this.opacityincrease = 1/2; // 2 seconds to full opacity.
 
     var xmlhttp = new XMLHttpRequest();
     var url = "maps/mandarinmojo.json";

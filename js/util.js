@@ -56,68 +56,91 @@ function shuffleArray(array) {
     return array;
 }
 function drawRect(context, x, y, width, height, color, opacity) {
-    if (opacity) {
-        gContext.save();
-        gContext.globalAlpha = opacity;
+    var changed = false;
+    if ((color && context.fillStyle != color) || (opacity && context.globalAlpha != opacity)) {
+        changed = true;
+        context.save();
     }
-    if (color) {
+    if (color && context.fillStyle != color) {
         context.fillStyle = color;
     }
+    if (opacity && context.globalAlpha != opacity) {
+        context.globalAlpha = opacity;
+    }
     context.fillRect(x, y, width, height);
-    if (opacity) {
-        gContext.restore();
+    if (changed) {
+        context.restore();
     }
 }
 function drawBox(context, x, y, width, height, color, opacity) {
-    if (opacity) {
-        gContext.save();
-        gContext.globalAlpha = opacity;
+    var changed = false;
+    if (opacity && context.globalAlpha != opacity) {
+        changed = true;
+        context.save();
+        context.globalAlpha = opacity;
+    }
+    if (context.lineWidth != 1) {
+        context.lineWidth = 1;
+    }
+    if (context.strokeStyle != color) {
+        context.strokeStyle = color;
     }
     context.beginPath();
     context.rect(x, y, width, height);
-    context.lineWidth = 1;
-    context.strokeStyle = color;
     context.stroke();
-    if (opacity) {
-        gContext.restore();
+    if (changed) {
+        context.restore();
     }
 }
 function drawCircle(context, x, y, radius, color, opacity) {
-    var oldOpacity = null;
-    if (opacity && gContext.globalAlpha != opacity) {
-        oldOpacity = gContext.globalAlpha;
-        gContext.globalAlpha = opacity;
+    var changed = false;
+    if ((color && context.strokeStyle != color) || (opacity && context.globalAlpha != opacity)) {
+        changed = true;
+        context.save();
     }
-    var oldColor = null;
-    if (context.strokeStyle != color) {
-        oldColor = context.strokeStyle;
+    if (color && context.strokeStyle != color) {
         context.strokeStyle = color;
     }
-    context.strokeStyle = color;
+    if (opacity && context.globalAlpha != opacity) {
+        context.globalAlpha = opacity;
+    }
+
     context.beginPath();
     context.arc(x,y,radius,0,2*Math.PI);
     context.stroke();
-    if (oldColor) {
-        context.strokeStyle = oldColor;
-    }
-    if (oldOpacity) {
-        gContext.globalAlpha = oldOpacity;
+
+    if (changed) {
+        context.restore();
     }
 }
 function drawText(context, text, font, style, x, y, opacity, align) {
-    if (opacity) {
-        gContext.globalAlpha = opacity;
+    if (!align) {
+        align = 'center';
     }
-    context.textAlign = 'center';
-    if (align) {
+
+    var changed = false;
+    if ((opacity && context.globalAlpha != opacity) || (align && context.textAlign != align)) {
+        changed = true;
+        context.save();
+    }
+    if (opacity && context.globalAlpha != opacity) {
+        context.globalAlpha = opacity;
+    }
+    if (align && context.textAlign != align) {
         context.textAlign = align;
     }
-    context.textBaseline = "top";
-    context.font = font;
-    context.fillStyle = style;
+    if (context.textBaseline != "top") {
+        context.textBaseline = "top";
+    }
+    if (context.font != font) {
+        context.font = font;
+    }
+    if (context.fillStyle != style) {
+        context.fillStyle = style;
+    }
     context.fillText(text, x, y);
-    if (opacity) {
-        gContext.globalAlpha = 1.0;
+    if (changed) {
+        context.restore();
     }
 }
 function angleToVector(ang) {

@@ -36,14 +36,6 @@ HSK 6 2500
 
 TODO
 
-- PlayerInfoManager should method to calc number of pending review questions. display in review arena? On map too?
-
-- improve review arena problem queue.
-store words sorted for the user by difficulty (wrong answers, time to pick correct).
-only words you got wrong in review?
-
-- getting a problem wrong in NOT review should alter the review queue
-
 - Fix opacity handling in util.js
 
 - audio not working for some.

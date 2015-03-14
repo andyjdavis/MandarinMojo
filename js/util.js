@@ -16,15 +16,6 @@ function createDiv(parent, imagesrc, width, height, id) {
     
     div.style.backgroundImage = "url("+imagesrc+")";
 
-    /*var img = new Image();
-    img.src = imagesrc;
-    img.style.position = "absolute";
-    img.style.left = "0px";
-    img.style.widght = width;
-    img.style.height = height;
-
-    div.appendChild(img);
-    div.img = img;	// assign the image to a property so we have easy access to the image later*/
     screen.appendChild(div);
     
     return div;
@@ -56,15 +47,14 @@ function shuffleArray(array) {
     return array;
 }
 function drawRect(context, x, y, width, height, color, opacity) {
-    var changed = false;
-    if ((color && context.fillStyle != color) || (opacity && context.globalAlpha != opacity)) {
-        changed = true;
-        context.save();
-    }
     if (color && context.fillStyle != color) {
         context.fillStyle = color;
     }
+
+    var changed = false;
     if (opacity && context.globalAlpha != opacity) {
+        changed = true;
+        context.save(); // This is kind of over-kill for just setting alpha...
         context.globalAlpha = opacity;
     }
     context.fillRect(x, y, width, height);
@@ -73,17 +63,18 @@ function drawRect(context, x, y, width, height, color, opacity) {
     }
 }
 function drawBox(context, x, y, width, height, color, opacity) {
-    var changed = false;
-    if (opacity && context.globalAlpha != opacity) {
-        changed = true;
-        context.save();
-        context.globalAlpha = opacity;
-    }
     if (context.lineWidth != 1) {
         context.lineWidth = 1;
     }
     if (context.strokeStyle != color) {
         context.strokeStyle = color;
+    }
+
+    var changed = false;
+    if (opacity && context.globalAlpha != opacity) {
+        changed = true;
+        context.save();
+        context.globalAlpha = opacity;
     }
     context.beginPath();
     context.rect(x, y, width, height);
@@ -93,15 +84,14 @@ function drawBox(context, x, y, width, height, color, opacity) {
     }
 }
 function drawCircle(context, x, y, radius, color, opacity) {
-    var changed = false;
-    if ((color && context.strokeStyle != color) || (opacity && context.globalAlpha != opacity)) {
-        changed = true;
-        context.save();
-    }
     if (color && context.strokeStyle != color) {
         context.strokeStyle = color;
     }
+
+    var changed = false;
     if (opacity && context.globalAlpha != opacity) {
+        changed = true;
+        context.save();
         context.globalAlpha = opacity;
     }
 
@@ -117,15 +107,6 @@ function drawText(context, text, font, style, x, y, opacity, align) {
     if (!align) {
         align = 'center';
     }
-
-    var changed = false;
-    if ((opacity && context.globalAlpha != opacity) || (align && context.textAlign != align)) {
-        changed = true;
-        context.save();
-    }
-    if (opacity && context.globalAlpha != opacity) {
-        context.globalAlpha = opacity;
-    }
     if (align && context.textAlign != align) {
         context.textAlign = align;
     }
@@ -137,6 +118,13 @@ function drawText(context, text, font, style, x, y, opacity, align) {
     }
     if (context.fillStyle != style) {
         context.fillStyle = style;
+    }
+
+    var changed = false;
+    if (opacity && context.globalAlpha != opacity) {
+        changed = true;
+        context.save();
+        context.globalAlpha = opacity;
     }
     context.fillText(text, x, y);
     if (changed) {

@@ -36,8 +36,6 @@ HSK 6 2500
 
 TODO
 
-- Fix opacity handling in util.js
-
 - audio not working for some.
 
 - Sound doesn't work in chrome incognito window. Can use to test error detection.

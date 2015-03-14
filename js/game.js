@@ -274,6 +274,15 @@ function updateGame(dt) {
 function drawGame() {
     gContext.clearRect(0, 0, gCanvas.width, gCanvas.height);
     gWorld.state.getStateEngine().draw();
+    if (gWorld.debug) {
+        var frames = Math.floor(1/gWorld.dt);
+        drawText(gContext,
+                 frames,
+                 gWorld.textsize,
+                 gWorld.textcolor,
+                 150,
+                 0);
+    }
 }
 
 var mainloop = function() {

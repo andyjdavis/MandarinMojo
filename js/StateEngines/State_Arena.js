@@ -406,8 +406,7 @@ game.State_Arena.prototype.nextCharacter = function() {
     }
     this._currentproblem = this._problems.pop();
 
-    /*
-    if (gWorld.debug) {
+    /*if (gWorld.debug) {
         console.log('FAVORING LONG WORDS');
         while (!this._currentproblem) {
             this._currentproblem = this._problems.pop();
@@ -416,7 +415,7 @@ game.State_Arena.prototype.nextCharacter = function() {
             }
         }
     }*/
-    
+
     if (this.player.health < this.player.maxhealth) {
         this.spawnPowerup();
     }
@@ -429,7 +428,7 @@ game.State_Arena.prototype.nextCharacter = function() {
         // two 3rds 水果  33 becomes 23
         // a fifth 爸爸
         // 不 is 4th except when followed by another 4th when it changes to 2nd.
-        /*var forcecharacter = '出租车';
+        /*var forcecharacter = '医院';
         console.log('FORCING '+forcecharacter);
         while (true) {
             if ((this._currentproblem.words[0].character == forcecharacter && this._currentproblem.words[0].correct)
@@ -509,10 +508,14 @@ game.State_Arena.prototype.playAudio = function() {
     }
 };
 game.State_Arena.prototype.playGoogleAudio = function() {
-    var correct = this._currentproblem.getCorrectWord();
-    var text = correct.character;
-    var frame = $('speechiframe');
-    frame.src = 'http://translate.google.com/translate_tts?ie=utf-8&tl=zh-CN&q='+text;
+    var text = this._currentproblem.getCorrectWord().character;
+    var iframe = $('speechiframe');
+    var src = 'http://translate.google.com/translate_tts?ie=utf-8&tl=zh-CN&q='+text;
+    var script = '<script type="text/javascript">var a = document.getElementById("theaudio");a.addEventListener("error", function(e) {parent.gWorld.toggleSpeaker();}, true);</script>';
+    var html = '<html><body><audio error="alert(7)" onstalled="alert(3)" autoplay name="media" id="theaudio"><source src="'+src+'" type="audio/mpeg"></audio>'+script+'</body></html>';
+    iframe.contentWindow.document.open();
+    iframe.contentWindow.document.write(html);
+    iframe.contentWindow.document.close();
 }
 
 //}());

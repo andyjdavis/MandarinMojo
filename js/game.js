@@ -73,7 +73,16 @@ window.onload = function() {
 
         localTTS: false,
         hp: new HanyuPinyin(),
-        tts: new ChineseTextToSpeech()
+        tts: new ChineseTextToSpeech(),
+        toggleSpeaker: function() {
+            gWorld.localTTS = !gWorld.localTTS;
+            /*var s = 'Speaker A';
+            if (gWorld.localTTS) {
+                s = 'Speaker B';
+            }*/
+            var s = "switching speaker";
+            gWorld.message = new game.Message(s);
+        }
     };
     gWorld.images = new game.ImageManager();
     gWorld.sounds = new game.SoundManager();
@@ -108,12 +117,7 @@ function onKeyDown(event) {
         }
         if (event.keyCode == 83) {
             // s
-            gWorld.localTTS = !gWorld.localTTS;
-            var s = 'Speaker A';
-            if (gWorld.localTTS) {
-                s = 'Speaker B';
-            }
-            gWorld.message = new game.Message(s);
+            gWorld.toggleSpeaker();
         }
     }
     if (state == gWorld.state.states.MAP || state == gWorld.state.states.OVERLAY) {

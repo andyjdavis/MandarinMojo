@@ -510,12 +510,14 @@ game.State_Arena.prototype.playAudio = function() {
 game.State_Arena.prototype.playGoogleAudio = function() {
     var text = this._currentproblem.getCorrectWord().character;
     var iframe = $('speechiframe');
+    iframe.src = 'http://translate.google.com/translate_tts?ie=utf-8&tl=zh-CN&q='+text;
+    /*
     var src = 'http://translate.google.com/translate_tts?ie=utf-8&tl=zh-CN&q='+text;
     var script = '<script type="text/javascript">var a = document.getElementById("theaudio");a.addEventListener("error", function(e) {parent.gWorld.toggleSpeaker();}, true);</script>';
     var html = '<html><body><audio error="alert(7)" onstalled="alert(3)" autoplay name="media" id="theaudio"><source src="'+src+'" type="audio/mpeg"></audio>'+script+'</body></html>';
     iframe.contentWindow.document.open();
     iframe.contentWindow.document.write(html);
-    iframe.contentWindow.document.close();
+    iframe.contentWindow.document.close();*/
 }
 
 //}());

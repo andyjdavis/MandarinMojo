@@ -144,14 +144,14 @@ game.State_Arena.prototype.checkCollisions = function() {
         for (var p in this._projectiles) {
             projectile = this._projectiles[p];
             if (enemy.collideThing(projectile)) {
-                this.shake();
-                enemy.hit();
+                enemy.hit(normalizeVector(projectile.vel));
                 this._projectiles.splice(p, 1);
                 this._decorations.push(new game.Explosion(enemy.pos));
                 this.spawnMonsters();
                 if (gWorld.debug) {
                     console.log('enemy hit');
                 }
+                this.shake();
                 break;
             }
         }
@@ -242,7 +242,6 @@ game.State_Arena.prototype.shootProjectile = function() {
         }
     }
 
-    //var enemy = this._enemies[this._enemies.length - 1];
     target = [enemy.pos[0] + enemy.size[0]/2, enemy.pos[1] + enemy.size[1]/2];
 
     var playerX = this.player.pos[0] + this.player.size[0]/2;

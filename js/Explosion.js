@@ -11,6 +11,10 @@ game.Explosion.prototype = new game.Thing();
 game.Explosion.prototype.constructor = game.Explosion;
 
 game.Explosion.prototype.draw = function(camerapos) {
+    if (!camerapos) {
+        camerapos = [0, 0];
+    }
+
     var img = gWorld.images.getImage('explosion');
     if (img) {
         //debug

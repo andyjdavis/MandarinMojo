@@ -147,6 +147,13 @@ function calcNormalVector(p1, p2) {
     vect[1] = vect[1] / h;
     return vect;
 }
+function normalizeVector(v) {
+    var vect = [0, 0];
+    var h = calcDistance(v);
+    vect[0] = v[0] / h;
+    vect[1] = v[1] / h;
+    return vect;
+}
 /*function getDrawPos(p) {
     return [p[0] - gCamera[0], p[1] - gCamera[1]];
 }*/

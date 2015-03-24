@@ -91,7 +91,6 @@ game.Monster.prototype.draw = function(camerapos) {
     var sourceY = this.sourcelocations[this.frame][1];
     var sourceWidth = this.sourcesize[this.frame][0];
     var sourceHeight = this.sourcesize[this.frame][1];
-    //gContext.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, this.pos[0], this.pos[1], this.size[0], this.size[1]);
     gContext.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, this.pos[0]+camerapos[0], this.pos[1]+camerapos[1], sourceWidth/2, sourceHeight/2);
 
     if (this.vel[0] > 0) {
@@ -133,11 +132,15 @@ game.Monster.prototype.update = function(dt, player) {
 game.Monster.prototype.die = function() {
     //$("left_col").removeChild(this.div);
 };
-game.Monster.prototype.hit = function() {
+game.Monster.prototype.hit = function(vector) {
     this.lives--;
     if (this.isDead()) {
         this.timeDied = Date.now();
     }
+
+    pushback = 5;
+    this.pos[0] += (vector[0] * pushback);
+    this.pos[1] += (vector[1] * pushback);
 };
 game.Monster.prototype.isDead = function() {
     return this.lives <= 0;

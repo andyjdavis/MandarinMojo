@@ -19,13 +19,23 @@ game.Character = function(pos, alignment, slotindex, iscorrect, character, pinyi
 game.Character.prototype = new game.Thing();
 game.Character.prototype.constructor = game.Character;
  
-game.Character.prototype.draw = function() {
+game.Character.prototype.draw = function(camerapos) {
     if (this.visible) {
-        drawText(gContext, this.character, gWorld.textsize, 'yellow', this.pos[0], this.pos[1], 1.0, this.alignment);
+        drawText(gContext,
+                 this.character,
+                 gWorld.textsize,
+                 'yellow',
+                 this.pos[0] + camerapos[0],
+                 this.pos[1] + camerapos[1],
+                 1.0,
+                 this.alignment);
     }
     if (gWorld.debug) {
         // Character position.
-        drawRect(gContext, this.getCollisionPos()[0], this.getCollisionPos()[1], 2, 2);
+        drawRect(gContext,
+                 this.getCollisionPos()[0] + camerapos[0],
+                 this.getCollisionPos()[1] + camerapos[1],
+                 2, 2);
         game.Thing.prototype.draw.call(this); // Draw bounding box.
     }
 

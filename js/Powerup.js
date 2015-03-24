@@ -10,7 +10,7 @@ game.Powerup = function(pos) {
 game.Powerup.prototype = new game.Thing();
 game.Powerup.prototype.constructor = game.Powerup;
 
-game.Powerup.prototype.draw = function() {
+game.Powerup.prototype.draw = function(camerapos) {
     var img = gWorld.images.getImage('powerup');
     if (img) {
         //debug
@@ -18,7 +18,7 @@ game.Powerup.prototype.draw = function() {
         var sourceWidth = 35;
         var sourceX = 0;
         var sourceY = 0;
-        gContext.drawImage(img, sourceX, sourceY, sourceWidth, sourceWidth, this.pos[0], this.pos[1], this.size[0], this.size[1]);
+        gContext.drawImage(img, sourceX, sourceY, sourceWidth, sourceWidth, this.pos[0]+camerapos[0], this.pos[1]+camerapos[1], this.size[0], this.size[1]);
     }
     //game.Thing.prototype.draw.call(this, drawpos);
 };

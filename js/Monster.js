@@ -57,7 +57,7 @@ game.Monster = function(pos, type) {
 game.Monster.prototype = new game.Thing();
 game.Monster.prototype.constructor = game.Monster;
  
-game.Monster.prototype.draw = function() {
+game.Monster.prototype.draw = function(camerapos) {
     var img = gWorld.images.getImage('monster');
     if (!img) {
         return;
@@ -68,7 +68,7 @@ game.Monster.prototype.draw = function() {
         var sourceY = this.deadlocation[1];
         var sourceWidth = this.deadsize[0];
         var sourceHeight = this.deadsize[1];
-        gContext.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, this.pos[0], this.pos[1], sourceWidth/2, sourceHeight/2);
+        gContext.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, this.pos[0]+camerapos[0], this.pos[1]+camerapos[1], sourceWidth/2, sourceHeight/2);
         return;
     }
 
@@ -92,7 +92,7 @@ game.Monster.prototype.draw = function() {
     var sourceWidth = this.sourcesize[this.frame][0];
     var sourceHeight = this.sourcesize[this.frame][1];
     //gContext.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, this.pos[0], this.pos[1], this.size[0], this.size[1]);
-    gContext.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, this.pos[0], this.pos[1], sourceWidth/2, sourceHeight/2);
+    gContext.drawImage(img, sourceX, sourceY, sourceWidth, sourceHeight, this.pos[0]+camerapos[0], this.pos[1]+camerapos[1], sourceWidth/2, sourceHeight/2);
 
     if (this.vel[0] > 0) {
         gContext.restore();

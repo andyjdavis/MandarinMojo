@@ -10,7 +10,7 @@ game.Projectile = function(pos, vel) {
 game.Projectile.prototype = new game.Thing();
 game.Projectile.prototype.constructor = game.Projectile;
  
-game.Projectile.prototype.draw = function() {
+game.Projectile.prototype.draw = function(camerapos) {
     var img = gWorld.images.getImage('fireball');
     if (img) {
         //debug
@@ -35,7 +35,7 @@ game.Projectile.prototype.draw = function() {
         gContext.rotate(angle); // rotate
         
         gContext.translate(-xtranslate, -ytranslate);
-        gContext.drawImage(img, sourceX, 0, sourceWidth, sourceWidth, this.pos[0], this.pos[1], this.size[0], this.size[1]);
+        gContext.drawImage(img, sourceX, 0, sourceWidth, sourceWidth, this.pos[0]+camerapos[0], this.pos[1]+camerapos[1], this.size[0], this.size[1]);
         gContext.restore(); // restore original states (no rotation etc)
     }
     //game.Thing.prototype.draw.call(this, drawpos);

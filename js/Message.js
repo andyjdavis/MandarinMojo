@@ -11,8 +11,14 @@ game.Message = function(message) {
 game.Message.prototype = new game.Thing();
 game.Message.prototype.constructor = game.Message;
 
-game.Message.prototype.draw = function() {
-    drawText(gContext, this.message, '48pt Arial', 'yellow', gCanvas.width/2, gCanvas.height/2, 0.4);
+game.Message.prototype.draw = function(camerapos) {
+    drawText(gContext,
+             this.message,
+             '48pt Arial',
+             'yellow',
+             gCanvas.width/2 + camerapos[0],
+             gCanvas.height/2 + camerapos[1],
+             0.4);
 };
 game.Message.prototype.update = function(dt) {
     //game.Thing.prototype.update.call(this, dt);

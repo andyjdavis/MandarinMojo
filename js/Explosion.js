@@ -10,7 +10,7 @@ game.Explosion = function(pos) {
 game.Explosion.prototype = new game.Thing();
 game.Explosion.prototype.constructor = game.Explosion;
 
-game.Explosion.prototype.draw = function() {
+game.Explosion.prototype.draw = function(camerapos) {
     var img = gWorld.images.getImage('explosion');
     if (img) {
         //debug
@@ -25,7 +25,7 @@ game.Explosion.prototype.draw = function() {
         }
         var sourceX = sourceWidth * (this.frame % 4);
         var sourceY = sourceWidth * Math.floor(this.frame / 4);
-        gContext.drawImage(img, sourceX, sourceY, sourceWidth, sourceWidth, this.pos[0], this.pos[1], this.size[0], this.size[1]);
+        gContext.drawImage(img, sourceX, sourceY, sourceWidth, sourceWidth, this.pos[0]+camerapos[0], this.pos[1]+camerapos[1], this.size[0], this.size[1]);
     }
     //game.Thing.prototype.draw.call(this, drawpos);
 };

@@ -27,6 +27,11 @@ game.State_Arena = function() {
     this._powerups = Array();
     this._decorations = Array();
 
+    this._shaketime = 0;
+    this._shakeoffset = [0,0];
+    this._shakemax = 5;
+    this._shakeduration = 500; //ms
+
     this.player = new game.Player([64, 85], true);
 }
 game.State_Arena.prototype = new game.Thing();
@@ -36,31 +41,42 @@ game.State_Arena.prototype.end = function() {
 };
 
 game.State_Arena.prototype.draw = function() {
+    var now = Date.now();
+    if (this._shaketime > now) {
+        var max = ((this._shaketime - now) / this._shakeduration) * this._shakemax;
+        this._shakeoffset[0] = getRandomInt(-max, max);
+        this._shakeoffset[1] = getRandomInt(-max, max);
+    } else {
+        this._shakeoffset[0] = 0;
+        this._shakeoffset[1] = 0;
+    }
+    var cameraPos = [0 + this._shakeoffset[0], 0 + this._shakeoffset[1]]
+
     var img = gWorld.images.getImage('background');
     if (img) {
-        gContext.drawImage(img, 0, 0);
+        gContext.drawImage(img, 0 + this._shakeoffset[0], 0 + this._shakeoffset[1]);
     }
 
     for (var i in this._currentcharacters) {
         char = this._currentcharacters[i];
-        char.draw();
+        char.draw(cameraPos);
     }
 
     if (gWorld.message) {
-        gWorld.message.draw();
+        gWorld.message.draw(cameraPos);
     }
     for (var i in this._projectiles) {
-        this._projectiles[i].draw();
+        this._projectiles[i].draw(cameraPos);
     }
     for (var i in this._powerups) {
-        this._powerups[i].draw();
+        this._powerups[i].draw(cameraPos);
     }
     for (var i in this._enemies) {
-        this._enemies[i].draw();
+        this._enemies[i].draw(cameraPos);
     }
-    this.player.draw();
+    this.player.draw(cameraPos);
     for (var i in this._decorations) {
-        this._decorations[i].draw();
+        this._decorations[i].draw(cameraPos);
     }
 
     var s = null;
@@ -128,8 +144,8 @@ game.State_Arena.prototype.checkCollisions = function() {
         for (var p in this._projectiles) {
             projectile = this._projectiles[p];
             if (enemy.collideThing(projectile)) {
+                this.shake();
                 enemy.hit();
-                //this._enemies.splice(j, 1);
                 this._projectiles.splice(p, 1);
                 this._decorations.push(new game.Explosion(enemy.pos));
                 this.spawnMonsters();
@@ -204,6 +220,9 @@ game.State_Arena.prototype.clearDivs = function() {
             gDivs[i].innerHTML = "";
         }
     }
+};
+game.State_Arena.prototype.shake = function() {
+    this._shaketime = Date.now() + this._shakeduration;
 };
 game.State_Arena.prototype.shootProjectile = function() {
     if (this._enemies.length <= 0) {

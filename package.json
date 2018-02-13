@@ -1,0 +1,19 @@
+{
+  "name": "mandarin-mojo",
+  "version": "1.0.0",
+  "description": "A web based game to help you practice your Mandarin skills",
+  "main": "index.html",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andyjdavis/MandarinMojo.git"
+  },
+  "author": "Andrew",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/andyjdavis/MandarinMojo/issues"
+  },
+  "homepage": "https://github.com/andyjdavis/MandarinMojo#readme"
+}

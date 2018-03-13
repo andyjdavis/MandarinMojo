@@ -1,0 +1,25 @@
+{
+  "defaultSeverity": "error",
+  "extends": [
+    "tslint:recommended"
+  ],
+  "jsRules": {},
+  "rules": {
+    "no-consecutive-blank-lines": true,
+    "semicolon": [
+      true,
+      "never"
+    ],
+    "no-console": false,
+    "object-literal-sort-keys": false,
+    "variable-name": [
+      true,
+      "ban-keywords",
+      "check-format",
+      "allow-leading-underscore"
+    ],
+    "max-line-length": false
+  },
+  "rulesDirectory": [],
+  "autoFixOnSave": true
+}

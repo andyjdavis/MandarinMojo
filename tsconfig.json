@@ -1,0 +1,55 @@
+{
+    "compilerOptions": {
+        "outDir": "./src",
+        "strict": true,
+        "removeComments": true,
+        "sourceMap": true,
+        "noImplicitAny": true,
+        "noEmit": false,
+        "module": "commonjs",
+        "moduleResolution": "node",
+        "target": "es6",
+        "jsx": "react",
+        "strictNullChecks": true,
+        "noImplicitReturns": true,
+        "noUnusedLocals": true,
+        "noUnusedParameters": true,
+        "skipLibCheck": true,
+        "paths": {
+            "assets/*": [
+                "src/assets/*"
+            ]
+        },
+        "baseUrl": "./",
+        "lib": [
+            "dom",
+            "es5",
+            "es2015.iterable",
+            "es2015.symbol",
+            "es2015.symbol.wellknown",
+            "es2015.promise",
+            "es2015.collection"
+        ],
+        "typeRoots": [
+            "node_modules/@types",
+            "@types"
+        ]
+    },
+    "exclude": [
+        "node_modules",
+        "dist",
+        "src/perthnow/dist",
+        "src/the-west/dist",
+        "src/styleguide/dist",
+        "src/blueprints",
+        "src/component-library/__App/component-rendering/TypeSafetyTestFixtures",
+        "src/perthnow/config",
+        "src/perthnow/tools",
+        "src/the-west/config",
+        "src/the-west/tools"
+    ],
+    "include": [
+        "./src/**/*",
+        "@types"
+    ]
+}

@@ -3,6 +3,8 @@ ChineseCharacterChallenge
 
 This is a HTML 5 game to help me, and hopefully others, practice Mandarin character comprehension.
 
+A Typescript conversion is currently occurring.
+
 It is based on a basic game prototype that I prepared earlier. https://github.com/andyjdavis/EndlessGoblin
 
 The prototype is itself inspired by a Lost Decade tutorial http://www.lostdecadegames.com/how-to-make-a-simple-html5-canvas-game/

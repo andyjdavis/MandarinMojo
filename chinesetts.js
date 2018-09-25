@@ -11,7 +11,7 @@
  *
  */
 
-var ChineseTextToSpeech = function() {
+var ChineseTextToSpeech = function () {
 
   // timeout offest in milliseconds (1500 = 1.5 seconds)
   var _pace = 1500,
@@ -35,45 +35,45 @@ var ChineseTextToSpeech = function() {
     _inputPinyin = '';
 
 
-    // should this item be skipped?
-    function skipThisItem(str) {
+  // should this item be skipped?
+  function skipThisItem(str) {
 
-      // if item is blank
-      if(str.length < 1) {
-        return true;
-      }
-
-    return false;
+    // if item is blank
+    if (str.length < 1) {
+      return true;
     }
 
-    // clears prior cadence, starts new cadence
-    function startCadence() {
+    return false;
+  }
 
-      var lap = 0;
+  // clears prior cadence, starts new cadence
+  function startCadence() {
 
-      if(_timeDeck.length > 0) {
+    var lap = 0;
 
-        // clear the timeouts
-        clearCadence();
+    if (_timeDeck.length > 0) {
 
-        // clear the deck
-        _timeDeck.length = 0;
+      // clear the timeouts
+      clearCadence();
 
+      // clear the deck
+      _timeDeck.length = 0;
+
+    }
+
+    // add timeouts using time offset
+    for (var x in _pinyinDeck) {
+
+      if (skipThisItem(_pinyinDeck[x])) {
+        continue;
       }
 
-      // add timeouts using time offset
-      for(var x in _pinyinDeck) {
+      lap += _pace;
 
-        if(skipThisItem(_pinyinDeck[x])) {
-          continue;
-        }
-
-        lap += _pace;
-
-        _timeDeck[x] = setTimeout(
-          '(new ChineseTextToSpeech()).playPinyin("'
-            + _pinyinDeck[x]  + '");', lap);
-      }
+      _timeDeck[x] = setTimeout(
+        '(new ChineseTextToSpeech()).playPinyin("'
+        + _pinyinDeck[x] + '");', lap);
+    }
 
     //console.log(_timeDeck);
   }
@@ -81,9 +81,9 @@ var ChineseTextToSpeech = function() {
   // cross-browser getObject
   function getObject(id) {
 
-   var object = { };
+    var object = {};
 
-   if (document.layers) {
+    if (document.layers) {
       object = document.layers[id];
     } else if (document.all) {
       object = document.all[id];
@@ -96,14 +96,14 @@ var ChineseTextToSpeech = function() {
 
   // (attempts) to clear all timeouts
   function clearCadence() {
-    for(var k in _timeDeck) {
+    for (var k in _timeDeck) {
       clearTimeout(_timeDeck[k]);
     }
   }
 
   // builds output HTML
   function buildHtml() {
-    for(var b in _toneBank) {
+    for (var b in _toneBank) {
       buildAudioHtml(_toneBank[b]);
     }
 
@@ -145,10 +145,10 @@ var ChineseTextToSpeech = function() {
   // builds HTML tone bank with unique tones
   function buildToneBank() {
 
-    startover: for(var i=0; i < _pinyinDeck.length; i++) {
+    startover: for (var i = 0; i < _pinyinDeck.length; i++) {
 
-      for(var j = 0; j < _toneBank.length; j++) {
-        if(_toneBank[j] == _pinyinDeck[i])
+      for (var j = 0; j < _toneBank.length; j++) {
+        if (_toneBank[j] == _pinyinDeck[i])
           continue startover;
       }
 
@@ -173,7 +173,7 @@ var ChineseTextToSpeech = function() {
      * @param void
      * @return string outputHtml
      */
-    getHtml : function() {
+    getHtml: function () {
       return _outputHtml;
     },
 
@@ -196,13 +196,13 @@ var ChineseTextToSpeech = function() {
      * @return ChineseTextToSpeech object
      */
     setInput: function (inputString) {
-        //ADDED BY ANDREW
-        // reset everything so we can setInput multiple times.
-        _pinyinDeck = [];
-        _toneBank = [];
-        _timeDeck = [];
-        _toneBankHTML = '';
-        _outputHtml = '';
+      //ADDED BY ANDREW
+      // reset everything so we can setInput multiple times.
+      _pinyinDeck = [];
+      _toneBank = [];
+      _timeDeck = [];
+      _toneBankHTML = '';
+      _outputHtml = '';
 
       _inputPinyin = inputString.trim();
 

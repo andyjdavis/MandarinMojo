@@ -1,81 +1,48 @@
 <!DOCTYPE html>
 <html lang="en">
-	<head>
-		<meta charset="utf-8">
-		<title>Practice your Chinese with MandarinMojo.com</title>
-		<link rel="stylesheet" type="text/css" href="style.css">
-	</head>
-	<body>
-	    <script type='text/javascript' >
-        var gCanvas = null;
-        var gQuestion = null;
-        var gPinyin = null;
-        var gAudio = null;
-        var gContext = null;
-        var gWorld = null;
-        var gLeft = null;
-        var gRight = null;
-        var gTable = null;
-        var gDivs = null;
-        </script>
-		<SCRIPT LANGUAGE="javascript" SRC="js/util.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/ImageManager.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/SoundManager.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/StateManager.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/Thing.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/Map.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/Monster.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/Player.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/Projectile.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/Powerup.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/Explosion.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/Aura.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/Aura_Round.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/Message.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/PlayerInfoManager.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/StateEngines/State_Loading.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/StateEngines/State_Arena.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/StateEngines/State_ArenaIntro.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/StateEngines/State_ArenaEnd.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/StateEngines/State_ArenaPassed.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/StateEngines/State_Map.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/StateEngines/State_Paused.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/StateEngines/State_Overlay.js"></SCRIPT>
-        <script LANGUAGE="javascript" src="js/game.js"></script>
-		<script type="text/javascript" src="hanyupinyin.js"></script>
-        <script type="text/javascript" src="chinesetts.js"></script>
-        
-        <SCRIPT LANGUAGE="javascript" SRC="js/Character.js"></SCRIPT>
-        <SCRIPT LANGUAGE="javascript" SRC="js/Problem.js"></SCRIPT>
-        <table>
-            <tr>
-                <td id="left_col">
-                    <div style="position:relative">
-                    </div>
-                </td>
-                <td id="right_col">
-                    <div id="awrapper" style="text-align:center;">
-                    </div>
-                    <div id="tablewrapper">
+
+<head>
+    <meta charset="utf-8">
+    <title>Practice your Chinese with MandarinMojo.com</title>
+    <link rel="stylesheet" type="text/css" href="style.css">
+</head>
+
+<body>
+    <table>
+        <tr>
+            <td id="left_col">
+                <div style="position:relative">
+                </div>
+            </td>
+            <td id="right_col">
+                <div id="awrapper" style="text-align:center;">
+                </div>
+                <div id="tablewrapper">
                     <table id="thetable">
                         <tr></tr>
                     </table>
-                    </div>
-                </td>
-            </tr>
-        </table>
-        <div id="paused" style=""><div id="pausemessage">Mandarin Mojo is paused. Press p to unpause.</div></div>
-<script>
-  (function(i,s,o,g,r,a,m){i['GoogleAnalyticsObject']=r;i[r]=i[r]||function(){
-  (i[r].q=i[r].q||[]).push(arguments)},i[r].l=1*new Date();a=s.createElement(o),
-  m=s.getElementsByTagName(o)[0];a.async=1;a.src=g;m.parentNode.insertBefore(a,m)
-  })(window,document,'script','//www.google-analytics.com/analytics.js','ga');
-
-  ga('create', 'UA-54306968-1', 'auto');
-  ga('send', 'pageview');
-</script>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div id="paused">
+        <div id="pausemessage">Mandarin Mojo is paused. Press p to unpause.</div>
+    </div>
     <div id="foot">
         <iframe id="speechiframe" height="0" width="0" src="" style="visibility:hidden;display:none"></iframe>
     </div>
-	</body>
+    <script src="mandarinMojo.js"></script>
+    <script>
+        (function (i, s, o, g, r, a, m) {
+            i['GoogleAnalyticsObject'] = r; i[r] = i[r] || function () {
+                (i[r].q = i[r].q || []).push(arguments)
+            }, i[r].l = 1 * new Date(); a = s.createElement(o),
+                m = s.getElementsByTagName(o)[0]; a.async = 1; a.src = g; m.parentNode.insertBefore(a, m)
+        })(window, document, 'script', '//www.google-analytics.com/analytics.js', 'ga');
+
+        ga('create', 'UA-54306968-1', 'auto');
+        ga('send', 'pageview');
+    </script>
+</body>
+
 </html>

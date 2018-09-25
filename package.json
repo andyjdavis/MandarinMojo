@@ -1,0 +1,31 @@
+{
+  "name": "mandarin-mojo",
+  "version": "1.0.0",
+  "description": "A web based game to help you practice your Mandarin skills",
+  "main": "index.html",
+  "scripts": {
+    "lint": "tslint -c tslint.json 'src/**/*.ts'",
+    "build": "tsc && tslint --project '.' && webpack --config webpack.config.js",
+    "prebuild": "cp index.html ./dist/index.html && cp game.html ./dist/game.html && cp style.css ./dist/style.css",
+    "start": "webpack-dev-server --mode development  --config webpack.config.js",
+    "test": "webpack"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/andyjdavis/MandarinMojo.git"
+  },
+  "author": "Andrew",
+  "license": "GPL-3.0",
+  "bugs": {
+    "url": "https://github.com/andyjdavis/MandarinMojo/issues"
+  },
+  "homepage": "https://github.com/andyjdavis/MandarinMojo#readme",
+  "devDependencies": {
+    "ts-loader": "^4.4.2",
+    "tslint": "^5.10.0",
+    "typescript": "^2.9.2",
+    "webpack": "^4.16.2",
+    "webpack-cli": "^3.1.0",
+    "webpack-dev-server": "^3.1.5"
+  }
+}

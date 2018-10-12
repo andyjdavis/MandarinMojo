@@ -3,6 +3,7 @@ import { Map } from "./Map"
 import { Message } from "./Message"
 import { PlayerInfoManager } from "./PlayerInfoManager"
 import { Problem } from "./Problem/Problem"
+import { SoundManager } from "./SoundManager"
 import { StateManager } from "./StateManager"
 
 export type numberPair = [number, number]
@@ -25,7 +26,7 @@ export interface IWorld {
   keyState: any[]
   state: StateManager | null
   images: ImageManager
-  // sounds: SoundManager
+  sounds: SoundManager
 
   playerinfo: PlayerInfoManager
 

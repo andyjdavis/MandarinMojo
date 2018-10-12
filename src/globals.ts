@@ -1,5 +1,6 @@
 import { ImageManager } from "./ImageManager"
 import { PlayerInfoManager } from "./PlayerInfoManager"
+import { SoundManager } from "./SoundManager"
 import { IGlobals, IWorld } from "./types"
 import { dc, getElementById, getParameterByName } from "./util"
 
@@ -64,7 +65,7 @@ function setupGlobals() {
         images: new ImageManager(),
         keyState: Array(),
         state: null, // new StateManager(), // Defaults to state LOADING.
-        // sounds: new SoundManager()
+        sounds: new SoundManager(),
 
         playerinfo: new PlayerInfoManager(),
 

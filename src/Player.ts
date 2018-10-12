@@ -132,8 +132,8 @@ export class Player extends Thing {
             return
         }
         console.error("fail sound commented out in Player")
-        // const world = globals.world
-        // world.sounds.play("fail");
+        const world = globals.world
+        world.sounds.play("fail")
     }
     public healed() {
         this.health++

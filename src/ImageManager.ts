@@ -1,41 +1,34 @@
-import { getGlobals } from "./globals"
+import * as background from "./assets/images/background.png"
+import * as monster from "./assets/images/enemies_spritesheet.png"
+import * as explosion from "./assets/images/explosion.png"
+import * as fireball from "./assets/images/fireball.png"
+import * as hero from "./assets/images/player/p1_spritesheet.png"
+import * as powerup from "./assets/images/star.png"
+import * as tiles from "./assets/maps/Tiny32-Complete-Spritesheet-Repack3.png"
 
-function onImageLoad() {
-    const globals = getGlobals()
-    if (!globals) {
-        return
-    }
-    globals.world.images.numImagesLoaded++
+function loadImage(url: string): HTMLImageElement {
+    const image = new Image()
+    image.src = url
+    return image
 }
 
 export class ImageManager {
-    public numImagesLoaded: number
-    public imagedict: { [key: string]: string }
-    public images: { [key: string]: HTMLImageElement } = {}
+
+    private images: { [key: string]: HTMLImageElement } = {}
 
     constructor() {
-        this.numImagesLoaded = 0
-        this.imagedict = {
-            background: "images/background.png",
-            explosion: "images/explosion.png",
-            fireball: "images/fireball.png",
-            hero: "images/player/p1_spritesheet.png",
-            monster: "images/enemies_spritesheet.png",
-            powerup: "images/star.png",
-            tiles: "maps/Tiny32-Complete-Spritesheet-Repack3.png",
-        }
-        // this.images = Array(7);
-        for (const name in this.imagedict) {
-            if (this.imagedict.hasOwnProperty(name)) {
-                this.images[name] = new Image()
-                this.images[name].onload = onImageLoad
-                this.images[name].src = this.imagedict[name]
-            }
+        this.images = {
+            background: loadImage(background),
+            monster: loadImage(monster),
+            explosion: loadImage(explosion),
+            fireball: loadImage(fireball),
+            hero: loadImage(hero),
+            powerup: loadImage(powerup),
+            tiles: loadImage(tiles),
         }
     }
 
     public getImage(name: string) {
-        // if (this.images.length == this.numImagesLoaded) {
         if (this.images[name]) {
             return this.images[name]
         } else {
